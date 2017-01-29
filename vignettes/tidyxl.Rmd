@@ -1,0 +1,231 @@
+---
+title: "Tidyxl"
+author: "Duncan Garmonsway"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Tidyxl}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+<style>
+pre code, pre, code {
+  white-space: pre !important;
+  overflow-x: scroll !important;
+  word-break: keep-all !important;
+  word-wrap: initial !important;
+}
+</style>
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.path = "README-"
+)
+```
+
+# tidyxl
+
+[tidyxl](https://github.com/nacnudus/tidyxl) imports non-tabular data from Excel
+files into R.  It exposes cell content, position, formatting and comments in a
+tidy structure for further manipulation, especialy by the
+[unpivotr](https://github.com/nacnudus/unpivotr) package.  It supports the
+xml-based file formats '.xlsx' and '.xlsm' via the embedded
+[RapidXML](http://rapidxml.sourceforge.net) C++ library.  It does not support
+the binary file formats '.xlsb' or '.xls'.
+
+## Installation
+
+```{r, echo = TRUE, eval = FALSE}
+devtools::install_github("nacnudus/tidyxl")
+```
+
+## Examples
+
+The package includes a spreadsheet, 'titanic.xlsx', which contains the following
+pivot table:
+
+```{r, echo = TRUE}
+ftable(Titanic, row.vars = 1:2)
+```
+
+The multi-row column headers make this difficult to import.  A popular package
+for importing spreadsheets coerces the pivot table into a dataframe. It treats
+the second header row as though it were observations.
+
+```{r, echo = TRUE}
+readxl::read_excel("../inst/extdata/titanic.xlsx")
+```
+
+[Tidyxl](https://github.com/nacnudus/tidyxl) doesn't coerce the pivot table into
+a data frame.  Instead, it represents each cell in its own row, where it
+describes the cell's address, value and other properties.
+
+```{r, echo = TRUE}
+library(tidyxl)
+x <- tidy_xlsx("../inst/extdata/titanic.xlsx")$data$Sheet1
+# Specific sheets can be requested using `tidy_xlsx(file, sheet)`
+str(x)
+```
+
+In this structure, the cells can be found by filtering.
+
+```{r, echo = TRUE}
+x[x$data_type == "character", c("address", "character")]
+x[x$row == 4, c("address", "character", "numeric")]
+```
+
+### Formatting
+
+The original spreadsheet has formatting applied to the cells.  This can also be
+retrieved using [tidyxl](https://github.com/nacnudus/tidyxl).
+
+![iris-screenshot](./iris-screenshot.png)
+
+Formatting is available by using the columns `local_format_id` and
+`style_format_id` as indexes into a separate list-of-lists structure.  'Local'
+formatting is the most common kind, applied to individual cells.  'Style'
+formatting is usually applied to blocks of cells, and defines several formats at
+once.  Here is a screenshot of the styles buttons in Excel.
+
+![styles-screenshot](./styles-screenshot.png)
+
+Formatting can be looked up as follows.
+
+```{r, echo = TRUE}
+# Bold
+formats <- tidy_xlsx("../inst/extdata/titanic.xlsx")$formats
+formats$local$font$bold
+x[x$local_format_id %in% which(formats$local$font$bold),
+  c("address", "character")]
+
+# Yellow fill
+formats$local$fill$patternFill$fgColor$rgb
+x[x$local_format_id %in%
+  which(formats$local$fill$patternFill$fgColor$rgb == "FFFFFF00"),
+  c("address", "numeric")]
+
+# Styles by name
+formats$style$font$name["Normal"]
+head(x[x$style_format == "Normal", c("address", "character")])
+```
+
+To see all the available kinds of formats, use `str(formats)`.
+
+### Comments
+
+Comments are available alongside cell values.
+
+```{r, echo = TRUE}
+x[!is.na(x$comment), c("address", "comment")]
+```
+
+### Formulas
+
+Formulas are available, but with a few quirks.
+
+```{r, echo = TRUE}
+options(width = 120)
+y <- tidy_xlsx("../inst/extdata/examples.xlsx", "Sheet1")$data[[1]]
+y[!is.na(y$formula),
+  c("address", "formula", "formula_type", "formula_ref", "formula_group",
+    "error", "logical", "numeric", "date", "character")]
+```
+
+The top five cells show that the results of formulas are available as usual in
+the columns `error`, `logical`, `numeric`, `date`, and `character`.
+
+Cells `A20` and `A21` share a formula definition.  The formula is given
+against cell `A20`, and assigned to `formula_group` `0`, which spans the cells
+given by the `formula_ref`, A20:A21.  A spreadsheet application would infer that
+cell `A21` had the formula `A20+1`.  Cells `B20` and `B21` are similar.  The
+roadmap [tidyxl](https://github.com/nacnudus/tidyxl) for tidyxl includes
+de-normalising shared formulas.  If you can suggest how to tokenize Excel
+formulas, then please contact me.
+
+Cell `A22` contains an array formula, which, in a spreadsheet application, would
+appear with curly braces `{SUM(A19:A21*B19:B21)}`.  Cells `A23` and `A24`
+contain a single multi-cell array formula (single formula, multi-cell result),
+indicated by the `formula_ref`, but unlike cells `A20:A21` and `B20:B21`, the
+`formula` for A24 is NA rather than blank (`""`), and it doesn't have a
+`formula_group`.
+
+Cell `A25` contains a formula that refers to another file.  The `[1]` is an
+index into a table of files.  The roadmap
+[tidyxl](https://github.com/nacnudus/tidyxl) for tidyxl includes de-referencing
+such numbers.
+
+[tidyxl](https://github.com/nacnudus/tidyxl) imports the same table into a
+format suitable for non-tabular processing (see e.g. the
+[unpivotr](https://github.com/nacnudus/unpivotr) package in 'Similar projects'
+below).
+
+## Philosophy
+
+Information in in many spreadsheets cannot be easily imported into R.  Why?
+
+Most R packages that import spreadsheets have difficulty unless the layout of
+the spreadsheet conforms to a strict definition of a 'table', e.g.:
+
+* observations in rows
+* variables in columns
+* a single header row
+* all information represented by characters, whether textual, logical, or
+  numeric
+
+These rules are designed to eliminate ambiguity in the interpretation of the
+information.  But most spreadsheeting software relaxes these rules in a trade of
+ambiguity for expression via other media:
+
+* proximity (other than headers, i.e. other than being the first value at the
+  top of a column)
+* formatting (colours and borders)
+
+Humans can usually resolve the ambiguities with contextual knowledge, but
+computers are limited by their ignorance.  Programmers are hampered by:
+
+* their language's expressiveness
+* loss of information in transfer from spreadsheet to programming library
+
+Information is lost when software discards it in order to force the data into
+tabular form.  Sometimes date formatting is retained, but mostly formatting
+is lost, and position has to be inferred again.
+
+[tidyxl](https://github.com/nacnudus/tidyxl) addresses the programmer's problems
+by not discarding information.  It imports the content, position and formatting
+of cells, leaving it up to the user to associate the different forms of
+information, and to re-encode them in tabular form without loss.  The
+[unpivotr](https://github.com/nacnudus/unpivotr) package has been developed to
+assist with that step.
+
+## Similar projects
+
+[tidyxl](https://github.com/nacnudus/tidyxl) was originally derived from
+[readxl](https://github.com/hadley/readxl) and still contains some of the same
+code, hence it inherits the GPL-3 licence.
+[readxl](https://github.com/hadley/readxl) is intended for importing tabular
+data with a single row of column headers, whereas
+[tidyxl](https://github.com/nacnudus/tidyxl) is more general, and less magic.
+
+The [rsheets](https://github.com/rsheets) project of several R packages is in
+the early stages of importing spreadsheet information from Excel and Google
+Sheets into R, manipulating it, and potentially parsing and processing formulas
+and writing out to spreadsheet files.  In particular,
+[jailbreaker](https://github.com/rsheets/jailbreakr) attempts to extract
+non-tabular data from spreadsheets into tabular structures automatically via
+some clever algorithms.
+
+[tidyxl](https://github.com/nacnudus/tidyxl) differs from
+[rsheets](https://github.com/rsheets) in scope
+([tidyxl](https://github.com/nacnudus/tidyxl) will never import charts, for
+example), and implementation ([tidyxl](https://github.com/nacnudus/tidyxl) is
+implemented mainly in C++ and is quite fast, only a little slower than
+[readxl](https://github.com/hadley/readxl)).
+[unpivotr](https://github.com/nacnudus/unpivotr) is a package related to
+[tidyxl](https://github.com/nacnudus/tidyxl) that provides tools for unpivoting
+complex and non-tabular data layouts using I not AI (intelligence, not
+artificial intelligence).  In this way it corresponds to
+[jailbreaker](https://github.com/rsheets/jailbreakr), but with a different
+philosophy.
