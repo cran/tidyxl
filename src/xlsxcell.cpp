@@ -31,14 +31,14 @@ void xlsxcell::parseAddress(
   if (r == NULL)
     stop("Invalid cell: lacks 'r' attribute");
 
-  std::string address = r->value(); // we need this std::string in a moment
-  sheet->address_[i] = address;
+  address_ = r->value(); // we need this std::string in a moment
+  sheet->address_[i] = address_;
 
   // Iterate though the A1-style address string character by character
   int col = 0;
   int row = 0;
-  for(std::string::const_iterator iter = address.begin();
-      iter != address.end(); ++iter) {
+  for(std::string::const_iterator iter = address_.begin();
+      iter != address_.end(); ++iter) {
     if (*iter >= '0' && *iter <= '9') { // If it's a number
       row = row * 10 + (*iter - '0'); // Then multiply existing row by 10 and add new number
     } else if (*iter >= 'A' && *iter <= 'Z') { // If it's a character
@@ -48,11 +48,12 @@ void xlsxcell::parseAddress(
   sheet->col_[i] = col;
   sheet->row_[i] = row;
 
-  // Look up any comment using the address
+  // Look up any comment using the address, and delete it if found
   std::map<std::string, std::string>& comments = sheet->comments_;
-  std::map<std::string, std::string>::iterator it = comments.find(address);
+  std::map<std::string, std::string>::iterator it = comments.find(address_);
   if(it != comments.end()) {
-     sheet->comment_[i] = it->second;
+    SET_STRING_ELT(sheet->comment_, i, Rf_mkCharCE(it->second.c_str(), CE_UTF8));
+    comments.erase(it);
   }
 }
 
@@ -92,7 +93,7 @@ void xlsxcell::cacheValue(
     svalue = 0;
   }
   sheet->local_format_id_[i] = svalue + 1;
-  sheet->style_format_[i] = book.styles_.cellStyles_[book.styles_.cellXfs_[svalue].xfId_[0]];
+  sheet->style_format_[i] = book.styles_.cellStyles_map_[book.styles_.cellXfs_[svalue].xfId_[0]];
 
   if (t != NULL && tvalue == "inlineStr") {
     sheet->data_type_[i] = "character";
@@ -113,15 +114,13 @@ void xlsxcell::cacheValue(
       if (book.styles_.isDate_[book.styles_.cellXfs_[svalue].numFmtId_[0]]) {
         // local number format is a date format
         sheet->data_type_[i] = "date";
-        double date = strtof(vvalue.c_str(), NULL);
-        if (book.dateSystem_ == 1900 && date < 61) {
-          warning("Dates before 1 March 1900 are off by one, due to Excel's famous bug.");
-        }
-        sheet->date_[i] = (date - book.dateOffset_) * 86400;
+        double date = strtod(vvalue.c_str(), NULL);
+        sheet->date_[i] = checkDate(date, book.dateSystem_, book.dateOffset_,
+                                    ref(sheet->name_, address_));
         return;
       } else {
         sheet->data_type_[i] = "numeric";
-        sheet->numeric_[i] = strtof(vvalue.c_str(), NULL);
+        sheet->numeric_[i] = strtod(vvalue.c_str(), NULL);
       }
     } else if (
           book.styles_.isDate_[
@@ -132,21 +131,19 @@ void xlsxcell::cacheValue(
         ) {
       // style number format is a date format
       sheet->data_type_[i] = "date";
-      double date = strtof(vvalue.c_str(), NULL);
-      if (book.dateSystem_ == 1900 && date < 61) {
-        warning("Dates before 1 March 1900 are off by one, due to Excel's famous bug.");
-      }
-      sheet->date_[i] = (date - book.dateOffset_) * 86400;
+      double date = strtod(vvalue.c_str(), NULL);
+      sheet->date_[i] = checkDate(date, book.dateSystem_, book.dateOffset_,
+                                  ref(sheet->name_, address_));
       return;
     } else {
       sheet->data_type_[i] = "numeric";
-      sheet->numeric_[i] = strtof(vvalue.c_str(), NULL);
+      sheet->numeric_[i] = strtod(vvalue.c_str(), NULL);
     }
   } else if (tvalue == "s") {
     // the t attribute exists and its value is exactly "s", so v is an index
     // into the string table.
     sheet->data_type_[i] = "character";
-    sheet->character_[i] = book.strings_[strtol(vvalue.c_str(), NULL, 10)];
+    SET_STRING_ELT(sheet->character_, i, Rf_mkCharCE(book.strings_[strtol(vvalue.c_str(), NULL, 10)].c_str(), CE_UTF8));
     return;
   } else if (tvalue == "str") {
     // Formula, which could have evaluated to anything, so only a string is safe
@@ -155,7 +152,7 @@ void xlsxcell::cacheValue(
     return;
   } else if (tvalue == "b"){
     sheet->data_type_[i] = "logical";
-    sheet->logical_[i] = strtof(vvalue.c_str(), NULL);
+    sheet->logical_[i] = strtod(vvalue.c_str(), NULL);
     return;
   } else if (tvalue == "e") {
     sheet->data_type_[i] = "error";

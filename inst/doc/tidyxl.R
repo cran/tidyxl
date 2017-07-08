@@ -12,11 +12,12 @@ knitr::opts_chunk$set(
 ftable(Titanic, row.vars = 1:2)
 
 ## ---- echo = TRUE--------------------------------------------------------
-readxl::read_excel("../inst/extdata/titanic.xlsx")
+titanic <- system.file("extdata/titanic.xlsx", package = "tidyxl")
+readxl::read_excel(titanic)
 
 ## ---- echo = TRUE--------------------------------------------------------
 library(tidyxl)
-x <- tidy_xlsx("../inst/extdata/titanic.xlsx")$data$Sheet1
+x <- tidy_xlsx(titanic)$data$Sheet1
 # Specific sheets can be requested using `tidy_xlsx(file, sheet)`
 str(x)
 
@@ -26,7 +27,7 @@ x[x$row == 4, c("address", "character", "numeric")]
 
 ## ---- echo = TRUE--------------------------------------------------------
 # Bold
-formats <- tidy_xlsx("../inst/extdata/titanic.xlsx")$formats
+formats <- tidy_xlsx(titanic)$formats
 formats$local$font$bold
 x[x$local_format_id %in% which(formats$local$font$bold),
   c("address", "character")]
@@ -46,7 +47,8 @@ x[!is.na(x$comment), c("address", "comment")]
 
 ## ---- echo = TRUE-----------------------------------------------------------------------------------------------------
 options(width = 120)
-y <- tidy_xlsx("../inst/extdata/examples.xlsx", "Sheet1")$data[[1]]
+y <- tidy_xlsx(system.file("/extdata/examples.xlsx", package = "tidyxl"),
+               "Sheet1")$data[[1]]
 y[!is.na(y$formula),
   c("address", "formula", "formula_type", "formula_ref", "formula_group",
     "error", "logical", "numeric", "date", "character")]

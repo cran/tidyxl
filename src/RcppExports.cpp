@@ -6,16 +6,16 @@
 using namespace Rcpp;
 
 // xlsx_read_
-List xlsx_read_(std::string path, IntegerVector sheets, CharacterVector names, CharacterVector comments_paths);
-RcppExport SEXP tidyxl_xlsx_read_(SEXP pathSEXP, SEXP sheetsSEXP, SEXP namesSEXP, SEXP comments_pathsSEXP) {
+List xlsx_read_(std::string path, CharacterVector sheet_paths, CharacterVector sheet_names, CharacterVector comments_paths);
+RcppExport SEXP tidyxl_xlsx_read_(SEXP pathSEXP, SEXP sheet_pathsSEXP, SEXP sheet_namesSEXP, SEXP comments_pathsSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< std::string >::type path(pathSEXP);
-    Rcpp::traits::input_parameter< IntegerVector >::type sheets(sheetsSEXP);
-    Rcpp::traits::input_parameter< CharacterVector >::type names(namesSEXP);
+    Rcpp::traits::input_parameter< CharacterVector >::type sheet_paths(sheet_pathsSEXP);
+    Rcpp::traits::input_parameter< CharacterVector >::type sheet_names(sheet_namesSEXP);
     Rcpp::traits::input_parameter< CharacterVector >::type comments_paths(comments_pathsSEXP);
-    rcpp_result_gen = Rcpp::wrap(xlsx_read_(path, sheets, names, comments_paths));
+    rcpp_result_gen = Rcpp::wrap(xlsx_read_(path, sheet_paths, sheet_names, comments_paths));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -29,4 +29,15 @@ BEGIN_RCPP
     rcpp_result_gen = Rcpp::wrap(xlsx_sheets_(path));
     return rcpp_result_gen;
 END_RCPP
+}
+
+static const R_CallMethodDef CallEntries[] = {
+    {"tidyxl_xlsx_read_", (DL_FUNC) &tidyxl_xlsx_read_, 4},
+    {"tidyxl_xlsx_sheets_", (DL_FUNC) &tidyxl_xlsx_sheets_, 1},
+    {NULL, NULL, 0}
+};
+
+RcppExport void R_init_tidyxl(DllInfo *dll) {
+    R_registerRoutines(dll, NULL, CallEntries, NULL, NULL);
+    R_useDynamicSymbols(dll, FALSE);
 }

@@ -1,3 +1,27 @@
+# tidyxl 0.2.3
+
+* Imports dates on or before 1900-02-28 dates correctly, and only warns on the impossible date 1900-02-29, returning NA (following [readxl](https://github.com/tidyverse/readxl/commit/c9a54ae9ce0394808f6d22e8ef1a7a647b2d92bb)).
+* Fixes subsecond rounding (following [readxl](https://github.com/tidyverse/readxl/commit/63ef215f57322dd5d7a27799a2a3fe463bd39fc7) (fixes #14))
+* Imports styles correctly from LibreOffice files (interprets 'true' and 'false'
+  as booleans, as well as the 0 and 1 used by Microsoft Excel, and defaults to
+  'true' when not present, e.g. applyFill)
+* Fixes a bug that caused some LibreOffice files to crash R, when styles were
+    declared with gaps in the sequence of xfIds.
+* Imports comments attached to blank cells (fixes #10)
+* Includes the sheet and cell address in warnings of impossible datetimes from
+    1900-02-29.
+
+# tidyxl 0.2.1.9000
+
+* Checks the value of the `date1904` attribute for `"false"` or `"1"` to support files
+  created by the `openxlsx` package (#8).
+* Fixed a bug that only imported the first line of multiline comments (#9).
+* Encodes cell and comment text as UTF-8 (#12).
+* Finds worksheets more reliably in files not created by Excel (part of #13).
+* Falls back to default styles when none defined (#13).
+* Imports dates with greater precision (part of #14).
+* Fixed the order of worksheets (#15)
+
 # tidyxl 0.2.1
 
 * Fixed a major bug: dates were parsed incorrectly because the offsets for the

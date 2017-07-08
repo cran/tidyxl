@@ -30,7 +30,7 @@ knitr::opts_chunk$set(
 
 [tidyxl](https://github.com/nacnudus/tidyxl) imports non-tabular data from Excel
 files into R.  It exposes cell content, position, formatting and comments in a
-tidy structure for further manipulation, especialy by the
+tidy structure for further manipulation, especially by the
 [unpivotr](https://github.com/nacnudus/unpivotr) package.  It supports the
 xml-based file formats '.xlsx' and '.xlsm' via the embedded
 [RapidXML](http://rapidxml.sourceforge.net) C++ library.  It does not support
@@ -56,7 +56,8 @@ for importing spreadsheets coerces the pivot table into a dataframe. It treats
 the second header row as though it were observations.
 
 ```{r, echo = TRUE}
-readxl::read_excel("../inst/extdata/titanic.xlsx")
+titanic <- system.file("extdata/titanic.xlsx", package = "tidyxl")
+readxl::read_excel(titanic)
 ```
 
 [Tidyxl](https://github.com/nacnudus/tidyxl) doesn't coerce the pivot table into
@@ -65,7 +66,7 @@ describes the cell's address, value and other properties.
 
 ```{r, echo = TRUE}
 library(tidyxl)
-x <- tidy_xlsx("../inst/extdata/titanic.xlsx")$data$Sheet1
+x <- tidy_xlsx(titanic)$data$Sheet1
 # Specific sheets can be requested using `tidy_xlsx(file, sheet)`
 str(x)
 ```
@@ -82,7 +83,7 @@ x[x$row == 4, c("address", "character", "numeric")]
 The original spreadsheet has formatting applied to the cells.  This can also be
 retrieved using [tidyxl](https://github.com/nacnudus/tidyxl).
 
-![iris-screenshot](./iris-screenshot.png)
+![](./titanic-screenshot.png)
 
 Formatting is available by using the columns `local_format_id` and
 `style_format_id` as indexes into a separate list-of-lists structure.  'Local'
@@ -90,13 +91,13 @@ formatting is the most common kind, applied to individual cells.  'Style'
 formatting is usually applied to blocks of cells, and defines several formats at
 once.  Here is a screenshot of the styles buttons in Excel.
 
-![styles-screenshot](./styles-screenshot.png)
+![](./styles-screenshot.png)
 
 Formatting can be looked up as follows.
 
 ```{r, echo = TRUE}
 # Bold
-formats <- tidy_xlsx("../inst/extdata/titanic.xlsx")$formats
+formats <- tidy_xlsx(titanic)$formats
 formats$local$font$bold
 x[x$local_format_id %in% which(formats$local$font$bold),
   c("address", "character")]
@@ -128,7 +129,8 @@ Formulas are available, but with a few quirks.
 
 ```{r, echo = TRUE}
 options(width = 120)
-y <- tidy_xlsx("../inst/extdata/examples.xlsx", "Sheet1")$data[[1]]
+y <- tidy_xlsx(system.file("/extdata/examples.xlsx", package = "tidyxl"),
+               "Sheet1")$data[[1]]
 y[!is.na(y$formula),
   c("address", "formula", "formula_type", "formula_ref", "formula_group",
     "error", "logical", "numeric", "date", "character")]
@@ -141,7 +143,7 @@ Cells `A20` and `A21` share a formula definition.  The formula is given
 against cell `A20`, and assigned to `formula_group` `0`, which spans the cells
 given by the `formula_ref`, A20:A21.  A spreadsheet application would infer that
 cell `A21` had the formula `A20+1`.  Cells `B20` and `B21` are similar.  The
-roadmap [tidyxl](https://github.com/nacnudus/tidyxl) for tidyxl includes
+roadmap for [tidyxl](https://github.com/nacnudus/tidyxl) includes
 de-normalising shared formulas.  If you can suggest how to tokenize Excel
 formulas, then please contact me.
 

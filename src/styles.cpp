@@ -8,19 +8,37 @@
 using namespace Rcpp;
 
 styles::styles(const std::string& path) {
-  std::string styles = zip_buffer(path, "xl/styles.xml");
-  rapidxml::xml_document<> styles_xml;
-  styles_xml.parse<0>(&styles[0]);
-  rapidxml::xml_node<>* styleSheet = styles_xml.first_node("styleSheet");
-
   cacheThemeRgb(path);
   cacheIndexedRgb();
-  cacheNumFmts(styleSheet);
-  cacheCellXfs(styleSheet);
-  cacheCellStyleXfs(styleSheet);
-  cacheFonts(styleSheet);
-  cacheFills(styleSheet);
-  cacheBorders(styleSheet);
+
+  // Try the styles.xml in the file.  If it doesn't define what is needed,
+  // then use a default file
+  std::string styles1 = zip_buffer(path, "xl/styles.xml");
+  rapidxml::xml_document<> styles_xml1;
+  styles_xml1.parse<0>(&styles1[0]);
+  rapidxml::xml_node<>* styleSheet1 = styles_xml1.first_node("styleSheet");
+  rapidxml::xml_node<>* cellStyleXfs = styleSheet1->first_node("cellStyleXfs");
+  if (cellStyleXfs != NULL) {
+    rapidxml::xml_node<>* styleSheet1 = styles_xml1.first_node("styleSheet");
+    cacheNumFmts(styleSheet1);
+    cacheCellXfs(styleSheet1);
+    cacheCellStyleXfs(styleSheet1);
+    cacheFonts(styleSheet1);
+    cacheFills(styleSheet1);
+    cacheBorders(styleSheet1);
+  } else {
+    warning("Default styles used (cellStyleXfs is not defined)");
+    std::string styles2 = zip_buffer(extdata() + "/default.xlsx", "xl/styles.xml");
+    rapidxml::xml_document<> styles_xml2;
+    styles_xml2.parse<0>(&styles2[0]);
+    rapidxml::xml_node<>* styleSheet2 = styles_xml2.first_node("styleSheet");
+    cacheNumFmts(styleSheet2);
+    cacheCellXfs(styleSheet2);
+    cacheCellStyleXfs(styleSheet2);
+    cacheFonts(styleSheet2);
+    cacheFills(styleSheet2);
+    cacheBorders(styleSheet2);
+  }
 
   applyFormats();
   style_ = zipFormats(style_formats_, true);
@@ -307,20 +325,19 @@ void styles::cacheCellStyleXfs(rapidxml::xml_node<>* styleSheet) {
   rapidxml::xml_node<>* cellStyles = styleSheet->first_node("cellStyles");
   if (cellStyles != NULL) {
     // Get the names, which aren't necessarily in xf order
-    std::map<int, std::string> stylenames;
     int index;
     int max_index = 0;
     for (rapidxml::xml_node<>* cellStyle = cellStyles->first_node("cellStyle");
         cellStyle; cellStyle = cellStyle->next_sibling()) {
       index = strtol(cellStyle->first_attribute("xfId")->value(), NULL, 10);
-      stylenames[index] = cellStyle->first_attribute("name")->value();
+      cellStyles_map_[index] = cellStyle->first_attribute("name")->value();
       if (index > max_index) {
         max_index = index;
       }
     }
     // Sort them
-    for (std::map<int, std::string>::iterator i = stylenames.begin();
-        i != stylenames.end(); i++) {
+    for (std::map<int, std::string>::iterator i = cellStyles_map_.begin();
+        i != cellStyles_map_.end(); i++) {
       cellStyles_.push_back(i->second);
     }
   } else {
