@@ -6,7 +6,8 @@ globalVariables(c(".",
                   "rels",
                   "row_number",
                   "index",
-                  "name"))
+                  "name",
+                  "hasArg"))
 
 check_file <- function(path) {
   if (!file.exists(path)) {
@@ -42,11 +43,17 @@ standardise_sheet <- function(sheets, all_sheets) {
     if (max(sheets) > max(all_sheets$order)) {
       stop("Only ", max(all_sheets$order), " sheet(s) found.", call. = FALSE)
     }
-    all_sheets[all_sheets$order == sheets, ]
+    if (any(!(sheets %in% all_sheets$order))) {
+      warning("Only worksheets (not chartsheets) were imported", call. = FALSE)
+    }
+    all_sheets[all_sheets$order %in% sheets, ]
   } else if (is.character(sheets)) {
     indices <- match(sheets, all_sheets$name)
     if (anyNA(indices)) {
-      stop("Sheet(s) not found: \"", paste(sheets[is.na(indices)], collapse = "\", \""), "\"",
+      stop("Sheets not found: \"",
+           paste(sheets[is.na(indices)],
+                 collapse = "\", \""),
+           "\"",
            call. = FALSE)
     }
     all_sheets[indices, ]
@@ -56,9 +63,27 @@ standardise_sheet <- function(sheets, all_sheets) {
   }
 }
 
-xlsx_sheets <- function(path) {
-  out <- xlsx_sheets_(path)
-  out$order <- order(out$id)
+check_sheets <- function(sheets, path) {
+  all_sheets <- utils_xlsx_sheet_files(path)
+  if (anyNA(sheets)) {
+    if (length(sheets) > 1) {
+      warning("Argument 'sheets' included NAs, which were discarded.")
+      sheets <- sheets[!is.na(sheets)]
+      if (length(sheets) == 0) {
+        stop("All elements of argument 'sheets' were discarded.")
+      }
+    } else {
+      sheets <- all_sheets$order
+    }
+  }
+  standardise_sheet(sheets, all_sheets)
+}
+
+utils_xlsx_sheet_files <- function(path) {
+  out <- xlsx_sheet_files_(path)
+  out$order <- order(out$rId)
   out <- out[out$order, ]
+  # Omit chartsheets
+  out <- out[grepl("^xl/worksheets\\.*", out$sheet_path), ]
   out
 }

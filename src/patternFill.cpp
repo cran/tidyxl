@@ -1,21 +1,22 @@
 #include <Rcpp.h>
 #include "rapidxml.h"
 #include "patternFill.h"
-#include "styles.h"
+#include "xlsxstyles.h"
 #include "color.h"
 
 using namespace Rcpp;
 
-patternFill::patternFill() {} // Default constructor
-
 patternFill::patternFill(rapidxml::xml_node<>* patternFill,
-    styles* styles
+    xlsxstyles* styles
     ) {
   patternType_ = NA_STRING;
 
   if (patternFill != NULL) {
     fgColor_ = color(patternFill->first_node("fgColor"), styles);
     bgColor_ = color(patternFill->first_node("bgColor"), styles);
-    patternType_ = patternFill->first_attribute("patternType")->value();
+    std::string patternType = patternFill->first_attribute("patternType")->value();
+    if (patternType != "none") {
+      patternType_ = patternFill->first_attribute("patternType")->value();
+    }
   }
 }

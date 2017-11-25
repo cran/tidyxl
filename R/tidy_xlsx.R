@@ -1,7 +1,10 @@
 #' @title Import xlsx (Excel) cell contents into a tidy structure.
 #'
 #' @description
-#' \code{tidy_xlsx} imports data from spreadsheets without coercing it into a
+#' `tidy_xlsx()` is deprecated.  Please use [xlsx_cells()] or [xlsx_formats()]
+#' instead.
+#'
+#' `tidy_xlsx()` imports data from spreadsheets without coercing it into a
 #' rectangle.  Each cell is represented by a row in a data frame, giving the
 #' cell's address, contents, formula, height, width, and keys to look up the
 #' cell's formatting in an adjacent data structure within the list returned by
@@ -16,118 +19,141 @@
 #' A cell has two 'values': its content, and sometimes also a formula.  It also
 #' has formatting applied at the 'style' level, which can be locally overridden.
 #'
-#' \subsection{content}{
+#' \subsection{Content}{
 #'   Depending on the cell, the content may be a numeric value such as 365 or
 #'   365.25, it may represent a date/datetime in one of Excel's date/datetime
 #'   systems, or it may be an index into an internal table of strings.
-#'   \code{tidy_xlsx} attempts to infer the correct data type of each cell,
+#'   `tidy_xlsx()` attempts to infer the correct data type of each cell,
 #'   returning its value in the appropriate column (error, logical, numeric,
 #'   date, character). In case this cleverness is unhelpful, the unparsed value
 #'   and type information is available in the 'content' and 'type' columns.
 #' }
 #'
-#' \subsection{formula}{
+#' \subsection{Formula}{
 #'   When a cell has a formula, the value in the 'content' column is the result
 #'   of the formula the last time it was evaluated.
 #'
 #'   Certain groups of cells may share a formula that differs only by addresses
 #'   referred to in the formula; such groups are identified by an index, the
 #'   'formula_group'.  The xlsx (Excel) file format only records the formula
-#'   against one cell in any group.  It is planned for \code{tidy_xlsx} to parse
-#'   such formulas and copy them to the other cells in a group, making the
-#'   necessary changes to addresses in the formula.
+#'   against one cell in any group, but `tidy_xlsx()` propagates the formula to
+#'   all the cells in the group, making the necessary changes to relative
+#'   addresses in the formula.
 #'
 #'   Array formulas may also apply to a group of cells, identified by an address
 #'   'formula_ref', but xlsx (Excel) file format only records the formula
-#'   against one cell in the group.  It is planned for \code{tidy_xlsx} to parse
-#'   such addresses and copy the array formula to the other cells in the group.
-#'   Unlike shared formulas, no changes to addresses in array formulas are
-#'   necessary.
+#'   against one cell in the group.  Unlike ordinary formulas, `tidy_xlsx()`
+#'   does not propagate these to the other cells in the group.
 #'
 #'   Formulas that refer to other workbooks currently do not name the workbooks
-#'   directly, instead via indices such as \code{[1]}.  It is planned to
+#'   directly, instead via indices such as `[1]`.  It is planned to
 #'   dereference these.
 #' }
 #'
-#' \subsection{formatting}{
-#'   Cell formatting is returned in \code{x$formats}.  There are two types of
+#' \subsection{Formatting}{
+#'   Cell formatting is returned in `x$formats`.  There are two types of
 #'   formatting: 'style' formatting, such as Excel's built-in styles 'normal',
 #'   'bad', etc., and 'local' formatting, which overrides the style.  These are
-#'   returned in \code{x$formats$style} and \code{x$formats$local}, with
+#'   returned in `x$formats$style` and `x$formats$local`, with
 #'   identical structures.  To look up the local formatting of a given cell,
-#'   take the cell's 'local_format_id' value (\code{x$data$Sheet1[1,
-#'   "local_format_id"]}), and use it as an index into the format structure.
+#'   take the cell's 'local_format_id' value (`x$data$Sheet1[1,
+#'   "local_format_id"]`), and use it as an index into the format structure.
 #'   E.g. to look up the font size,
-#'   \code{x$formats$local$font$size[local_format_id]}.  To see all available
+#'   `x$formats$local$font$size[local_format_id]`.  To see all available
 #'   formats, type `str(x$formats$local)`.
 #' }
 #'
 #' @return
-#' A list of the data within each sheet ($data), and the formatting applied to
-#' each cell ($formats).
+#' A list of the data within each sheet (`$data`), and the formatting applied to
+#' each cell (`$formats`).
 #'
 #' Each sheet's data is returned as a data frames, one per sheet, by the sheet
 #' name.  For example, the data in a sheet named 'My Worksheet' is in
 #' x$data$`My Worksheet`.  Each data frame has the following
 #' columns:
 #'
-#' \describe{
-#'   \item{address}{The cell address in A1 notation.}
-#'   \item{row}{The row number of a cell address (integer).}
-#'   \item{col}{The column number of a cell address (integer).}
-#'   \item{content}{The content of a cell before type inference (see
-#'   'Details').}
-#'   \item{formula}{The formula in a cell (see 'Details').}
-#'   \item{formula_type}{NA for ordinary formulas, or 'array' for array
-#'   formulas.}
-#'   \item{formula_ref}{The address (in A1 notation) of the cell that defines
-#'   the formula of this cell (see 'Details').}
-#'   \item{formula_group}{The formula group to which the cell belongs (see
-#'   'Details').}
-#'   \item{formula_ref}{The address of a range of cells group to which an array
-#'   formula or shared formula applies (see 'Details').}
-#'   \item{formula_group}{An index of a group of cells to which a shared formula
-#'   applies (see 'Details').}
-#'   \item{type}{The type of a cell in Excel's notation (b = boolean, e = error,
-#'   s = string, str = formula).}
-#'   \item{data_type}{The type of a cell, referring to the following columns
-#'   (error, logical, numeric, date).}
-#'   \item{error}{The error value of a cell.}
-#'   \item{logical}{The boolean value of a cell.}
-#'   \item{numeric}{The numeric value of a cell.}
-#'   \item{date}{The date value of a cell.}
-#'   \item{character}{The string value of a cell.}
-#'   \item{comment}{The text of a comment attached to a cell.}
-#'   \item{height}{The height of a cell's row, in Excel's units.}
-#'   \item{width}{The width of a cell's column, in Excel's units.}
-#'   \item{style_format}{An index into a table of style formats
-#'   \code{x$formats$style} (see 'Details').}
-#'   \item{local_format_id}{An index into a table of local cell formats
-#'   \code{x$formats$local} (see 'Details').}
+#' * `address` The cell address in A1 notation.
+#' * `row` The row number of a cell address (integer).
+#' * `col` The column number of a cell address (integer).
+#' * `is_blank` Whether or not the cell has a value
+#' * `data_type` The type of a cell, referring to the following columns:
+#'     error, logical, numeric, date, character, blank.
+#' * `error` The error value of a cell.
+#' * `logical` The boolean value of a cell.
+#' * `numeric` The numeric value of a cell.
+#' * `date` The date value of a cell.
+#' * `character` The string value of a cell.
+#' * `character_formatted` A data frame of substrings and their individual
+#'     formatting.
+#' * `formula` The formula in a cell (see 'Details').
+#' * `is_array` Whether or not the formula is an array formula.
+#' * `formula_ref` The address of a range of cells group to which an array
+#'     formula or shared formula applies (see 'Details').
+#' * `formula_group` The formula group to which the cell belongs (see
+#'     'Details').
+#' * `comment` The text of a comment attached to a cell.
+#' * `height` The height of a cell's row, in Excel's units.
+#' * `width` The width of a cell's column, in Excel's units.
+#' * `style_format` An index into a table of style formats
+#'     `x$formats$style` (see 'Details').
+#' * `local_format_id` An index into a table of local cell formats
+#'     `x$formats$local` (see 'Details').
+#'
+#' \subsection{Formula}{
+#'   When a cell has a formula, the value in the 'content' column is the result
+#'   of the formula the last time it was evaluated.
+#'
+#'   Certain groups of cells may share a formula that differs only by addresses
+#'   referred to in the formula; such groups are identified by an index, the
+#'   'formula_group'.  The xlsx (Excel) file format only records the formula
+#'   against one cell in any group.  `xlsx_cells()` propagates such formulas to
+#'   the other cells in a group, making the necessary changes to relative
+#'   addresses in the formula.
+#'
+#'   Array formulas may also apply to a group of cells, identified by an address
+#'   'formula_ref', but xlsx (Excel) file format only records the formula
+#'   against one cell in the group.  `xlsx_cells()` propagates such formulas to
+#'   the other cells in a group.  Unlike shared formulas, no changes to
+#'   addresses in array formulas are necessary.
+#'
+#'   Formulas that refer to other workbooks currently do not name the workbooks
+#'   directly, instead via indices such as `[1]`.  It is planned to
+#'   dereference these.
 #' }
 #'
-#' Cell formatting is returned in \code{x$formats}.  There are two types or
-#' scopes of formatting: 'style' formatting, such as Excel's built-in styles
-#' 'normal', 'bad', etc., and 'local' formatting, which overrides particular
-#' elements of the style, e.g. by making it bold.  Both types of  are returned
-#' in \code{x$formats$style} and \code{x$formats$local}, with identical
-#' structures.  To look up the local formatting of a given cell, take the cell's
-#' 'local_format_id' value (\code{x$data$Sheet1[1, "local_format_id"]}), and use
-#' it as an index into the format structure.  E.g. to look up the font size,
-#' \code{x$formats$local$font$size[local_format_id]}.  To see all available
-#' formats, type `str(x$formats$local)`.
+#' \subsection{Formatting}{
+#'   Cell formatting is returned in `x$formats`.  There are two types or scopes
+#'   of formatting: 'style' formatting, such as Excel's built-in styles
+#'   'normal', 'bad', etc., and 'local' formatting, which overrides particular
+#'   elements of the style, e.g. by making it bold.  Both types of  are returned
+#'   in `x$formats$style` and `x$formats$local`, with identical structures.  To
+#'   look up the local formatting of a given cell, take the cell's
+#'   'local_format_id' value (`x$data$Sheet1[1, "local_format_id"]`), and use it
+#'   as an index into the format structure.  E.g. to look up the font size,
+#'   `x$formats$local$font$size[local_format_id]`.  To see all available
+#'   formats, type `str(x$formats$local)`.
 #'
-#' Colours may be recorded in any of three ways: a hexadecimal RGB string with
-#' or without alpha, an 'indexed' colour, and an index into a 'theme'.
-#' \code{tidy_xlsx} dereferences 'indexed' and 'theme' colours to their hexadecimal
-#' RGB string representation, and standardises all RGB strings to have an alpha
-#' channel in the first two characters.  The 'index' and the 'theme' name are
-#' still provided.  To filter by an RGB string, you could  look up the RGB
-#' values in a spreadsheet program (e.g. Excel, LibreOffice, Gnumeric), and use
-#' the \code{\link{rgb}} function to convert these to a hexadecimal string.
+#'   Colours may be recorded in any of three ways: a hexadecimal RGB string with
+#'   or without alpha, an 'indexed' colour, and an index into a 'theme'.
+#'   `tidy_xlsx` dereferences 'indexed' and 'theme' colours to their hexadecimal
+#'   RGB string representation, and standardises all RGB strings to have an
+#'   alpha channel in the first two characters.  The 'index' and the 'theme'
+#'   name are still provided.  To filter by an RGB string, you could  look up
+#'   the RGB values in a spreadsheet program (e.g. Excel, LibreOffice,
+#'   Gnumeric), and use the [grDevices::rgb()] function to convert these to a
+#'   hexadecimal string.
+#'
+#'   Strings can be formatted within a cell, so that a single cell can contain
+#'   substrings with different formatting.  This in-cell formatting is available
+#'   in the column `character_formatted`, which is a list-column of data frames.
+#'   Each row of each data frame describes a substring and its formatting.  For
+#'   cells without a character value, `character_formatted` is `NULL`, so for
+#'   further processing you might need to filter out the `NULL`s first.
+#' }
 #'
 #' @export
 #' @examples
+#' \dontrun{
 #' examples <- system.file("extdata/examples.xlsx", package = "tidyxl")
 #'
 #' # All sheets
@@ -154,20 +180,23 @@
 #' # the relevant indices, and then filter the cells by those indices.
 #' bold_indices <- which(x$formats$local$font$bold)
 #' Sheet1[Sheet1$local_format_id %in% bold_indices, ]
+#'
+#' # In-cell formatting is available in the `character_formatted` column as a
+#' # data frame, one row per substring.
+#' tidy_xlsx(examples)$data$Sheet1$character_formatted[77]
+#' }
 tidy_xlsx <- function(path, sheets = NA) {
+  .Deprecated(msg = paste("'tidy_xlsx()' is deprecated.",
+                          "Use 'xlsx_cells()' or 'xlsx_formats()' instead.",
+                          sep = "\n"))
   path <- check_file(path)
-  all_sheets <- xlsx_sheets(path)
-  if (anyNA(sheets)) {
-    if (length(sheets) > 1) {
-      warning("Argument 'sheets' included NAs, which were discarded.")
-      sheets <- sheets[!is.na(sheets)]
-      if (length(sheets) == 0) {
-        stop("All elements of argument 'sheets' were discarded.")
-      }
-    } else {
-      sheets <- all_sheets$order
-    }
-  }
-  sheets <- standardise_sheet(sheets, all_sheets)
-  xlsx_read_(path, sheets$sheet_path, sheets$name, sheets$comments_path)
+  all_sheets <- utils_xlsx_sheet_files(path)
+  sheets <- check_sheets(sheets, path)
+  formats <- xlsx_formats_(path)
+  cells <- xlsx_cells_(path, sheets$sheet_path, sheets$name, sheets$comments_path)
+  # Split into a list of data frames, one per sheet
+  cells$sheet <- factor(cells$sheet, levels = sheets$name) # control sheet order
+  cells_list <- split(cells, cells$sheet)
+  cells_list <- lapply(cells_list, function(x) x[, -1])    # remove 'sheet' col
+  list(data = cells_list, formats = formats)
 }

@@ -1,24 +1,24 @@
 #include <Rcpp.h>
 #include "rapidxml.h"
 #include "color.h"
-#include "styles.h"
+#include "xlsxstyles.h"
 
 using namespace Rcpp;
 
 color::color() { // Default constructor
   // Initialize variables
   rgb_     = NA_STRING;
-  theme_   = IntegerVector::create(NA_INTEGER);
-  indexed_ = IntegerVector::create(NA_INTEGER);
-  tint_    = NumericVector::create(NA_REAL);
+  theme_   = NA_STRING;
+  indexed_ = NA_INTEGER;
+  tint_    = NA_REAL;
 }
 
-color::color(rapidxml::xml_node<>* color, styles* styles) {
+color::color(rapidxml::xml_node<>* color, xlsxstyles* styles) {
   // Initialize variables
   rgb_     = NA_STRING;
-  theme_   = IntegerVector::create(NA_INTEGER);
-  indexed_ = IntegerVector::create(NA_INTEGER);
-  tint_    = NumericVector::create(NA_REAL);
+  theme_   = NA_STRING;
+  indexed_ = NA_INTEGER;
+  tint_    = NA_REAL;
 
   if (color != NULL) {
     rapidxml::xml_attribute<>* _auto = color->first_attribute("auto");
@@ -33,21 +33,21 @@ color::color(rapidxml::xml_node<>* color, styles* styles) {
 
       rapidxml::xml_attribute<>* theme = color->first_attribute("theme");
       if (theme != NULL) {
-        int theme_int = strtol(theme->value(), NULL, 10) + 1;
-        theme_[0] = theme_int;
-        rgb_ = styles->theme_[theme_int - 1];
+        int theme_int = strtol(theme->value(), NULL, 10) ;
+        theme_ = styles->theme_name_[theme_int];
+        rgb_ = styles->theme_[theme_int];
       }
 
       rapidxml::xml_attribute<>* indexed = color->first_attribute("indexed");
       if (indexed != NULL) {
         int indexed_int = strtol(indexed->value(), NULL, 10) + 1;
-        indexed_[0] = indexed_int;
+        indexed_ = indexed_int;
         rgb_ = styles->indexed_[indexed_int - 1];
       }
 
       rapidxml::xml_attribute<>* tint = color->first_attribute("tint");
       if (tint != NULL) {
-        tint_[0] = strtod(tint->value(), NULL);
+        tint_ = strtod(tint->value(), NULL);
       }
     }
   }

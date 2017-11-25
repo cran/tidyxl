@@ -1,3 +1,89 @@
+# tidyxl 0.2.3.9000
+
+## New features
+
+* `xlsx_cells()` and `xlsx_formats()` replace `tidy_xlsx()`, which has been
+    deprecated.  `xlsx_cells()` returns a single data frame of all the cells in
+    scope (the whole workbook, or chosen sheets), rather than a list of separate
+    data frames for each sheet.  `xlsx_formats()` performs orders of magnitude
+    faster.
+* `xlsx_validation()` imports validation rules from cells that restrict data
+    input, such as cells that require a selection from a drop-down list.  See
+    the
+    [vignette](https://nacnudus.github.io/tidyxl/articles/data-validation-rules.html)
+    `vignette("data-validation-rules", package = "tidyxl")`.
+* `xlsx_names()` imports defined names (aka named ranges/formulas), which can
+    be used to filter for particular ranges of cells by name.  Use `is_range()`
+    to filter for ones that are named ranges, and then read
+    [joining rules to cells](https://nacnudus.github.io/tidyxl/articles/data-validation-rules.html#joining-rules-to-cells)
+    for how to join cell ranges to cell addresses.  This will become easier in a
+    future release.
+* `is_range()` checks whether a formula is simply ranges of cells.
+* `xlex()` tokenises formulas.  This is useful for detecting
+    spreadsheet smells like embedded constants and deep nesting.  There is a
+    [demo Shiny app](https://duncan-garmonsway.shinyapps.io/xlex/), and a
+    [vignette](https://nacnudus.github.io/tidyxl/articles/smells.html)
+    `vignette("smells", package = "tidyxl")`.  A vector of Excel function names
+    `excel_functions` can be used to separated built-in functions from custom
+    functions.  More experimental features will be implemented in the off-CRAN
+    package [lexl](https://nacnudus.github.io/lexl) before becoming part of
+    tidyxl.
+* `xlsx_cells()$character_formatted` is a new column for the in-cell formatting
+    of text (#5).  This is for when different parts of text in a single cell
+    have been formatted differently from one another.
+* `is_date_format()` checks whether a number format string is a date format.
+    This is useful if a cell formula contains a number formatting string (e.g.
+    `TEXT(45678,"yyyy")`), and you need to know that the constant 45678 is a
+    date in order to recover it at full resolution (rather than parsing the
+    character output "2025" as a year).
+* `xlsx_color_theme()` and it's British alias `xlsx_colour_theme()` returns the
+    theme colour palette used in a file.  This is useful to monitor use of a
+    corporate standard theme.
+* `xlsx_color_standard` and it's British alias `xlsx_colour_standard` are data
+    frames of the standard Excel palette (`red`, `blue`, etc.).
+* Shared formulas are propogated to all the cells that use the same formula
+    definition.  Relative cell references are handled, so that the formula
+    `=A1*2` in cell `B1`  becomes `=A2*2` in cell `B2` (for more details see
+    issue #7).
+* Formatting of alignment and cell protection is returned (#20).
+
+## Breaking changes and deprecations
+
+* `tidy_xlsx()` has been deprecated in favour of `xlsx_cells()`,
+    which returns a data frame of all the cells in the workbook (or in the
+    requested sheets), and `xlsx_formats()`, which returns a lookup list of cell
+    formats.
+* In `tidy_xlsx()` and one of it's replacments `xlsx_cells()`
+  * the column `content` has been replaced by `is_blank`, a logical value
+    indicating whether the cell contains data.  Please replace `!is.na(content)`
+    with `!is_blank` to filter out blank cells (ones with formatting but no
+    value).
+  * the column `formula_type` has been replaced by `is_array`, a logical value
+    indicating whether the cell's formula is an array formula or not.  In Excel
+    array formulas are represented visually by being surrounded by curly braces
+    `{}`.
+  * The order of columns has been changed so that the more useful columns are
+      visible in narrow consoles.
+* in `xlsx_formats()` and `tidy_xlsx()`, theme colours are given by name rather
+    than by number, e.g. `"accent6"` instead of `4`.
+
+## Minor fixes and improvements
+
+* Certain unusual custom number formats that specify colours (e.g. `"[Cyan]0%"`)
+    are no longer mis-detect as dates (#21).  `is_date_format()` tests whether a
+    number format is a date format.
+* `xlsx_formats()` is now thoroughly tested, and several relatively minor bugs
+    fixed.  For example, `xlsx_formats(path)$local$fill$patternFill$patternType`
+    consistently returns `NA` and never `"none"` when a pattern fill has not
+    been set, and escape-backslashes are consistently omitted from numFmts.
+
+## New dependency
+
+`xlex()`, `is_range()` and the handling of relative references in shared
+formulas requires a dependency on the
+[piton](https://cran.r-project.org/package=piton) package, which wraps the
+[PEGTL](https://github.com/taocpp/PEGTL) C++ parser generator.
+
 # tidyxl 0.2.3
 
 * Imports dates on or before 1900-02-28 dates correctly, and only warns on the impossible date 1900-02-29, returning NA (following [readxl](https://github.com/tidyverse/readxl/commit/c9a54ae9ce0394808f6d22e8ef1a7a647b2d92bb)).

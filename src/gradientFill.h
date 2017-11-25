@@ -1,28 +1,27 @@
 #ifndef GRADIENTFILL_
 #define GRADIENTFILL_
 
-class styles; // Forward declaration because font is included in styles.
+class xlsxstyles; // Forward declaration because font is included in xlsxstyles.
 
 #include <Rcpp.h>
 #include "rapidxml.h"
 #include "color.h"
+#include "gradientStop.h"
 
 class gradientFill {
 
   public:
 
-    Rcpp::String        type_;
-    Rcpp::IntegerVector degree_;
-    Rcpp::NumericVector left_;
-    Rcpp::NumericVector right_;
-    Rcpp::NumericVector top_;
-    Rcpp::NumericVector bottom_;
+    Rcpp::String type_;
+    int          degree_;
+    double       left_;
+    double       right_;
+    double       top_;
+    double       bottom_;
+    gradientStop stop1_;
+    gradientStop stop2_;
 
-    color               color1_;
-    color               color2_;
-
-    gradientFill(); // Default constructor
-    gradientFill(rapidxml::xml_node<>* gradientFill, styles* styles);
+    gradientFill(rapidxml::xml_node<>* gradientFill, xlsxstyles* styles);
 };
 
 #endif
