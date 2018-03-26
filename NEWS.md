@@ -1,4 +1,15 @@
-# tidyxl 0.2.3.9000
+# tidyxl 1.0.1
+
+* Filetype checking is based on the [file
+  signature](https://en.wikipedia.org/wiki/List_of_file_signatures) or "magic
+  number", rather than the filename extension.  A new function `maybe_xlsx()` is
+  provided for checking whether a file might be in the xlsx format.  It is
+  impossible to be sure from the magic number alone, because the magic numbers
+  are either common to all zip files, or common to other Microsoft Office files
+  (e.g. .doc, .ppt).
+* Fixed a CRAN warning.
+
+# tidyxl 1.0.0
 
 ## New features
 

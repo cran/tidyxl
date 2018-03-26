@@ -12,7 +12,7 @@
 
 <meta name="author" content="Duncan Garmonsway" />
 
-<meta name="date" content="2017-11-25" />
+<meta name="date" content="2018-03-26" />
 
 <title>Tidyxl</title>
 
@@ -20,57 +20,69 @@
 
 <style type="text/css">code{white-space: pre;}</style>
 <style type="text/css">
-div.sourceLine, a.sourceLine { display: inline-block; min-height: 1.25em; }
+a.sourceLine { display: inline-block; line-height: 1.25; }
 a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
+a.sourceLine:empty { height: 1.2em; position: absolute; }
 .sourceCode { overflow: visible; }
-code.sourceCode { white-space: pre; }
+code.sourceCode { white-space: pre; position: relative; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
 @media print {
 code.sourceCode { white-space: pre-wrap; }
-div.sourceLine, a.sourceLine { text-indent: -1em; padding-left: 1em; }
+a.sourceLine { text-indent: -1em; padding-left: 1em; }
 }
-pre.numberSource div.sourceLine, .numberSource a.sourceLine
+pre.numberSource a.sourceLine
   { position: relative; }
-pre.numberSource div.sourceLine::before, .numberSource a.sourceLine::before
+pre.numberSource a.sourceLine:empty
+  { position: absolute; }
+pre.numberSource a.sourceLine::before
   { content: attr(data-line-number);
     position: absolute; left: -5em; text-align: right; vertical-align: baseline;
     border: none; pointer-events: all;
     -webkit-touch-callout: none; -webkit-user-select: none;
     -khtml-user-select: none; -moz-user-select: none;
     -ms-user-select: none; user-select: none;
-    padding: 0 4px; width: 4em; }
-pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa; color: #aaaaaa;  padding-left: 4px; }
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {  }
 @media screen {
-a.sourceLine::before { text-decoration: underline; color: initial; }
+a.sourceLine::before { text-decoration: underline; }
 }
-code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
 code span.dt { color: #902000; } /* DataType */
 code span.dv { color: #40a070; } /* DecVal */
-code span.bn { color: #40a070; } /* BaseN */
-code span.fl { color: #40a070; } /* Float */
-code span.ch { color: #4070a0; } /* Char */
-code span.st { color: #4070a0; } /* String */
-code span.co { color: #60a0b0; font-style: italic; } /* Comment */
-code span.ot { color: #007020; } /* Other */
-code span.al { color: #ff0000; font-weight: bold; } /* Alert */
-code span.fu { color: #06287e; } /* Function */
 code span.er { color: #ff0000; font-weight: bold; } /* Error */
-code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
-code span.cn { color: #880000; } /* Constant */
-code span.sc { color: #4070a0; } /* SpecialChar */
-code span.vs { color: #4070a0; } /* VerbatimString */
-code span.ss { color: #bb6688; } /* SpecialString */
-code span.im { } /* Import */
-code span.va { color: #19177c; } /* Variable */
-code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
-code span.op { color: #666666; } /* Operator */
-code span.bu { } /* BuiltIn */
 code span.ex { } /* Extension */
-code span.pp { color: #bc7a00; } /* Preprocessor */
-code span.at { color: #7d9029; } /* Attribute */
-code span.do { color: #ba2121; font-style: italic; } /* Documentation */
-code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
-code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
 code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
 </style>
 
 
@@ -268,7 +280,7 @@ code > span.fu { color: #900; font-weight: bold; }  code > span.er { color: #a61
 
 <h1 class="title toc-ignore">Tidyxl</h1>
 <h4 class="author"><em>Duncan Garmonsway</em></h4>
-<h4 class="date"><em>2017-11-25</em></h4>
+<h4 class="date"><em>2018-03-26</em></h4>
 
 
 
@@ -290,92 +302,92 @@ pre code, pre, code {
 </div>
 <div id="installation" class="section level2">
 <h2>Installation</h2>
-<pre class="sourceCode r" id="cb1"><code class="sourceCode r"><div class="sourceLine" id="cb1-1" data-line-number="1">devtools<span class="op">::</span><span class="kw">install_github</span>(<span class="st">&quot;nacnudus/tidyxl&quot;</span>)</div></code></pre>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" data-line-number="1">devtools<span class="op">::</span><span class="kw">install_github</span>(<span class="st">&quot;nacnudus/tidyxl&quot;</span>)</a></code></pre></div>
 </div>
 <div id="examples" class="section level2">
 <h2>Examples</h2>
 <p>The package includes a spreadsheet, ‘titanic.xlsx’, which contains the following pivot table:</p>
-<pre class="sourceCode r" id="cb2"><code class="sourceCode r"><div class="sourceLine" id="cb2-1" data-line-number="1"><span class="kw">ftable</span>(Titanic, <span class="dt">row.vars =</span> <span class="dv">1</span><span class="op">:</span><span class="dv">2</span>)</div>
-<div class="sourceLine" id="cb2-2" data-line-number="2"><span class="co">#&gt;              Age      Child     Adult    </span></div>
-<div class="sourceLine" id="cb2-3" data-line-number="3"><span class="co">#&gt;              Survived    No Yes    No Yes</span></div>
-<div class="sourceLine" id="cb2-4" data-line-number="4"><span class="co">#&gt; Class Sex                                </span></div>
-<div class="sourceLine" id="cb2-5" data-line-number="5"><span class="co">#&gt; 1st   Male                0   5   118  57</span></div>
-<div class="sourceLine" id="cb2-6" data-line-number="6"><span class="co">#&gt;       Female              0   1     4 140</span></div>
-<div class="sourceLine" id="cb2-7" data-line-number="7"><span class="co">#&gt; 2nd   Male                0  11   154  14</span></div>
-<div class="sourceLine" id="cb2-8" data-line-number="8"><span class="co">#&gt;       Female              0  13    13  80</span></div>
-<div class="sourceLine" id="cb2-9" data-line-number="9"><span class="co">#&gt; 3rd   Male               35  13   387  75</span></div>
-<div class="sourceLine" id="cb2-10" data-line-number="10"><span class="co">#&gt;       Female             17  14    89  76</span></div>
-<div class="sourceLine" id="cb2-11" data-line-number="11"><span class="co">#&gt; Crew  Male                0   0   670 192</span></div>
-<div class="sourceLine" id="cb2-12" data-line-number="12"><span class="co">#&gt;       Female              0   0     3  20</span></div></code></pre>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" data-line-number="1"><span class="kw">ftable</span>(Titanic, <span class="dt">row.vars =</span> <span class="dv">1</span><span class="op">:</span><span class="dv">2</span>)</a>
+<a class="sourceLine" id="cb2-2" data-line-number="2"><span class="co">#&gt;              Age      Child     Adult    </span></a>
+<a class="sourceLine" id="cb2-3" data-line-number="3"><span class="co">#&gt;              Survived    No Yes    No Yes</span></a>
+<a class="sourceLine" id="cb2-4" data-line-number="4"><span class="co">#&gt; Class Sex                                </span></a>
+<a class="sourceLine" id="cb2-5" data-line-number="5"><span class="co">#&gt; 1st   Male                0   5   118  57</span></a>
+<a class="sourceLine" id="cb2-6" data-line-number="6"><span class="co">#&gt;       Female              0   1     4 140</span></a>
+<a class="sourceLine" id="cb2-7" data-line-number="7"><span class="co">#&gt; 2nd   Male                0  11   154  14</span></a>
+<a class="sourceLine" id="cb2-8" data-line-number="8"><span class="co">#&gt;       Female              0  13    13  80</span></a>
+<a class="sourceLine" id="cb2-9" data-line-number="9"><span class="co">#&gt; 3rd   Male               35  13   387  75</span></a>
+<a class="sourceLine" id="cb2-10" data-line-number="10"><span class="co">#&gt;       Female             17  14    89  76</span></a>
+<a class="sourceLine" id="cb2-11" data-line-number="11"><span class="co">#&gt; Crew  Male                0   0   670 192</span></a>
+<a class="sourceLine" id="cb2-12" data-line-number="12"><span class="co">#&gt;       Female              0   0     3  20</span></a></code></pre></div>
 <p>The multi-row column headers make this difficult to import. A popular package for importing spreadsheets coerces the pivot table into a dataframe. It treats the second header row as though it were observations.</p>
-<pre class="sourceCode r" id="cb3"><code class="sourceCode r"><div class="sourceLine" id="cb3-1" data-line-number="1">titanic &lt;-<span class="st"> </span><span class="kw">system.file</span>(<span class="st">&quot;extdata/titanic.xlsx&quot;</span>, <span class="dt">package =</span> <span class="st">&quot;tidyxl&quot;</span>)</div>
-<div class="sourceLine" id="cb3-2" data-line-number="2">readxl<span class="op">::</span><span class="kw">read_excel</span>(titanic)</div>
-<div class="sourceLine" id="cb3-3" data-line-number="3"><span class="co">#&gt; # A tibble: 10 x 7</span></div>
-<div class="sourceLine" id="cb3-4" data-line-number="4"><span class="co">#&gt;    X__1  X__2   Age      Child X__3  Adult X__4 </span></div>
-<div class="sourceLine" id="cb3-5" data-line-number="5"><span class="co">#&gt;    &lt;chr&gt; &lt;chr&gt;  &lt;chr&gt;    &lt;chr&gt; &lt;chr&gt; &lt;chr&gt; &lt;chr&gt;</span></div>
-<div class="sourceLine" id="cb3-6" data-line-number="6"><span class="co">#&gt;  1 &lt;NA&gt;  &lt;NA&gt;   Survived No    Yes   No    Yes  </span></div>
-<div class="sourceLine" id="cb3-7" data-line-number="7"><span class="co">#&gt;  2 Class Sex    &lt;NA&gt;     &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt; </span></div>
-<div class="sourceLine" id="cb3-8" data-line-number="8"><span class="co">#&gt;  3 1st   Male   &lt;NA&gt;     0     5     118   57   </span></div>
-<div class="sourceLine" id="cb3-9" data-line-number="9"><span class="co">#&gt;  4 &lt;NA&gt;  Female &lt;NA&gt;     0     1     4     140  </span></div>
-<div class="sourceLine" id="cb3-10" data-line-number="10"><span class="co">#&gt;  5 2nd   Male   &lt;NA&gt;     0     11    154   14   </span></div>
-<div class="sourceLine" id="cb3-11" data-line-number="11"><span class="co">#&gt;  6 &lt;NA&gt;  Female &lt;NA&gt;     0     13    13    80   </span></div>
-<div class="sourceLine" id="cb3-12" data-line-number="12"><span class="co">#&gt;  7 3rd   Male   &lt;NA&gt;     35    13    387   75   </span></div>
-<div class="sourceLine" id="cb3-13" data-line-number="13"><span class="co">#&gt;  8 &lt;NA&gt;  Female &lt;NA&gt;     17    14    89    76   </span></div>
-<div class="sourceLine" id="cb3-14" data-line-number="14"><span class="co">#&gt;  9 Crew  Male   &lt;NA&gt;     0     0     670   192  </span></div>
-<div class="sourceLine" id="cb3-15" data-line-number="15"><span class="co">#&gt; 10 &lt;NA&gt;  Female &lt;NA&gt;     0     0     3     20</span></div></code></pre>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" data-line-number="1">titanic &lt;-<span class="st"> </span><span class="kw">system.file</span>(<span class="st">&quot;extdata/titanic.xlsx&quot;</span>, <span class="dt">package =</span> <span class="st">&quot;tidyxl&quot;</span>)</a>
+<a class="sourceLine" id="cb3-2" data-line-number="2">readxl<span class="op">::</span><span class="kw">read_excel</span>(titanic)</a>
+<a class="sourceLine" id="cb3-3" data-line-number="3"><span class="co">#&gt; # A tibble: 10 x 7</span></a>
+<a class="sourceLine" id="cb3-4" data-line-number="4"><span class="co">#&gt;    X__1  X__2   Age      Child X__3  Adult X__4 </span></a>
+<a class="sourceLine" id="cb3-5" data-line-number="5"><span class="co">#&gt;    &lt;chr&gt; &lt;chr&gt;  &lt;chr&gt;    &lt;chr&gt; &lt;chr&gt; &lt;chr&gt; &lt;chr&gt;</span></a>
+<a class="sourceLine" id="cb3-6" data-line-number="6"><span class="co">#&gt;  1 &lt;NA&gt;  &lt;NA&gt;   Survived No    Yes   No    Yes  </span></a>
+<a class="sourceLine" id="cb3-7" data-line-number="7"><span class="co">#&gt;  2 Class Sex    &lt;NA&gt;     &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt; </span></a>
+<a class="sourceLine" id="cb3-8" data-line-number="8"><span class="co">#&gt;  3 1st   Male   &lt;NA&gt;     0     5     118   57   </span></a>
+<a class="sourceLine" id="cb3-9" data-line-number="9"><span class="co">#&gt;  4 &lt;NA&gt;  Female &lt;NA&gt;     0     1     4     140  </span></a>
+<a class="sourceLine" id="cb3-10" data-line-number="10"><span class="co">#&gt;  5 2nd   Male   &lt;NA&gt;     0     11    154   14   </span></a>
+<a class="sourceLine" id="cb3-11" data-line-number="11"><span class="co">#&gt;  6 &lt;NA&gt;  Female &lt;NA&gt;     0     13    13    80   </span></a>
+<a class="sourceLine" id="cb3-12" data-line-number="12"><span class="co">#&gt;  7 3rd   Male   &lt;NA&gt;     35    13    387   75   </span></a>
+<a class="sourceLine" id="cb3-13" data-line-number="13"><span class="co">#&gt;  8 &lt;NA&gt;  Female &lt;NA&gt;     17    14    89    76   </span></a>
+<a class="sourceLine" id="cb3-14" data-line-number="14"><span class="co">#&gt;  9 Crew  Male   &lt;NA&gt;     0     0     670   192  </span></a>
+<a class="sourceLine" id="cb3-15" data-line-number="15"><span class="co">#&gt; 10 &lt;NA&gt;  Female &lt;NA&gt;     0     0     3     20</span></a></code></pre></div>
 <p><a href="https://github.com/nacnudus/tidyxl">tidyxl</a> doesn’t coerce the pivot table into a data frame. Instead, it represents each cell in its own row, where it describes the cell’s address, value and other properties.</p>
-<pre class="sourceCode r" id="cb4"><code class="sourceCode r"><div class="sourceLine" id="cb4-1" data-line-number="1"><span class="kw">library</span>(tidyxl)</div>
-<div class="sourceLine" id="cb4-2" data-line-number="2">x &lt;-<span class="st"> </span><span class="kw">xlsx_cells</span>(titanic)</div>
-<div class="sourceLine" id="cb4-3" data-line-number="3">dplyr<span class="op">::</span><span class="kw">glimpse</span>(x)</div>
-<div class="sourceLine" id="cb4-4" data-line-number="4"><span class="co">#&gt; Observations: 60</span></div>
-<div class="sourceLine" id="cb4-5" data-line-number="5"><span class="co">#&gt; Variables: 21</span></div>
-<div class="sourceLine" id="cb4-6" data-line-number="6"><span class="co">#&gt; $ sheet               &lt;chr&gt; &quot;Sheet1&quot;, &quot;Sheet1&quot;, &quot;Sheet1&quot;, &quot;Sheet1&quot;, &quot;S...</span></div>
-<div class="sourceLine" id="cb4-7" data-line-number="7"><span class="co">#&gt; $ address             &lt;chr&gt; &quot;C1&quot;, &quot;D1&quot;, &quot;E1&quot;, &quot;F1&quot;, &quot;G1&quot;, &quot;C2&quot;, &quot;D2&quot;, ...</span></div>
-<div class="sourceLine" id="cb4-8" data-line-number="8"><span class="co">#&gt; $ row                 &lt;int&gt; 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 3, 3, 4, 4, ...</span></div>
-<div class="sourceLine" id="cb4-9" data-line-number="9"><span class="co">#&gt; $ col                 &lt;int&gt; 3, 4, 5, 6, 7, 3, 4, 5, 6, 7, 1, 2, 1, 2, ...</span></div>
-<div class="sourceLine" id="cb4-10" data-line-number="10"><span class="co">#&gt; $ is_blank            &lt;lgl&gt; FALSE, FALSE, TRUE, FALSE, TRUE, FALSE, FA...</span></div>
-<div class="sourceLine" id="cb4-11" data-line-number="11"><span class="co">#&gt; $ data_type           &lt;chr&gt; &quot;character&quot;, &quot;character&quot;, &quot;blank&quot;, &quot;charac...</span></div>
-<div class="sourceLine" id="cb4-12" data-line-number="12"><span class="co">#&gt; $ error               &lt;chr&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA...</span></div>
-<div class="sourceLine" id="cb4-13" data-line-number="13"><span class="co">#&gt; $ logical             &lt;lgl&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA...</span></div>
-<div class="sourceLine" id="cb4-14" data-line-number="14"><span class="co">#&gt; $ numeric             &lt;dbl&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA...</span></div>
-<div class="sourceLine" id="cb4-15" data-line-number="15"><span class="co">#&gt; $ date                &lt;dttm&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, N...</span></div>
-<div class="sourceLine" id="cb4-16" data-line-number="16"><span class="co">#&gt; $ character           &lt;chr&gt; &quot;Age&quot;, &quot;Child&quot;, NA, &quot;Adult&quot;, NA, &quot;Survived...</span></div>
-<div class="sourceLine" id="cb4-17" data-line-number="17"><span class="co">#&gt; $ character_formatted &lt;list&gt; [&lt;# A tibble: 1 x 14,   chara… bold  ital...</span></div>
-<div class="sourceLine" id="cb4-18" data-line-number="18"><span class="co">#&gt; $ formula             &lt;chr&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA...</span></div>
-<div class="sourceLine" id="cb4-19" data-line-number="19"><span class="co">#&gt; $ is_array            &lt;lgl&gt; FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, ...</span></div>
-<div class="sourceLine" id="cb4-20" data-line-number="20"><span class="co">#&gt; $ formula_ref         &lt;chr&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA...</span></div>
-<div class="sourceLine" id="cb4-21" data-line-number="21"><span class="co">#&gt; $ formula_group       &lt;int&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA...</span></div>
-<div class="sourceLine" id="cb4-22" data-line-number="22"><span class="co">#&gt; $ comment             &lt;chr&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA...</span></div>
-<div class="sourceLine" id="cb4-23" data-line-number="23"><span class="co">#&gt; $ height              &lt;dbl&gt; 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15...</span></div>
-<div class="sourceLine" id="cb4-24" data-line-number="24"><span class="co">#&gt; $ width               &lt;dbl&gt; 8.38, 8.38, 8.38, 8.38, 8.38, 8.38, 8.38, ...</span></div>
-<div class="sourceLine" id="cb4-25" data-line-number="25"><span class="co">#&gt; $ style_format        &lt;chr&gt; &quot;Normal&quot;, &quot;Normal&quot;, &quot;Normal&quot;, &quot;Normal&quot;, &quot;N...</span></div>
-<div class="sourceLine" id="cb4-26" data-line-number="26"><span class="co">#&gt; $ local_format_id     &lt;int&gt; 2, 3, 3, 3, 3, 2, 3, 3, 3, 3, 2, 2, 3, 3, ...</span></div></code></pre>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb4-1" data-line-number="1"><span class="kw">library</span>(tidyxl)</a>
+<a class="sourceLine" id="cb4-2" data-line-number="2">x &lt;-<span class="st"> </span><span class="kw">xlsx_cells</span>(titanic)</a>
+<a class="sourceLine" id="cb4-3" data-line-number="3">dplyr<span class="op">::</span><span class="kw">glimpse</span>(x)</a>
+<a class="sourceLine" id="cb4-4" data-line-number="4"><span class="co">#&gt; Observations: 60</span></a>
+<a class="sourceLine" id="cb4-5" data-line-number="5"><span class="co">#&gt; Variables: 21</span></a>
+<a class="sourceLine" id="cb4-6" data-line-number="6"><span class="co">#&gt; $ sheet               &lt;chr&gt; &quot;Sheet1&quot;, &quot;Sheet1&quot;, &quot;Sheet1&quot;, &quot;Sheet1&quot;, &quot;S...</span></a>
+<a class="sourceLine" id="cb4-7" data-line-number="7"><span class="co">#&gt; $ address             &lt;chr&gt; &quot;C1&quot;, &quot;D1&quot;, &quot;E1&quot;, &quot;F1&quot;, &quot;G1&quot;, &quot;C2&quot;, &quot;D2&quot;, ...</span></a>
+<a class="sourceLine" id="cb4-8" data-line-number="8"><span class="co">#&gt; $ row                 &lt;int&gt; 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 3, 3, 4, 4, ...</span></a>
+<a class="sourceLine" id="cb4-9" data-line-number="9"><span class="co">#&gt; $ col                 &lt;int&gt; 3, 4, 5, 6, 7, 3, 4, 5, 6, 7, 1, 2, 1, 2, ...</span></a>
+<a class="sourceLine" id="cb4-10" data-line-number="10"><span class="co">#&gt; $ is_blank            &lt;lgl&gt; FALSE, FALSE, TRUE, FALSE, TRUE, FALSE, FA...</span></a>
+<a class="sourceLine" id="cb4-11" data-line-number="11"><span class="co">#&gt; $ data_type           &lt;chr&gt; &quot;character&quot;, &quot;character&quot;, &quot;blank&quot;, &quot;charac...</span></a>
+<a class="sourceLine" id="cb4-12" data-line-number="12"><span class="co">#&gt; $ error               &lt;chr&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA...</span></a>
+<a class="sourceLine" id="cb4-13" data-line-number="13"><span class="co">#&gt; $ logical             &lt;lgl&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA...</span></a>
+<a class="sourceLine" id="cb4-14" data-line-number="14"><span class="co">#&gt; $ numeric             &lt;dbl&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA...</span></a>
+<a class="sourceLine" id="cb4-15" data-line-number="15"><span class="co">#&gt; $ date                &lt;dttm&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, N...</span></a>
+<a class="sourceLine" id="cb4-16" data-line-number="16"><span class="co">#&gt; $ character           &lt;chr&gt; &quot;Age&quot;, &quot;Child&quot;, NA, &quot;Adult&quot;, NA, &quot;Survived...</span></a>
+<a class="sourceLine" id="cb4-17" data-line-number="17"><span class="co">#&gt; $ character_formatted &lt;list&gt; [&lt;# A tibble: 1 x 14,   character bold  i...</span></a>
+<a class="sourceLine" id="cb4-18" data-line-number="18"><span class="co">#&gt; $ formula             &lt;chr&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA...</span></a>
+<a class="sourceLine" id="cb4-19" data-line-number="19"><span class="co">#&gt; $ is_array            &lt;lgl&gt; FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, ...</span></a>
+<a class="sourceLine" id="cb4-20" data-line-number="20"><span class="co">#&gt; $ formula_ref         &lt;chr&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA...</span></a>
+<a class="sourceLine" id="cb4-21" data-line-number="21"><span class="co">#&gt; $ formula_group       &lt;int&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA...</span></a>
+<a class="sourceLine" id="cb4-22" data-line-number="22"><span class="co">#&gt; $ comment             &lt;chr&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA...</span></a>
+<a class="sourceLine" id="cb4-23" data-line-number="23"><span class="co">#&gt; $ height              &lt;dbl&gt; 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15...</span></a>
+<a class="sourceLine" id="cb4-24" data-line-number="24"><span class="co">#&gt; $ width               &lt;dbl&gt; 8.38, 8.38, 8.38, 8.38, 8.38, 8.38, 8.38, ...</span></a>
+<a class="sourceLine" id="cb4-25" data-line-number="25"><span class="co">#&gt; $ style_format        &lt;chr&gt; &quot;Normal&quot;, &quot;Normal&quot;, &quot;Normal&quot;, &quot;Normal&quot;, &quot;N...</span></a>
+<a class="sourceLine" id="cb4-26" data-line-number="26"><span class="co">#&gt; $ local_format_id     &lt;int&gt; 2, 3, 3, 3, 3, 2, 3, 3, 3, 3, 2, 2, 3, 3, ...</span></a></code></pre></div>
 <p>In this structure, the cells can be found by filtering.</p>
-<pre class="sourceCode r" id="cb5"><code class="sourceCode r"><div class="sourceLine" id="cb5-1" data-line-number="1">x[x<span class="op">$</span>data_type <span class="op">==</span><span class="st"> &quot;character&quot;</span>, <span class="kw">c</span>(<span class="st">&quot;address&quot;</span>, <span class="st">&quot;character&quot;</span>)]</div>
-<div class="sourceLine" id="cb5-2" data-line-number="2"><span class="co">#&gt; # A tibble: 22 x 2</span></div>
-<div class="sourceLine" id="cb5-3" data-line-number="3"><span class="co">#&gt;    address character</span></div>
-<div class="sourceLine" id="cb5-4" data-line-number="4"><span class="co">#&gt;    &lt;chr&gt;   &lt;chr&gt;    </span></div>
-<div class="sourceLine" id="cb5-5" data-line-number="5"><span class="co">#&gt;  1 C1      Age      </span></div>
-<div class="sourceLine" id="cb5-6" data-line-number="6"><span class="co">#&gt;  2 D1      Child    </span></div>
-<div class="sourceLine" id="cb5-7" data-line-number="7"><span class="co">#&gt;  3 F1      Adult    </span></div>
-<div class="sourceLine" id="cb5-8" data-line-number="8"><span class="co">#&gt;  4 C2      Survived </span></div>
-<div class="sourceLine" id="cb5-9" data-line-number="9"><span class="co">#&gt;  5 D2      No       </span></div>
-<div class="sourceLine" id="cb5-10" data-line-number="10"><span class="co">#&gt;  6 E2      Yes      </span></div>
-<div class="sourceLine" id="cb5-11" data-line-number="11"><span class="co">#&gt;  7 F2      No       </span></div>
-<div class="sourceLine" id="cb5-12" data-line-number="12"><span class="co">#&gt;  8 G2      Yes      </span></div>
-<div class="sourceLine" id="cb5-13" data-line-number="13"><span class="co">#&gt;  9 A3      Class    </span></div>
-<div class="sourceLine" id="cb5-14" data-line-number="14"><span class="co">#&gt; 10 B3      Sex      </span></div>
-<div class="sourceLine" id="cb5-15" data-line-number="15"><span class="co">#&gt; # ... with 12 more rows</span></div>
-<div class="sourceLine" id="cb5-16" data-line-number="16">x[x<span class="op">$</span>row <span class="op">==</span><span class="st"> </span><span class="dv">4</span>, <span class="kw">c</span>(<span class="st">&quot;address&quot;</span>, <span class="st">&quot;character&quot;</span>, <span class="st">&quot;numeric&quot;</span>)]</div>
-<div class="sourceLine" id="cb5-17" data-line-number="17"><span class="co">#&gt; # A tibble: 6 x 3</span></div>
-<div class="sourceLine" id="cb5-18" data-line-number="18"><span class="co">#&gt;   address character numeric</span></div>
-<div class="sourceLine" id="cb5-19" data-line-number="19"><span class="co">#&gt;   &lt;chr&gt;   &lt;chr&gt;       &lt;dbl&gt;</span></div>
-<div class="sourceLine" id="cb5-20" data-line-number="20"><span class="co">#&gt; 1 A4      1st         NA   </span></div>
-<div class="sourceLine" id="cb5-21" data-line-number="21"><span class="co">#&gt; 2 B4      Male        NA   </span></div>
-<div class="sourceLine" id="cb5-22" data-line-number="22"><span class="co">#&gt; 3 D4      &lt;NA&gt;         0   </span></div>
-<div class="sourceLine" id="cb5-23" data-line-number="23"><span class="co">#&gt; 4 E4      &lt;NA&gt;         5.00</span></div>
-<div class="sourceLine" id="cb5-24" data-line-number="24"><span class="co">#&gt; 5 F4      &lt;NA&gt;       118   </span></div>
-<div class="sourceLine" id="cb5-25" data-line-number="25"><span class="co">#&gt; 6 G4      &lt;NA&gt;        57.0</span></div></code></pre>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb5-1" data-line-number="1">x[x<span class="op">$</span>data_type <span class="op">==</span><span class="st"> &quot;character&quot;</span>, <span class="kw">c</span>(<span class="st">&quot;address&quot;</span>, <span class="st">&quot;character&quot;</span>)]</a>
+<a class="sourceLine" id="cb5-2" data-line-number="2"><span class="co">#&gt; # A tibble: 22 x 2</span></a>
+<a class="sourceLine" id="cb5-3" data-line-number="3"><span class="co">#&gt;    address character</span></a>
+<a class="sourceLine" id="cb5-4" data-line-number="4"><span class="co">#&gt;    &lt;chr&gt;   &lt;chr&gt;    </span></a>
+<a class="sourceLine" id="cb5-5" data-line-number="5"><span class="co">#&gt;  1 C1      Age      </span></a>
+<a class="sourceLine" id="cb5-6" data-line-number="6"><span class="co">#&gt;  2 D1      Child    </span></a>
+<a class="sourceLine" id="cb5-7" data-line-number="7"><span class="co">#&gt;  3 F1      Adult    </span></a>
+<a class="sourceLine" id="cb5-8" data-line-number="8"><span class="co">#&gt;  4 C2      Survived </span></a>
+<a class="sourceLine" id="cb5-9" data-line-number="9"><span class="co">#&gt;  5 D2      No       </span></a>
+<a class="sourceLine" id="cb5-10" data-line-number="10"><span class="co">#&gt;  6 E2      Yes      </span></a>
+<a class="sourceLine" id="cb5-11" data-line-number="11"><span class="co">#&gt;  7 F2      No       </span></a>
+<a class="sourceLine" id="cb5-12" data-line-number="12"><span class="co">#&gt;  8 G2      Yes      </span></a>
+<a class="sourceLine" id="cb5-13" data-line-number="13"><span class="co">#&gt;  9 A3      Class    </span></a>
+<a class="sourceLine" id="cb5-14" data-line-number="14"><span class="co">#&gt; 10 B3      Sex      </span></a>
+<a class="sourceLine" id="cb5-15" data-line-number="15"><span class="co">#&gt; # ... with 12 more rows</span></a>
+<a class="sourceLine" id="cb5-16" data-line-number="16">x[x<span class="op">$</span>row <span class="op">==</span><span class="st"> </span><span class="dv">4</span>, <span class="kw">c</span>(<span class="st">&quot;address&quot;</span>, <span class="st">&quot;character&quot;</span>, <span class="st">&quot;numeric&quot;</span>)]</a>
+<a class="sourceLine" id="cb5-17" data-line-number="17"><span class="co">#&gt; # A tibble: 6 x 3</span></a>
+<a class="sourceLine" id="cb5-18" data-line-number="18"><span class="co">#&gt;   address character numeric</span></a>
+<a class="sourceLine" id="cb5-19" data-line-number="19"><span class="co">#&gt;   &lt;chr&gt;   &lt;chr&gt;       &lt;dbl&gt;</span></a>
+<a class="sourceLine" id="cb5-20" data-line-number="20"><span class="co">#&gt; 1 A4      1st           NA </span></a>
+<a class="sourceLine" id="cb5-21" data-line-number="21"><span class="co">#&gt; 2 B4      Male          NA </span></a>
+<a class="sourceLine" id="cb5-22" data-line-number="22"><span class="co">#&gt; 3 D4      &lt;NA&gt;           0.</span></a>
+<a class="sourceLine" id="cb5-23" data-line-number="23"><span class="co">#&gt; 4 E4      &lt;NA&gt;           5.</span></a>
+<a class="sourceLine" id="cb5-24" data-line-number="24"><span class="co">#&gt; 5 F4      &lt;NA&gt;         118.</span></a>
+<a class="sourceLine" id="cb5-25" data-line-number="25"><span class="co">#&gt; 6 G4      &lt;NA&gt;          57.</span></a></code></pre></div>
 <p>Specific sheets can be requested using <code>xlsx_cells(file, sheet)</code>, and the names of all sheets in a file are given by <code>xlsx_sheet_names()</code>.</p>
 <div id="formatting" class="section level3">
 <h3>Formatting</h3>
@@ -384,105 +396,106 @@ pre code, pre, code {
 <p>Formatting is available by using the columns <code>local_format_id</code> and <code>style_format</code> as indexes into a separate list-of-lists structure. ‘Local’ formatting is the most common kind, applied to individual cells. ‘Style’ formatting is usually applied to blocks of cells, and defines several formats at once. Here is a screenshot of the styles buttons in Excel.</p>
 <p><img src="data:image/png;base64,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" /></p>
 <p>Formatting can be looked up as follows.</p>
-<pre class="sourceCode r" id="cb6"><code class="sourceCode r"><div class="sourceLine" id="cb6-1" data-line-number="1"><span class="co"># Bold</span></div>
-<div class="sourceLine" id="cb6-2" data-line-number="2">formats &lt;-<span class="st"> </span><span class="kw">xlsx_formats</span>(titanic)</div>
-<div class="sourceLine" id="cb6-3" data-line-number="3">formats<span class="op">$</span>local<span class="op">$</span>font<span class="op">$</span>bold</div>
-<div class="sourceLine" id="cb6-4" data-line-number="4"><span class="co">#&gt; [1] FALSE  TRUE FALSE FALSE</span></div>
-<div class="sourceLine" id="cb6-5" data-line-number="5">x[x<span class="op">$</span>local_format_id <span class="op">%in%</span><span class="st"> </span><span class="kw">which</span>(formats<span class="op">$</span>local<span class="op">$</span>font<span class="op">$</span>bold),</div>
-<div class="sourceLine" id="cb6-6" data-line-number="6">  <span class="kw">c</span>(<span class="st">&quot;address&quot;</span>, <span class="st">&quot;character&quot;</span>)]</div>
-<div class="sourceLine" id="cb6-7" data-line-number="7"><span class="co">#&gt; # A tibble: 4 x 2</span></div>
-<div class="sourceLine" id="cb6-8" data-line-number="8"><span class="co">#&gt;   address character</span></div>
-<div class="sourceLine" id="cb6-9" data-line-number="9"><span class="co">#&gt;   &lt;chr&gt;   &lt;chr&gt;    </span></div>
-<div class="sourceLine" id="cb6-10" data-line-number="10"><span class="co">#&gt; 1 C1      Age      </span></div>
-<div class="sourceLine" id="cb6-11" data-line-number="11"><span class="co">#&gt; 2 C2      Survived </span></div>
-<div class="sourceLine" id="cb6-12" data-line-number="12"><span class="co">#&gt; 3 A3      Class    </span></div>
-<div class="sourceLine" id="cb6-13" data-line-number="13"><span class="co">#&gt; 4 B3      Sex</span></div>
-<div class="sourceLine" id="cb6-14" data-line-number="14"></div>
-<div class="sourceLine" id="cb6-15" data-line-number="15"><span class="co"># Yellow fill</span></div>
-<div class="sourceLine" id="cb6-16" data-line-number="16">formats<span class="op">$</span>local<span class="op">$</span>fill<span class="op">$</span>patternFill<span class="op">$</span>fgColor<span class="op">$</span>rgb</div>
-<div class="sourceLine" id="cb6-17" data-line-number="17"><span class="co">#&gt; [1] NA         NA         NA         &quot;FFFFFF00&quot;</span></div>
-<div class="sourceLine" id="cb6-18" data-line-number="18">x[x<span class="op">$</span>local_format_id <span class="op">%in%</span></div>
-<div class="sourceLine" id="cb6-19" data-line-number="19"><span class="st">  </span><span class="kw">which</span>(formats<span class="op">$</span>local<span class="op">$</span>fill<span class="op">$</span>patternFill<span class="op">$</span>fgColor<span class="op">$</span>rgb <span class="op">==</span><span class="st"> &quot;FFFFFF00&quot;</span>),</div>
-<div class="sourceLine" id="cb6-20" data-line-number="20">  <span class="kw">c</span>(<span class="st">&quot;address&quot;</span>, <span class="st">&quot;numeric&quot;</span>)]</div>
-<div class="sourceLine" id="cb6-21" data-line-number="21"><span class="co">#&gt; # A tibble: 2 x 2</span></div>
-<div class="sourceLine" id="cb6-22" data-line-number="22"><span class="co">#&gt;   address numeric</span></div>
-<div class="sourceLine" id="cb6-23" data-line-number="23"><span class="co">#&gt;   &lt;chr&gt;     &lt;dbl&gt;</span></div>
-<div class="sourceLine" id="cb6-24" data-line-number="24"><span class="co">#&gt; 1 F11        3.00</span></div>
-<div class="sourceLine" id="cb6-25" data-line-number="25"><span class="co">#&gt; 2 G11       20.0</span></div>
-<div class="sourceLine" id="cb6-26" data-line-number="26"></div>
-<div class="sourceLine" id="cb6-27" data-line-number="27"><span class="co"># Styles by name</span></div>
-<div class="sourceLine" id="cb6-28" data-line-number="28">formats<span class="op">$</span>style<span class="op">$</span>font<span class="op">$</span>name[<span class="st">&quot;Normal&quot;</span>]</div>
-<div class="sourceLine" id="cb6-29" data-line-number="29"><span class="co">#&gt;    Normal </span></div>
-<div class="sourceLine" id="cb6-30" data-line-number="30"><span class="co">#&gt; &quot;Calibri&quot;</span></div>
-<div class="sourceLine" id="cb6-31" data-line-number="31"><span class="kw">head</span>(x[x<span class="op">$</span>style_format <span class="op">==</span><span class="st"> &quot;Normal&quot;</span>, <span class="kw">c</span>(<span class="st">&quot;address&quot;</span>, <span class="st">&quot;character&quot;</span>)])</div>
-<div class="sourceLine" id="cb6-32" data-line-number="32"><span class="co">#&gt; # A tibble: 6 x 2</span></div>
-<div class="sourceLine" id="cb6-33" data-line-number="33"><span class="co">#&gt;   address character</span></div>
-<div class="sourceLine" id="cb6-34" data-line-number="34"><span class="co">#&gt;   &lt;chr&gt;   &lt;chr&gt;    </span></div>
-<div class="sourceLine" id="cb6-35" data-line-number="35"><span class="co">#&gt; 1 C1      Age      </span></div>
-<div class="sourceLine" id="cb6-36" data-line-number="36"><span class="co">#&gt; 2 D1      Child    </span></div>
-<div class="sourceLine" id="cb6-37" data-line-number="37"><span class="co">#&gt; 3 E1      &lt;NA&gt;     </span></div>
-<div class="sourceLine" id="cb6-38" data-line-number="38"><span class="co">#&gt; 4 F1      Adult    </span></div>
-<div class="sourceLine" id="cb6-39" data-line-number="39"><span class="co">#&gt; 5 G1      &lt;NA&gt;     </span></div>
-<div class="sourceLine" id="cb6-40" data-line-number="40"><span class="co">#&gt; 6 C2      Survived</span></div>
-<div class="sourceLine" id="cb6-41" data-line-number="41"></div>
-<div class="sourceLine" id="cb6-42" data-line-number="42"><span class="co"># In-cell formatting is available in the `character_formatted` column as a data</span></div>
-<div class="sourceLine" id="cb6-43" data-line-number="43"><span class="co"># frame, one row per substring.</span></div>
-<div class="sourceLine" id="cb6-44" data-line-number="44">examples &lt;-<span class="st"> </span><span class="kw">system.file</span>(<span class="st">&quot;/extdata/examples.xlsx&quot;</span>, <span class="dt">package =</span> <span class="st">&quot;tidyxl&quot;</span>)</div>
-<div class="sourceLine" id="cb6-45" data-line-number="45"><span class="kw">xlsx_cells</span>(examples)<span class="op">$</span>character_formatted[<span class="dv">77</span>]</div>
-<div class="sourceLine" id="cb6-46" data-line-number="46"><span class="co">#&gt; [[1]]</span></div>
-<div class="sourceLine" id="cb6-47" data-line-number="47"><span class="co">#&gt; # A tibble: 16 x 14</span></div>
-<div class="sourceLine" id="cb6-48" data-line-number="48"><span class="co">#&gt;    charact… bold  italic under… stri… vert…  size colo… colo… colo… color…</span></div>
-<div class="sourceLine" id="cb6-49" data-line-number="49"><span class="co">#&gt;    &lt;chr&gt;    &lt;lgl&gt; &lt;lgl&gt;  &lt;chr&gt;  &lt;lgl&gt; &lt;chr&gt; &lt;dbl&gt; &lt;chr&gt; &lt;int&gt; &lt;int&gt;  &lt;dbl&gt;</span></div>
-<div class="sourceLine" id="cb6-50" data-line-number="50"><span class="co">#&gt;  1 in-cell  F     F      &lt;NA&gt;   F     &lt;NA&gt;      0 &lt;NA&gt;     NA    NA NA    </span></div>
-<div class="sourceLine" id="cb6-51" data-line-number="51"><span class="co">#&gt;  2 bold     T     F      &lt;NA&gt;   F     &lt;NA&gt;      0 FF00…     2    NA NA    </span></div>
-<div class="sourceLine" id="cb6-52" data-line-number="52"><span class="co">#&gt;  3 italic   F     T      &lt;NA&gt;   F     &lt;NA&gt;      0 FF00…     2    NA NA    </span></div>
-<div class="sourceLine" id="cb6-53" data-line-number="53"><span class="co">#&gt;  4 underli… F     F      single F     &lt;NA&gt;      0 FF00…     2    NA NA    </span></div>
-<div class="sourceLine" id="cb6-54" data-line-number="54"><span class="co">#&gt;  5 underli… F     F      double F     &lt;NA&gt;      0 FF00…     2    NA NA    </span></div>
-<div class="sourceLine" id="cb6-55" data-line-number="55"><span class="co">#&gt;  6 singlea… F     F      singl… F     &lt;NA&gt;      0 FF00…     2    NA NA    </span></div>
-<div class="sourceLine" id="cb6-56" data-line-number="56"><span class="co">#&gt;  7 doublea… F     F      doubl… F     &lt;NA&gt;      0 FF00…     2    NA NA    </span></div>
-<div class="sourceLine" id="cb6-57" data-line-number="57"><span class="co">#&gt;  8 striket… F     F      &lt;NA&gt;   T     &lt;NA&gt;      0 FF00…     2    NA NA    </span></div>
-<div class="sourceLine" id="cb6-58" data-line-number="58"><span class="co">#&gt;  9 subscri… F     F      &lt;NA&gt;   F     subs…     0 FF00…     2    NA NA    </span></div>
-<div class="sourceLine" id="cb6-59" data-line-number="59"><span class="co">#&gt; 10 supersc… F     F      &lt;NA&gt;   F     supe…     0 FF00…     2    NA NA    </span></div>
-<div class="sourceLine" id="cb6-60" data-line-number="60"><span class="co">#&gt; 11 red      F     F      &lt;NA&gt;   F     &lt;NA&gt;      0 FFFF…    NA    NA NA    </span></div>
-<div class="sourceLine" id="cb6-61" data-line-number="61"><span class="co">#&gt; 12 theme    F     F      &lt;NA&gt;   F     &lt;NA&gt;      0 FFC0…     6    NA NA    </span></div>
-<div class="sourceLine" id="cb6-62" data-line-number="62"><span class="co">#&gt; 13 tint     F     F      &lt;NA&gt;   F     &lt;NA&gt;      0 FFC0…     6    NA  0.800</span></div>
-<div class="sourceLine" id="cb6-63" data-line-number="63"><span class="co">#&gt; 14 size     F     F      &lt;NA&gt;   F     &lt;NA&gt;      0 FFFF…    NA    NA NA    </span></div>
-<div class="sourceLine" id="cb6-64" data-line-number="64"><span class="co">#&gt; 15 arial    F     F      &lt;NA&gt;   F     &lt;NA&gt;      0 FFFF…    NA    NA NA    </span></div>
-<div class="sourceLine" id="cb6-65" data-line-number="65"><span class="co">#&gt; 16 &quot;UTF8St… F     F      &lt;NA&gt;   F     &lt;NA&gt;      0 FFFF…    NA    NA NA    </span></div>
-<div class="sourceLine" id="cb6-66" data-line-number="66"><span class="co">#&gt; # ... with 3 more variables: font &lt;chr&gt;, family &lt;int&gt;, scheme &lt;chr&gt;</span></div></code></pre>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb6-1" data-line-number="1"><span class="co"># Bold</span></a>
+<a class="sourceLine" id="cb6-2" data-line-number="2">formats &lt;-<span class="st"> </span><span class="kw">xlsx_formats</span>(titanic)</a>
+<a class="sourceLine" id="cb6-3" data-line-number="3">formats<span class="op">$</span>local<span class="op">$</span>font<span class="op">$</span>bold</a>
+<a class="sourceLine" id="cb6-4" data-line-number="4"><span class="co">#&gt; [1] FALSE  TRUE FALSE FALSE</span></a>
+<a class="sourceLine" id="cb6-5" data-line-number="5">x[x<span class="op">$</span>local_format_id <span class="op">%in%</span><span class="st"> </span><span class="kw">which</span>(formats<span class="op">$</span>local<span class="op">$</span>font<span class="op">$</span>bold),</a>
+<a class="sourceLine" id="cb6-6" data-line-number="6">  <span class="kw">c</span>(<span class="st">&quot;address&quot;</span>, <span class="st">&quot;character&quot;</span>)]</a>
+<a class="sourceLine" id="cb6-7" data-line-number="7"><span class="co">#&gt; # A tibble: 4 x 2</span></a>
+<a class="sourceLine" id="cb6-8" data-line-number="8"><span class="co">#&gt;   address character</span></a>
+<a class="sourceLine" id="cb6-9" data-line-number="9"><span class="co">#&gt;   &lt;chr&gt;   &lt;chr&gt;    </span></a>
+<a class="sourceLine" id="cb6-10" data-line-number="10"><span class="co">#&gt; 1 C1      Age      </span></a>
+<a class="sourceLine" id="cb6-11" data-line-number="11"><span class="co">#&gt; 2 C2      Survived </span></a>
+<a class="sourceLine" id="cb6-12" data-line-number="12"><span class="co">#&gt; 3 A3      Class    </span></a>
+<a class="sourceLine" id="cb6-13" data-line-number="13"><span class="co">#&gt; 4 B3      Sex</span></a>
+<a class="sourceLine" id="cb6-14" data-line-number="14"></a>
+<a class="sourceLine" id="cb6-15" data-line-number="15"><span class="co"># Yellow fill</span></a>
+<a class="sourceLine" id="cb6-16" data-line-number="16">formats<span class="op">$</span>local<span class="op">$</span>fill<span class="op">$</span>patternFill<span class="op">$</span>fgColor<span class="op">$</span>rgb</a>
+<a class="sourceLine" id="cb6-17" data-line-number="17"><span class="co">#&gt; [1] NA         NA         NA         &quot;FFFFFF00&quot;</span></a>
+<a class="sourceLine" id="cb6-18" data-line-number="18">x[x<span class="op">$</span>local_format_id <span class="op">%in%</span></a>
+<a class="sourceLine" id="cb6-19" data-line-number="19"><span class="st">  </span><span class="kw">which</span>(formats<span class="op">$</span>local<span class="op">$</span>fill<span class="op">$</span>patternFill<span class="op">$</span>fgColor<span class="op">$</span>rgb <span class="op">==</span><span class="st"> &quot;FFFFFF00&quot;</span>),</a>
+<a class="sourceLine" id="cb6-20" data-line-number="20">  <span class="kw">c</span>(<span class="st">&quot;address&quot;</span>, <span class="st">&quot;numeric&quot;</span>)]</a>
+<a class="sourceLine" id="cb6-21" data-line-number="21"><span class="co">#&gt; # A tibble: 2 x 2</span></a>
+<a class="sourceLine" id="cb6-22" data-line-number="22"><span class="co">#&gt;   address numeric</span></a>
+<a class="sourceLine" id="cb6-23" data-line-number="23"><span class="co">#&gt;   &lt;chr&gt;     &lt;dbl&gt;</span></a>
+<a class="sourceLine" id="cb6-24" data-line-number="24"><span class="co">#&gt; 1 F11          3.</span></a>
+<a class="sourceLine" id="cb6-25" data-line-number="25"><span class="co">#&gt; 2 G11         20.</span></a>
+<a class="sourceLine" id="cb6-26" data-line-number="26"></a>
+<a class="sourceLine" id="cb6-27" data-line-number="27"><span class="co"># Styles by name</span></a>
+<a class="sourceLine" id="cb6-28" data-line-number="28">formats<span class="op">$</span>style<span class="op">$</span>font<span class="op">$</span>name[<span class="st">&quot;Normal&quot;</span>]</a>
+<a class="sourceLine" id="cb6-29" data-line-number="29"><span class="co">#&gt;    Normal </span></a>
+<a class="sourceLine" id="cb6-30" data-line-number="30"><span class="co">#&gt; &quot;Calibri&quot;</span></a>
+<a class="sourceLine" id="cb6-31" data-line-number="31"><span class="kw">head</span>(x[x<span class="op">$</span>style_format <span class="op">==</span><span class="st"> &quot;Normal&quot;</span>, <span class="kw">c</span>(<span class="st">&quot;address&quot;</span>, <span class="st">&quot;character&quot;</span>)])</a>
+<a class="sourceLine" id="cb6-32" data-line-number="32"><span class="co">#&gt; # A tibble: 6 x 2</span></a>
+<a class="sourceLine" id="cb6-33" data-line-number="33"><span class="co">#&gt;   address character</span></a>
+<a class="sourceLine" id="cb6-34" data-line-number="34"><span class="co">#&gt;   &lt;chr&gt;   &lt;chr&gt;    </span></a>
+<a class="sourceLine" id="cb6-35" data-line-number="35"><span class="co">#&gt; 1 C1      Age      </span></a>
+<a class="sourceLine" id="cb6-36" data-line-number="36"><span class="co">#&gt; 2 D1      Child    </span></a>
+<a class="sourceLine" id="cb6-37" data-line-number="37"><span class="co">#&gt; 3 E1      &lt;NA&gt;     </span></a>
+<a class="sourceLine" id="cb6-38" data-line-number="38"><span class="co">#&gt; 4 F1      Adult    </span></a>
+<a class="sourceLine" id="cb6-39" data-line-number="39"><span class="co">#&gt; 5 G1      &lt;NA&gt;     </span></a>
+<a class="sourceLine" id="cb6-40" data-line-number="40"><span class="co">#&gt; 6 C2      Survived</span></a>
+<a class="sourceLine" id="cb6-41" data-line-number="41"></a>
+<a class="sourceLine" id="cb6-42" data-line-number="42"><span class="co"># In-cell formatting is available in the `character_formatted` column as a data</span></a>
+<a class="sourceLine" id="cb6-43" data-line-number="43"><span class="co"># frame, one row per substring.</span></a>
+<a class="sourceLine" id="cb6-44" data-line-number="44">examples &lt;-<span class="st"> </span><span class="kw">system.file</span>(<span class="st">&quot;/extdata/examples.xlsx&quot;</span>, <span class="dt">package =</span> <span class="st">&quot;tidyxl&quot;</span>)</a>
+<a class="sourceLine" id="cb6-45" data-line-number="45"><span class="kw">xlsx_cells</span>(examples)<span class="op">$</span>character_formatted[<span class="dv">77</span>]</a>
+<a class="sourceLine" id="cb6-46" data-line-number="46"><span class="co">#&gt; [[1]]</span></a>
+<a class="sourceLine" id="cb6-47" data-line-number="47"><span class="co">#&gt; # A tibble: 16 x 14</span></a>
+<a class="sourceLine" id="cb6-48" data-line-number="48"><span class="co">#&gt;    character      bold  italic underline  strike vertAlign  size color_rgb</span></a>
+<a class="sourceLine" id="cb6-49" data-line-number="49"><span class="co">#&gt;    &lt;chr&gt;          &lt;lgl&gt; &lt;lgl&gt;  &lt;chr&gt;      &lt;lgl&gt;  &lt;chr&gt;     &lt;dbl&gt; &lt;chr&gt;    </span></a>
+<a class="sourceLine" id="cb6-50" data-line-number="50"><span class="co">#&gt;  1 in-cell        FALSE FALSE  &lt;NA&gt;       FALSE  &lt;NA&gt;         0. &lt;NA&gt;     </span></a>
+<a class="sourceLine" id="cb6-51" data-line-number="51"><span class="co">#&gt;  2 bold           TRUE  FALSE  &lt;NA&gt;       FALSE  &lt;NA&gt;         0. FF000000 </span></a>
+<a class="sourceLine" id="cb6-52" data-line-number="52"><span class="co">#&gt;  3 italic         FALSE TRUE   &lt;NA&gt;       FALSE  &lt;NA&gt;         0. FF000000 </span></a>
+<a class="sourceLine" id="cb6-53" data-line-number="53"><span class="co">#&gt;  4 underline      FALSE FALSE  single     FALSE  &lt;NA&gt;         0. FF000000 </span></a>
+<a class="sourceLine" id="cb6-54" data-line-number="54"><span class="co">#&gt;  5 underlinedoub… FALSE FALSE  double     FALSE  &lt;NA&gt;         0. FF000000 </span></a>
+<a class="sourceLine" id="cb6-55" data-line-number="55"><span class="co">#&gt;  6 singleaccount… FALSE FALSE  singleAcc… FALSE  &lt;NA&gt;         0. FF000000 </span></a>
+<a class="sourceLine" id="cb6-56" data-line-number="56"><span class="co">#&gt;  7 doubleaccount… FALSE FALSE  doubleAcc… FALSE  &lt;NA&gt;         0. FF000000 </span></a>
+<a class="sourceLine" id="cb6-57" data-line-number="57"><span class="co">#&gt;  8 strikethrough  FALSE FALSE  &lt;NA&gt;       TRUE   &lt;NA&gt;         0. FF000000 </span></a>
+<a class="sourceLine" id="cb6-58" data-line-number="58"><span class="co">#&gt;  9 subscript      FALSE FALSE  &lt;NA&gt;       FALSE  subscript    0. FF000000 </span></a>
+<a class="sourceLine" id="cb6-59" data-line-number="59"><span class="co">#&gt; 10 superscript    FALSE FALSE  &lt;NA&gt;       FALSE  superscr…    0. FF000000 </span></a>
+<a class="sourceLine" id="cb6-60" data-line-number="60"><span class="co">#&gt; 11 red            FALSE FALSE  &lt;NA&gt;       FALSE  &lt;NA&gt;         0. FFFF0000 </span></a>
+<a class="sourceLine" id="cb6-61" data-line-number="61"><span class="co">#&gt; 12 theme          FALSE FALSE  &lt;NA&gt;       FALSE  &lt;NA&gt;         0. FFC0504D </span></a>
+<a class="sourceLine" id="cb6-62" data-line-number="62"><span class="co">#&gt; 13 tint           FALSE FALSE  &lt;NA&gt;       FALSE  &lt;NA&gt;         0. FFC0504D </span></a>
+<a class="sourceLine" id="cb6-63" data-line-number="63"><span class="co">#&gt; 14 size           FALSE FALSE  &lt;NA&gt;       FALSE  &lt;NA&gt;         0. FFFF0000 </span></a>
+<a class="sourceLine" id="cb6-64" data-line-number="64"><span class="co">#&gt; 15 arial          FALSE FALSE  &lt;NA&gt;       FALSE  &lt;NA&gt;         0. FFFF0000 </span></a>
+<a class="sourceLine" id="cb6-65" data-line-number="65"><span class="co">#&gt; 16 &quot;UTF8Stéphane… FALSE FALSE  &lt;NA&gt;       FALSE  &lt;NA&gt;         0. FFFF0000 </span></a>
+<a class="sourceLine" id="cb6-66" data-line-number="66"><span class="co">#&gt; # ... with 6 more variables: color_theme &lt;int&gt;, color_indexed &lt;int&gt;,</span></a>
+<a class="sourceLine" id="cb6-67" data-line-number="67"><span class="co">#&gt; #   color_tint &lt;dbl&gt;, font &lt;chr&gt;, family &lt;int&gt;, scheme &lt;chr&gt;</span></a></code></pre></div>
 <p>To see all the available kinds of formats, use <code>str(formats)</code>.</p>
 </div>
 <div id="comments" class="section level3">
 <h3>Comments</h3>
 <p>Comments are available alongside cell values.</p>
-<pre class="sourceCode r" id="cb7"><code class="sourceCode r"><div class="sourceLine" id="cb7-1" data-line-number="1">x[<span class="op">!</span><span class="kw">is.na</span>(x<span class="op">$</span>comment), <span class="kw">c</span>(<span class="st">&quot;address&quot;</span>, <span class="st">&quot;comment&quot;</span>)]</div>
-<div class="sourceLine" id="cb7-2" data-line-number="2"><span class="co">#&gt; # A tibble: 1 x 2</span></div>
-<div class="sourceLine" id="cb7-3" data-line-number="3"><span class="co">#&gt;   address comment                                                    </span></div>
-<div class="sourceLine" id="cb7-4" data-line-number="4"><span class="co">#&gt;   &lt;chr&gt;   &lt;chr&gt;                                                      </span></div>
-<div class="sourceLine" id="cb7-5" data-line-number="5"><span class="co">#&gt; 1 G11     All women in the crew worked in the victualling department.</span></div></code></pre>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb7-1" data-line-number="1">x[<span class="op">!</span><span class="kw">is.na</span>(x<span class="op">$</span>comment), <span class="kw">c</span>(<span class="st">&quot;address&quot;</span>, <span class="st">&quot;comment&quot;</span>)]</a>
+<a class="sourceLine" id="cb7-2" data-line-number="2"><span class="co">#&gt; # A tibble: 1 x 2</span></a>
+<a class="sourceLine" id="cb7-3" data-line-number="3"><span class="co">#&gt;   address comment                                                    </span></a>
+<a class="sourceLine" id="cb7-4" data-line-number="4"><span class="co">#&gt;   &lt;chr&gt;   &lt;chr&gt;                                                      </span></a>
+<a class="sourceLine" id="cb7-5" data-line-number="5"><span class="co">#&gt; 1 G11     All women in the crew worked in the victualling department.</span></a></code></pre></div>
 </div>
 <div id="formulas" class="section level3">
 <h3>Formulas</h3>
 <p>Formulas are available, but with a few quirks.</p>
-<pre class="sourceCode r" id="cb8"><code class="sourceCode r"><div class="sourceLine" id="cb8-1" data-line-number="1"><span class="kw">options</span>(<span class="dt">width =</span> <span class="dv">120</span>)</div>
-<div class="sourceLine" id="cb8-2" data-line-number="2">y &lt;-<span class="st"> </span><span class="kw">xlsx_cells</span>(examples, <span class="st">&quot;Sheet1&quot;</span>)</div>
-<div class="sourceLine" id="cb8-3" data-line-number="3">y[<span class="op">!</span><span class="kw">is.na</span>(y<span class="op">$</span>formula),</div>
-<div class="sourceLine" id="cb8-4" data-line-number="4">  <span class="kw">c</span>(<span class="st">&quot;address&quot;</span>, <span class="st">&quot;formula&quot;</span>, <span class="st">&quot;is_array&quot;</span>, <span class="st">&quot;formula_ref&quot;</span>, <span class="st">&quot;formula_group&quot;</span>,</div>
-<div class="sourceLine" id="cb8-5" data-line-number="5">    <span class="st">&quot;error&quot;</span>, <span class="st">&quot;logical&quot;</span>, <span class="st">&quot;numeric&quot;</span>, <span class="st">&quot;date&quot;</span>, <span class="st">&quot;character&quot;</span>)]</div>
-<div class="sourceLine" id="cb8-6" data-line-number="6"><span class="co">#&gt; # A tibble: 32 x 10</span></div>
-<div class="sourceLine" id="cb8-7" data-line-number="7"><span class="co">#&gt;    address formula             is_array formula_ref formula_group error   logical numeric date                character</span></div>
-<div class="sourceLine" id="cb8-8" data-line-number="8"><span class="co">#&gt;    &lt;chr&gt;   &lt;chr&gt;               &lt;lgl&gt;    &lt;chr&gt;               &lt;int&gt; &lt;chr&gt;   &lt;lgl&gt;     &lt;dbl&gt; &lt;dttm&gt;              &lt;chr&gt;    </span></div>
-<div class="sourceLine" id="cb8-9" data-line-number="9"><span class="co">#&gt;  1 A1      1/0                 F        &lt;NA&gt;                   NA #DIV/0! NA        NA    NA                  &lt;NA&gt;     </span></div>
-<div class="sourceLine" id="cb8-10" data-line-number="10"><span class="co">#&gt;  2 A14     1=1                 F        &lt;NA&gt;                   NA &lt;NA&gt;    T         NA    NA                  &lt;NA&gt;     </span></div>
-<div class="sourceLine" id="cb8-11" data-line-number="11"><span class="co">#&gt;  3 A15     A4+1                F        &lt;NA&gt;                   NA &lt;NA&gt;    NA      1338    NA                  &lt;NA&gt;     </span></div>
-<div class="sourceLine" id="cb8-12" data-line-number="12"><span class="co">#&gt;  4 A16     DATE(2017,1,18)     F        &lt;NA&gt;                   NA &lt;NA&gt;    NA        NA    2017-01-18 00:00:00 &lt;NA&gt;     </span></div>
-<div class="sourceLine" id="cb8-13" data-line-number="13"><span class="co">#&gt;  5 A17     &quot;\&quot;Hello, World!\&quot;&quot; F        &lt;NA&gt;                   NA &lt;NA&gt;    NA        NA    NA                  Hello, W…</span></div>
-<div class="sourceLine" id="cb8-14" data-line-number="14"><span class="co">#&gt;  6 A19     $A$18+1             F        &lt;NA&gt;                   NA &lt;NA&gt;    NA         2.00 NA                  &lt;NA&gt;     </span></div>
-<div class="sourceLine" id="cb8-15" data-line-number="15"><span class="co">#&gt;  7 B19     A18+2               F        &lt;NA&gt;                   NA &lt;NA&gt;    NA         3.00 NA                  &lt;NA&gt;     </span></div>
-<div class="sourceLine" id="cb8-16" data-line-number="16"><span class="co">#&gt;  8 A20     $A$18+1             F        A20:A21                 0 &lt;NA&gt;    NA         2.00 NA                  &lt;NA&gt;     </span></div>
-<div class="sourceLine" id="cb8-17" data-line-number="17"><span class="co">#&gt;  9 B20     A19+2               F        B20:B21                 1 &lt;NA&gt;    NA         4.00 NA                  &lt;NA&gt;     </span></div>
-<div class="sourceLine" id="cb8-18" data-line-number="18"><span class="co">#&gt; 10 A21     $A$18+1             F        &lt;NA&gt;                    0 &lt;NA&gt;    NA         2.00 NA                  &lt;NA&gt;     </span></div>
-<div class="sourceLine" id="cb8-19" data-line-number="19"><span class="co">#&gt; # ... with 22 more rows</span></div></code></pre>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb8-1" data-line-number="1"><span class="kw">options</span>(<span class="dt">width =</span> <span class="dv">120</span>)</a>
+<a class="sourceLine" id="cb8-2" data-line-number="2">y &lt;-<span class="st"> </span><span class="kw">xlsx_cells</span>(examples, <span class="st">&quot;Sheet1&quot;</span>)</a>
+<a class="sourceLine" id="cb8-3" data-line-number="3">y[<span class="op">!</span><span class="kw">is.na</span>(y<span class="op">$</span>formula),</a>
+<a class="sourceLine" id="cb8-4" data-line-number="4">  <span class="kw">c</span>(<span class="st">&quot;address&quot;</span>, <span class="st">&quot;formula&quot;</span>, <span class="st">&quot;is_array&quot;</span>, <span class="st">&quot;formula_ref&quot;</span>, <span class="st">&quot;formula_group&quot;</span>,</a>
+<a class="sourceLine" id="cb8-5" data-line-number="5">    <span class="st">&quot;error&quot;</span>, <span class="st">&quot;logical&quot;</span>, <span class="st">&quot;numeric&quot;</span>, <span class="st">&quot;date&quot;</span>, <span class="st">&quot;character&quot;</span>)]</a>
+<a class="sourceLine" id="cb8-6" data-line-number="6"><span class="co">#&gt; # A tibble: 32 x 10</span></a>
+<a class="sourceLine" id="cb8-7" data-line-number="7"><span class="co">#&gt;    address formula             is_array formula_ref formula_group error   logical numeric date                character</span></a>
+<a class="sourceLine" id="cb8-8" data-line-number="8"><span class="co">#&gt;    &lt;chr&gt;   &lt;chr&gt;               &lt;lgl&gt;    &lt;chr&gt;               &lt;int&gt; &lt;chr&gt;   &lt;lgl&gt;     &lt;dbl&gt; &lt;dttm&gt;              &lt;chr&gt;    </span></a>
+<a class="sourceLine" id="cb8-9" data-line-number="9"><span class="co">#&gt;  1 A1      1/0                 FALSE    &lt;NA&gt;                   NA #DIV/0! NA          NA  NA                  &lt;NA&gt;     </span></a>
+<a class="sourceLine" id="cb8-10" data-line-number="10"><span class="co">#&gt;  2 A14     1=1                 FALSE    &lt;NA&gt;                   NA &lt;NA&gt;    TRUE        NA  NA                  &lt;NA&gt;     </span></a>
+<a class="sourceLine" id="cb8-11" data-line-number="11"><span class="co">#&gt;  3 A15     A4+1                FALSE    &lt;NA&gt;                   NA &lt;NA&gt;    NA        1338. NA                  &lt;NA&gt;     </span></a>
+<a class="sourceLine" id="cb8-12" data-line-number="12"><span class="co">#&gt;  4 A16     DATE(2017,1,18)     FALSE    &lt;NA&gt;                   NA &lt;NA&gt;    NA          NA  2017-01-18 00:00:00 &lt;NA&gt;     </span></a>
+<a class="sourceLine" id="cb8-13" data-line-number="13"><span class="co">#&gt;  5 A17     &quot;\&quot;Hello, World!\&quot;&quot; FALSE    &lt;NA&gt;                   NA &lt;NA&gt;    NA          NA  NA                  Hello, W…</span></a>
+<a class="sourceLine" id="cb8-14" data-line-number="14"><span class="co">#&gt;  6 A19     $A$18+1             FALSE    &lt;NA&gt;                   NA &lt;NA&gt;    NA           2. NA                  &lt;NA&gt;     </span></a>
+<a class="sourceLine" id="cb8-15" data-line-number="15"><span class="co">#&gt;  7 B19     A18+2               FALSE    &lt;NA&gt;                   NA &lt;NA&gt;    NA           3. NA                  &lt;NA&gt;     </span></a>
+<a class="sourceLine" id="cb8-16" data-line-number="16"><span class="co">#&gt;  8 A20     $A$18+1             FALSE    A20:A21                 0 &lt;NA&gt;    NA           2. NA                  &lt;NA&gt;     </span></a>
+<a class="sourceLine" id="cb8-17" data-line-number="17"><span class="co">#&gt;  9 B20     A19+2               FALSE    B20:B21                 1 &lt;NA&gt;    NA           4. NA                  &lt;NA&gt;     </span></a>
+<a class="sourceLine" id="cb8-18" data-line-number="18"><span class="co">#&gt; 10 A21     $A$18+1             FALSE    &lt;NA&gt;                    0 &lt;NA&gt;    NA           2. NA                  &lt;NA&gt;     </span></a>
+<a class="sourceLine" id="cb8-19" data-line-number="19"><span class="co">#&gt; # ... with 22 more rows</span></a></code></pre></div>
 <p>The top five cells show that the results of formulas are available as usual in the columns <code>error</code>, <code>logical</code>, <code>numeric</code>, <code>date</code>, and <code>character</code>.</p>
 <div id="shared-formulas" class="section level4">
 <h4>Shared formulas</h4>
@@ -503,20 +516,20 @@ pre code, pre, code {
 <h4>Tokenizing formulas</h4>
 <p>The function <code>xlex()</code> separates formulas into tokens of different types, and gives their depth within a nested formula. Its name is a bad pun on ‘Excel’ and ‘lexer’. Try the <a href="https://duncan-garmonsway.shinyapps.io/xlex/">online demo</a> or install the more experimental <a href="https://nacnudus.github.io/lexl">lexl</a> package to run <code>demo_lexl()</code> locally.</p>
 <p>It is useful for detecting spreadsheet smells, which are poor practices in spreadsheet design, such as deep nests of functions, or embedding constants in formulas.</p>
-<pre class="sourceCode r" id="cb9"><code class="sourceCode r"><div class="sourceLine" id="cb9-1" data-line-number="1">x &lt;-<span class="st"> </span><span class="kw">xlex</span>(<span class="st">&quot;MIN(3,MAX(2,A1))&quot;</span>)</div>
-<div class="sourceLine" id="cb9-2" data-line-number="2">x</div>
-<div class="sourceLine" id="cb9-3" data-line-number="3"><span class="co">#&gt; root            </span></div>
-<div class="sourceLine" id="cb9-4" data-line-number="4"><span class="co">#&gt; ¦-- MIN         function</span></div>
-<div class="sourceLine" id="cb9-5" data-line-number="5"><span class="co">#&gt; °-- (           fun_open</span></div>
-<div class="sourceLine" id="cb9-6" data-line-number="6"><span class="co">#&gt;     ¦-- 3       number</span></div>
-<div class="sourceLine" id="cb9-7" data-line-number="7"><span class="co">#&gt;     ¦-- ,       separator</span></div>
-<div class="sourceLine" id="cb9-8" data-line-number="8"><span class="co">#&gt;     ¦-- MAX     function</span></div>
-<div class="sourceLine" id="cb9-9" data-line-number="9"><span class="co">#&gt;     °-- (       fun_open</span></div>
-<div class="sourceLine" id="cb9-10" data-line-number="10"><span class="co">#&gt;         ¦-- 2   number</span></div>
-<div class="sourceLine" id="cb9-11" data-line-number="11"><span class="co">#&gt;         ¦-- ,   separator</span></div>
-<div class="sourceLine" id="cb9-12" data-line-number="12"><span class="co">#&gt;         °-- A1  ref</span></div>
-<div class="sourceLine" id="cb9-13" data-line-number="13"><span class="co">#&gt;     °-- )       fun_close</span></div>
-<div class="sourceLine" id="cb9-14" data-line-number="14"><span class="co">#&gt; °-- )           fun_close</span></div></code></pre>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb9-1" data-line-number="1">x &lt;-<span class="st"> </span><span class="kw">xlex</span>(<span class="st">&quot;MIN(3,MAX(2,A1))&quot;</span>)</a>
+<a class="sourceLine" id="cb9-2" data-line-number="2">x</a>
+<a class="sourceLine" id="cb9-3" data-line-number="3"><span class="co">#&gt; root            </span></a>
+<a class="sourceLine" id="cb9-4" data-line-number="4"><span class="co">#&gt; ¦-- MIN         function</span></a>
+<a class="sourceLine" id="cb9-5" data-line-number="5"><span class="co">#&gt; °-- (           fun_open</span></a>
+<a class="sourceLine" id="cb9-6" data-line-number="6"><span class="co">#&gt;     ¦-- 3       number</span></a>
+<a class="sourceLine" id="cb9-7" data-line-number="7"><span class="co">#&gt;     ¦-- ,       separator</span></a>
+<a class="sourceLine" id="cb9-8" data-line-number="8"><span class="co">#&gt;     ¦-- MAX     function</span></a>
+<a class="sourceLine" id="cb9-9" data-line-number="9"><span class="co">#&gt;     °-- (       fun_open</span></a>
+<a class="sourceLine" id="cb9-10" data-line-number="10"><span class="co">#&gt;         ¦-- 2   number</span></a>
+<a class="sourceLine" id="cb9-11" data-line-number="11"><span class="co">#&gt;         ¦-- ,   separator</span></a>
+<a class="sourceLine" id="cb9-12" data-line-number="12"><span class="co">#&gt;         °-- A1  ref</span></a>
+<a class="sourceLine" id="cb9-13" data-line-number="13"><span class="co">#&gt;     °-- )       fun_close</span></a>
+<a class="sourceLine" id="cb9-14" data-line-number="14"><span class="co">#&gt; °-- )           fun_close</span></a></code></pre></div>
 <p>See the <a href="file:///home/nacnudus/R/tidyxl/docs/articles/smells.html">vignette</a> for more examples and details.</p>
 </div>
 </div>
@@ -524,36 +537,37 @@ pre code, pre, code {
 <h3>Named ranges</h3>
 <p>Names are imported with <code>xlex_names()</code>. AKA ‘named formulas’ and ‘defined names’, these are usually used to name particular cells or ranges, making formulas that refer to them more readable. Ones that <em>are</em> ranges are identifed by the <code>is_range</code> column (using <code>is_range()</code>), making it easier to match the names to the cells returned by <code>xlsx_cells()</code> – e.g. by using the <a href="https://github.com/rsheets/cellranger"><code>cellranger</code></a> package.</p>
 <p>When the scope of the name is within a particular sheet, rather than global, the sheet name is given.</p>
-<pre class="sourceCode r" id="cb10"><code class="sourceCode r"><div class="sourceLine" id="cb10-1" data-line-number="1"><span class="kw">xlsx_names</span>(examples)</div>
-<div class="sourceLine" id="cb10-2" data-line-number="2"><span class="co">#&gt;   rId    sheet                 name                     formula    comment hidden is_range</span></div>
-<div class="sourceLine" id="cb10-3" data-line-number="3"><span class="co">#&gt; 1   1   Sheet1  named_local_formula MAX(Sheet1!$A$129:$A$130)+1       &lt;NA&gt;  FALSE    FALSE</span></div>
-<div class="sourceLine" id="cb10-4" data-line-number="4"><span class="co">#&gt; 2   4 E09904.2   sheet_beyond_chart E09904.2!$A$1,E09904.2!$C$1       &lt;NA&gt;  FALSE     TRUE</span></div>
-<div class="sourceLine" id="cb10-5" data-line-number="5"><span class="co">#&gt; 3  NA     &lt;NA&gt;         intersection   Sheet1!$B:$B Sheet1!$8:$8       &lt;NA&gt;  FALSE     TRUE</span></div>
-<div class="sourceLine" id="cb10-6" data-line-number="6"><span class="co">#&gt; 4  NA     &lt;NA&gt; named_global_formula             Sheet1!$A$129-1       &lt;NA&gt;  FALSE    FALSE</span></div>
-<div class="sourceLine" id="cb10-7" data-line-number="7"><span class="co">#&gt; 5  NA     &lt;NA&gt;          named_range               Sheet1!$A$129 My comment  FALSE     TRUE</span></div></code></pre>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb10-1" data-line-number="1"><span class="kw">xlsx_names</span>(examples)</a>
+<a class="sourceLine" id="cb10-2" data-line-number="2"><span class="co">#&gt;   rId    sheet                 name                     formula    comment hidden is_range</span></a>
+<a class="sourceLine" id="cb10-3" data-line-number="3"><span class="co">#&gt; 1   1   Sheet1  named_local_formula MAX(Sheet1!$A$129:$A$130)+1       &lt;NA&gt;  FALSE    FALSE</span></a>
+<a class="sourceLine" id="cb10-4" data-line-number="4"><span class="co">#&gt; 2   4 E09904.2   sheet_beyond_chart E09904.2!$A$1,E09904.2!$C$1       &lt;NA&gt;  FALSE     TRUE</span></a>
+<a class="sourceLine" id="cb10-5" data-line-number="5"><span class="co">#&gt; 3  NA     &lt;NA&gt;         intersection   Sheet1!$B:$B Sheet1!$8:$8       &lt;NA&gt;  FALSE     TRUE</span></a>
+<a class="sourceLine" id="cb10-6" data-line-number="6"><span class="co">#&gt; 4  NA     &lt;NA&gt; named_global_formula             Sheet1!$A$129-1       &lt;NA&gt;  FALSE    FALSE</span></a>
+<a class="sourceLine" id="cb10-7" data-line-number="7"><span class="co">#&gt; 5  NA     &lt;NA&gt;          named_range               Sheet1!$A$129 My comment  FALSE     TRUE</span></a></code></pre></div>
 </div>
 <div id="data-validation-rules" class="section level3">
 <h3>Data validation rules</h3>
 <p>Data validation rules are imported with <code>xlsx_validation()</code>. These rules control what values may be entered into a cell, and are often used to create a drop-down list in a cell. Read the <a href="file:///home/nacnudus/R/tidyxl/docs/articles/data-validation-rules.html">vignette</a> for details.</p>
-<pre class="sourceCode r" id="cb11"><code class="sourceCode r"><div class="sourceLine" id="cb11-1" data-line-number="1"><span class="kw">xlsx_validation</span>(examples)</div>
-<div class="sourceLine" id="cb11-2" data-line-number="2"><span class="co">#&gt; # A tibble: 15 x 14</span></div>
-<div class="sourceLine" id="cb11-3" data-line-number="3"><span class="co">#&gt;    sheet  ref            type       operator           formu… formu… allow… show_… promp… prom… show… erro… erro… erro…</span></div>
-<div class="sourceLine" id="cb11-4" data-line-number="4"><span class="co">#&gt;    &lt;chr&gt;  &lt;chr&gt;          &lt;chr&gt;      &lt;chr&gt;              &lt;chr&gt;  &lt;chr&gt;  &lt;lgl&gt;  &lt;lgl&gt;  &lt;chr&gt;  &lt;chr&gt; &lt;lgl&gt; &lt;chr&gt; &lt;chr&gt; &lt;chr&gt;</span></div>
-<div class="sourceLine" id="cb11-5" data-line-number="5"><span class="co">#&gt;  1 Sheet1 A106           whole      between            0      9      T      T      messa… mess… T     erro… erro… stop </span></div>
-<div class="sourceLine" id="cb11-6" data-line-number="6"><span class="co">#&gt;  2 Sheet1 A108           list       &lt;NA&gt;               $B$108 &lt;NA&gt;   T      T      &lt;NA&gt;   &lt;NA&gt;  T     &lt;NA&gt;  &lt;NA&gt;  warn…</span></div>
-<div class="sourceLine" id="cb11-7" data-line-number="7"><span class="co">#&gt;  3 Sheet1 A110           date       between            2017-… 2017-… T      T      &lt;NA&gt;   &lt;NA&gt;  T     &lt;NA&gt;  &lt;NA&gt;  stop </span></div>
-<div class="sourceLine" id="cb11-8" data-line-number="8"><span class="co">#&gt;  4 Sheet1 A111           time       between            00:00… 09:00… T      T      &lt;NA&gt;   &lt;NA&gt;  T     &lt;NA&gt;  &lt;NA&gt;  stop </span></div>
-<div class="sourceLine" id="cb11-9" data-line-number="9"><span class="co">#&gt;  5 Sheet1 A112           textLength between            0      9      T      T      &lt;NA&gt;   &lt;NA&gt;  T     &lt;NA&gt;  &lt;NA&gt;  stop </span></div>
-<div class="sourceLine" id="cb11-10" data-line-number="10"><span class="co">#&gt;  6 Sheet1 A114           whole      notBetween         0      9      T      T      &lt;NA&gt;   &lt;NA&gt;  T     &lt;NA&gt;  &lt;NA&gt;  stop </span></div>
-<div class="sourceLine" id="cb11-11" data-line-number="11"><span class="co">#&gt;  7 Sheet1 A115,A121:A122 whole      equal              0      &lt;NA&gt;   T      T      &lt;NA&gt;   &lt;NA&gt;  T     &lt;NA&gt;  &lt;NA&gt;  stop </span></div>
-<div class="sourceLine" id="cb11-12" data-line-number="12"><span class="co">#&gt;  8 Sheet1 A116           whole      notEqual           0      &lt;NA&gt;   T      T      &lt;NA&gt;   &lt;NA&gt;  T     &lt;NA&gt;  &lt;NA&gt;  stop </span></div>
-<div class="sourceLine" id="cb11-13" data-line-number="13"><span class="co">#&gt;  9 Sheet1 A117           whole      greaterThan        0      &lt;NA&gt;   T      T      &lt;NA&gt;   &lt;NA&gt;  T     &lt;NA&gt;  &lt;NA&gt;  stop </span></div>
-<div class="sourceLine" id="cb11-14" data-line-number="14"><span class="co">#&gt; 10 Sheet1 A119           whole      greaterThanOrEqual 0      &lt;NA&gt;   T      T      &lt;NA&gt;   &lt;NA&gt;  T     &lt;NA&gt;  &lt;NA&gt;  stop </span></div>
-<div class="sourceLine" id="cb11-15" data-line-number="15"><span class="co">#&gt; 11 Sheet1 A120           whole      lessThanOrEqual    0      &lt;NA&gt;   T      T      &lt;NA&gt;   &lt;NA&gt;  T     &lt;NA&gt;  &lt;NA&gt;  stop </span></div>
-<div class="sourceLine" id="cb11-16" data-line-number="16"><span class="co">#&gt; 12 Sheet1 A118           whole      lessThan           0      &lt;NA&gt;   T      T      &lt;NA&gt;   &lt;NA&gt;  T     &lt;NA&gt;  &lt;NA&gt;  stop </span></div>
-<div class="sourceLine" id="cb11-17" data-line-number="17"><span class="co">#&gt; 13 Sheet1 A107           decimal    notBetween         0      9      F      F      &lt;NA&gt;   &lt;NA&gt;  F     &lt;NA&gt;  &lt;NA&gt;  stop </span></div>
-<div class="sourceLine" id="cb11-18" data-line-number="18"><span class="co">#&gt; 14 Sheet1 A113           custom     &lt;NA&gt;               A113&lt;… &lt;NA&gt;   T      T      &lt;NA&gt;   &lt;NA&gt;  T     &lt;NA&gt;  &lt;NA&gt;  stop </span></div>
-<div class="sourceLine" id="cb11-19" data-line-number="19"><span class="co">#&gt; 15 Sheet1 A109           list       &lt;NA&gt;               $B$108 &lt;NA&gt;   T      T      &lt;NA&gt;   &lt;NA&gt;  T     &lt;NA&gt;  &lt;NA&gt;  info…</span></div></code></pre>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb11-1" data-line-number="1"><span class="kw">xlsx_validation</span>(examples)</a>
+<a class="sourceLine" id="cb11-2" data-line-number="2"><span class="co">#&gt; # A tibble: 15 x 14</span></a>
+<a class="sourceLine" id="cb11-3" data-line-number="3"><span class="co">#&gt;    sheet  ref   type  operator formula1 formula2 allow_blank show_input_mess… prompt_title prompt_body show_error_mess…</span></a>
+<a class="sourceLine" id="cb11-4" data-line-number="4"><span class="co">#&gt;    &lt;chr&gt;  &lt;chr&gt; &lt;chr&gt; &lt;chr&gt;    &lt;chr&gt;    &lt;chr&gt;    &lt;lgl&gt;       &lt;lgl&gt;            &lt;chr&gt;        &lt;chr&gt;       &lt;lgl&gt;           </span></a>
+<a class="sourceLine" id="cb11-5" data-line-number="5"><span class="co">#&gt;  1 Sheet1 A106  whole between  0        9        TRUE        TRUE             message tit… message bo… TRUE            </span></a>
+<a class="sourceLine" id="cb11-6" data-line-number="6"><span class="co">#&gt;  2 Sheet1 A108  list  &lt;NA&gt;     $B$108   &lt;NA&gt;     TRUE        TRUE             &lt;NA&gt;         &lt;NA&gt;        TRUE            </span></a>
+<a class="sourceLine" id="cb11-7" data-line-number="7"><span class="co">#&gt;  3 Sheet1 A110  date  between  2017-01… 2017-01… TRUE        TRUE             &lt;NA&gt;         &lt;NA&gt;        TRUE            </span></a>
+<a class="sourceLine" id="cb11-8" data-line-number="8"><span class="co">#&gt;  4 Sheet1 A111  time  between  00:00:00 09:00:00 TRUE        TRUE             &lt;NA&gt;         &lt;NA&gt;        TRUE            </span></a>
+<a class="sourceLine" id="cb11-9" data-line-number="9"><span class="co">#&gt;  5 Sheet1 A112  text… between  0        9        TRUE        TRUE             &lt;NA&gt;         &lt;NA&gt;        TRUE            </span></a>
+<a class="sourceLine" id="cb11-10" data-line-number="10"><span class="co">#&gt;  6 Sheet1 A114  whole notBetw… 0        9        TRUE        TRUE             &lt;NA&gt;         &lt;NA&gt;        TRUE            </span></a>
+<a class="sourceLine" id="cb11-11" data-line-number="11"><span class="co">#&gt;  7 Sheet1 A115… whole equal    0        &lt;NA&gt;     TRUE        TRUE             &lt;NA&gt;         &lt;NA&gt;        TRUE            </span></a>
+<a class="sourceLine" id="cb11-12" data-line-number="12"><span class="co">#&gt;  8 Sheet1 A116  whole notEqual 0        &lt;NA&gt;     TRUE        TRUE             &lt;NA&gt;         &lt;NA&gt;        TRUE            </span></a>
+<a class="sourceLine" id="cb11-13" data-line-number="13"><span class="co">#&gt;  9 Sheet1 A117  whole greater… 0        &lt;NA&gt;     TRUE        TRUE             &lt;NA&gt;         &lt;NA&gt;        TRUE            </span></a>
+<a class="sourceLine" id="cb11-14" data-line-number="14"><span class="co">#&gt; 10 Sheet1 A119  whole greater… 0        &lt;NA&gt;     TRUE        TRUE             &lt;NA&gt;         &lt;NA&gt;        TRUE            </span></a>
+<a class="sourceLine" id="cb11-15" data-line-number="15"><span class="co">#&gt; 11 Sheet1 A120  whole lessTha… 0        &lt;NA&gt;     TRUE        TRUE             &lt;NA&gt;         &lt;NA&gt;        TRUE            </span></a>
+<a class="sourceLine" id="cb11-16" data-line-number="16"><span class="co">#&gt; 12 Sheet1 A118  whole lessThan 0        &lt;NA&gt;     TRUE        TRUE             &lt;NA&gt;         &lt;NA&gt;        TRUE            </span></a>
+<a class="sourceLine" id="cb11-17" data-line-number="17"><span class="co">#&gt; 13 Sheet1 A107  deci… notBetw… 0        9        FALSE       FALSE            &lt;NA&gt;         &lt;NA&gt;        FALSE           </span></a>
+<a class="sourceLine" id="cb11-18" data-line-number="18"><span class="co">#&gt; 14 Sheet1 A113  cust… &lt;NA&gt;     A113&lt;=L… &lt;NA&gt;     TRUE        TRUE             &lt;NA&gt;         &lt;NA&gt;        TRUE            </span></a>
+<a class="sourceLine" id="cb11-19" data-line-number="19"><span class="co">#&gt; 15 Sheet1 A109  list  &lt;NA&gt;     $B$108   &lt;NA&gt;     TRUE        TRUE             &lt;NA&gt;         &lt;NA&gt;        TRUE            </span></a>
+<a class="sourceLine" id="cb11-20" data-line-number="20"><span class="co">#&gt; # ... with 3 more variables: error_title &lt;chr&gt;, error_body &lt;chr&gt;, error_symbol &lt;chr&gt;</span></a></code></pre></div>
 </div>
 </div>
 <div id="philosophy" class="section level2">
