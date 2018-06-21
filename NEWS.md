@@ -1,3 +1,19 @@
+# tidyxl 1.0.3
+
+* Noticeably faster for large files.
+* Omission of blank cells with `include_blank_cells = FALSE` had a bug that
+    returned blank cells as an empty row in the `xlsx_cells()` data frame.
+
+# tidyxl 1.0.2
+
+* Correctly constructs formulas where references are preceded by operators, e.g.
+    `-F10` (#26 @cablegui).
+* No longer misinterprets date formats that use underscores `_` as dates when
+    the underscore is followed by a date-ish character like `M` (#24).
+* Optionally omits blank cells with `include_blank_cells = FALSE` in
+    `xlsx_cells()` (#25).
+* Doesn't crash reading files with certain colour themes (#34 @dan-fahey).
+
 # tidyxl 1.0.1
 
 * Filetype checking is based on the [file

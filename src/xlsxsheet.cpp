@@ -12,9 +12,12 @@ xlsxsheet::xlsxsheet(
     const std::string& name,
     std::string& sheet_xml,
     xlsxbook& book,
-    String comments_path):
+    String comments_path,
+    const bool& include_blank_cells
+    ):
   name_(name),
-  book_(book) {
+  book_(book),
+  include_blank_cells_(include_blank_cells) {
   rapidxml::xml_document<> xml;
   xml.parse<rapidxml::parse_non_destructive>(&sheet_xml[0]);
 
@@ -81,7 +84,8 @@ void xlsxsheet::cacheColWidths(rapidxml::xml_node<>* worksheet) {
   }
 }
 
-unsigned long long int xlsxsheet::cacheCellcount(rapidxml::xml_node<>* sheetData) {
+unsigned long long int xlsxsheet::cacheCellcount(
+    rapidxml::xml_node<>* sheetData) {
   // Iterate over all rows and cells to count.  The 'dimension' tag is no use
   // here because it describes a rectangle of cells, many of which may be blank.
   unsigned long long int cellcount = 0;
@@ -104,7 +108,9 @@ unsigned long long int xlsxsheet::cacheCellcount(rapidxml::xml_node<>* sheetData
       if(comment != comments_.end()) {
         ++commentcount;
       }
-      ++cellcount;
+      if (include_blank_cells_ || c->first_node() != NULL) {
+        ++cellcount;
+      }
       if ((cellcount + 1) % 1000 == 0) {
         checkUserInterrupt();
       }
@@ -160,19 +166,43 @@ void xlsxsheet::parseSheetData(
       rowHeights_[rowNumber - 1] = rowHeight;
     }
 
-    for (rapidxml::xml_node<>* c = row->first_node();
-        c; c = c->next_sibling()) {
-      xlsxcell cell(c, this, book_, i);
+    if (include_blank_cells_) {
+      for (rapidxml::xml_node<>* c = row->first_node();
+          c; c = c->next_sibling()) {
+        xlsxcell cell(c, this, book_, i);
 
-      // Sheet name, row height and col width aren't really determined by the
-      // cell, so they're done in this sheet instance
-      book_.sheet_[i] = name_;
-      book_.height_[i] = rowHeight;
-      book_.width_[i] = colWidths_[book_.col_[i] - 1];
+        // Sheet name, row height and col width aren't really determined by
+        // the cell, so they're done in this sheet instance
+        book_.sheet_[i] = name_;
+        book_.height_[i] = rowHeight;
+        book_.width_[i] = colWidths_[book_.col_[i] - 1];
 
-      ++i;
-      if ((i + 1) % 1000 == 0)
-        checkUserInterrupt();
+        ++i;
+        if ((i + 1) % 1000 == 0)
+          checkUserInterrupt();
+      }
+    } else {
+      for (rapidxml::xml_node<>* c = row->first_node();
+          c; c = c->next_sibling()) {
+        // If cell has no child nodes then it is empty (no value or formula)
+        // besides maybe formatting (linked to via attributes not child nodes).
+        rapidxml::xml_node<>* first_child = c->first_node();
+        if (first_child != NULL) {
+          xlsxcell cell(c, this, book_, i);
+
+          // TODO: check readxl's method of importing ranges
+
+          // Sheet name, row height and col width aren't really determined by
+          // the cell, so they're done in this sheet instance
+          book_.sheet_[i] = name_;
+          book_.height_[i] = rowHeight;
+          book_.width_[i] = colWidths_[book_.col_[i] - 1];
+
+          ++i;
+          if ((i + 1) % 1000 == 0)
+            checkUserInterrupt();
+        }
+      }
     }
   }
 }

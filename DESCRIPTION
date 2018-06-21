@@ -1,6 +1,6 @@
 Package: tidyxl
 Title: Read Untidy Excel Files
-Version: 1.0.1
+Version: 1.0.3
 Authors@R: c(
     person("Duncan", "Garmonsway", email = "nacnudus@gmail.com", role = c("aut", "cre")),
     person("Hadley", "Wickham", role = c("ctb"), comment = "Author of included readxl fragments"),
@@ -23,10 +23,10 @@ URL: https://github.com/nacnudus/tidyxl
 BugReports: https://github.com/nacnudus/tidyxl/issues
 RoxygenNote: 6.0.1
 Suggests: testthat, here, knitr, rmarkdown, readxl, dplyr, tidyr,
-        purrr, ggplot2, cellranger, rlang
+        purrr, tibble, ggplot2, cellranger, openxlsx, rlang
 VignetteBuilder: knitr
 NeedsCompilation: yes
-Packaged: 2018-03-26 20:48:48 UTC; nacnudus
+Packaged: 2018-06-20 20:50:12 UTC; nacnudus
 Author: Duncan Garmonsway [aut, cre],
   Hadley Wickham [ctb] (Author of included readxl fragments),
   Jenny Bryan [ctb] (Author of included readxl fragments),
@@ -34,4 +34,4 @@ Author: Duncan Garmonsway [aut, cre],
   Marcin Kalicinski [ctb, cph] (Author of included RapidXML code)
 Maintainer: Duncan Garmonsway <nacnudus@gmail.com>
 Repository: CRAN
-Date/Publication: 2018-03-26 21:03:34 UTC
+Date/Publication: 2018-06-21 13:59:01 UTC

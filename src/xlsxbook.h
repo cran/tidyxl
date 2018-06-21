@@ -15,7 +15,7 @@ class xlsxbook {
     Rcpp::CharacterVector sheet_names_;    // worksheet names
     Rcpp::CharacterVector comments_paths_; // comments files
     std::vector<std::string> strings_;     // strings table
-    std::vector<Rcpp::List> strings_formatted_; // strings with inline formatting
+    Rcpp::List strings_formatted_;         // strings with inline formatting
                                                 // list of data frames
     xlsxstyles styles_;
 
@@ -27,6 +27,8 @@ class xlsxbook {
     unsigned long long int cellcount_;   // total cellcount of all sheets
 
     Rcpp::List information_;             // dataframes of cells
+
+    bool include_blank_cells_; // whether to include cells with no value
 
     // Vectors of cell properties, to be wrapped in a data frame
     Rcpp::CharacterVector sheet_;     // The worksheet that a cell is in
@@ -57,7 +59,8 @@ class xlsxbook {
         const std::string& path,
         Rcpp::CharacterVector& sheet_names,
         Rcpp::CharacterVector& sheet_paths,
-        Rcpp::CharacterVector& comments_paths
+        Rcpp::CharacterVector& comments_paths,
+        const bool& include_blank_cells
         );
 
     void cacheStrings();
