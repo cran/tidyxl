@@ -1,45 +1,46 @@
 <!DOCTYPE html>
 
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html>
 
 <head>
 
 <meta charset="utf-8" />
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
 
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1" />
 
 <meta name="author" content="Duncan Garmonsway" />
 
-<meta name="date" content="2019-01-02" />
+<meta name="date" content="2020-04-01" />
 
 <title>Detecting Spreadsheet Smells with xlex()</title>
 
 
 
 <style type="text/css">code{white-space: pre;}</style>
-<style type="text/css">
-a.sourceLine { display: inline-block; line-height: 1.25; }
-a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
-a.sourceLine:empty { height: 1.2em; }
-.sourceCode { overflow: visible; }
-code.sourceCode { white-space: pre; position: relative; }
+<style type="text/css" data-origin="pandoc">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
 div.sourceCode { margin: 1em 0; }
 pre.sourceCode { margin: 0; }
 @media screen {
 div.sourceCode { overflow: auto; }
 }
 @media print {
-code.sourceCode { white-space: pre-wrap; }
-a.sourceLine { text-indent: -1em; padding-left: 1em; }
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
 }
-pre.numberSource a.sourceLine
-  { position: relative; left: -4em; }
-pre.numberSource a.sourceLine::before
-  { content: attr(title);
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
     position: relative; left: -1em; text-align: right; vertical-align: baseline;
-    border: none; pointer-events: all; display: inline-block;
+    border: none; display: inline-block;
     -webkit-touch-callout: none; -webkit-user-select: none;
     -khtml-user-select: none; -moz-user-select: none;
     -ms-user-select: none; user-select: none;
@@ -48,9 +49,9 @@ pre.numberSource a.sourceLine::before
   }
 pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
 div.sourceCode
-  {  }
+  {   }
 @media screen {
-a.sourceLine::before { text-decoration: underline; }
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
 code span.al { color: #ff0000; font-weight: bold; } /* Alert */
 code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
@@ -81,7 +82,29 @@ code span.st { color: #4070a0; } /* String */
 code span.va { color: #19177c; } /* Variable */
 code span.vs { color: #4070a0; } /* VerbatimString */
 code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+
 </style>
+<script>
+// apply pandoc div.sourceCode style to pre.sourceCode instead
+(function() {
+  var sheets = document.styleSheets;
+  for (var i = 0; i < sheets.length; i++) {
+    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
+    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
+    for (var j = 0; j < rules.length; j++) {
+      var rule = rules[j];
+      // check if there is a div.sourceCode rule
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") continue;
+      var style = rule.style.cssText;
+      // check if color or background-color is set
+      if (rule.style.color === '' && rule.style.backgroundColor === '') continue;
+      // replace div.sourceCode by a pre.sourceCode rule
+      sheets[i].deleteRule(j);
+      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
+    }
+  }
+})();
+</script>
 
 
 
@@ -95,9 +118,6 @@ padding-right: 2em;
 font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
 font-size: 14px;
 line-height: 1.35;
-}
-#header {
-text-align: center;
 }
 #TOC {
 clear: both;
@@ -266,8 +286,12 @@ code > span.st { color: #d14; }
 code > span.co { color: #888888; font-style: italic; } 
 code > span.ot { color: #007020; } 
 code > span.al { color: #ff0000; font-weight: bold; } 
-code > span.fu { color: #900; font-weight: bold; }  code > span.er { color: #a61717; background-color: #e3d2d2; } 
+code > span.fu { color: #900; font-weight: bold; } 
+code > span.er { color: #a61717; background-color: #e3d2d2; } 
 </style>
+
+
+
 
 </head>
 
@@ -277,8 +301,8 @@ code > span.fu { color: #900; font-weight: bold; }  code > span.er { color: #a61
 
 
 <h1 class="title toc-ignore">Detecting Spreadsheet Smells with xlex()</h1>
-<h4 class="author"><em>Duncan Garmonsway</em></h4>
-<h4 class="date"><em>2019-01-02</em></h4>
+<h4 class="author">Duncan Garmonsway</h4>
+<h4 class="date">2020-04-01</h4>
 
 
 
@@ -287,9 +311,9 @@ code > span.fu { color: #900; font-weight: bold; }  code > span.er { color: #a61
 <div id="inspecting-the-parse-tree" class="section level2">
 <h2>Inspecting the parse tree</h2>
 <p>Here’s an example with a simple formula <code>MIN(3,MAX(2,A1))</code> (the <code>=</code> symbol at the beginning of the formula is implied, because Excel doesn’t write it to the file).</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" title="1"><span class="kw">library</span>(tidyxl)</a>
-<a class="sourceLine" id="cb1-2" title="2">x &lt;-<span class="st"> </span><span class="kw">xlex</span>(<span class="st">&quot;MIN(3,MAX(2,A1))&quot;</span>)</a>
-<a class="sourceLine" id="cb1-3" title="3">x</a></code></pre></div>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1"></a><span class="kw">library</span>(tidyxl)</span>
+<span id="cb1-2"><a href="#cb1-2"></a>x &lt;-<span class="st"> </span><span class="kw">xlex</span>(<span class="st">&quot;MIN(3,MAX(2,A1))&quot;</span>)</span>
+<span id="cb1-3"><a href="#cb1-3"></a>x</span></code></pre></div>
 <pre><code>## root            
 ## ¦-- MIN         function
 ## °-- (           fun_open
@@ -311,20 +335,20 @@ code > span.fu { color: #900; font-weight: bold; }  code > span.er { color: #a61
 <p>The first step, after importing the spreadsheet, is to tokenize the formulas, using <code>xlsx()</code>. Let’s tokenize one formula to see what it looks like.</p>
 <div id="one-formula" class="section level3">
 <h3>One formula</h3>
-<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" title="1"><span class="kw">library</span>(dplyr)</a>
-<a class="sourceLine" id="cb3-2" title="2"><span class="kw">library</span>(tidyr)</a>
-<a class="sourceLine" id="cb3-3" title="3"><span class="kw">library</span>(purrr)</a>
-<a class="sourceLine" id="cb3-4" title="4"><span class="kw">library</span>(ggplot2)</a>
-<a class="sourceLine" id="cb3-5" title="5"></a>
-<a class="sourceLine" id="cb3-6" title="6"><span class="co"># The original filename was &quot;barry_tycholiz__848__2002 Plan Worksheet CC107322.xlsx&quot;</span></a>
-<a class="sourceLine" id="cb3-7" title="7">sheet &lt;-<span class="st"> </span><span class="kw">tidy_xlsx</span>(<span class="kw">system.file</span>(<span class="st">&quot;extdata/enron-constants.xlsx&quot;</span>,</a>
-<a class="sourceLine" id="cb3-8" title="8">                               <span class="dt">package =</span> <span class="st">&quot;tidyxl&quot;</span>),</a>
-<a class="sourceLine" id="cb3-9" title="9">                   <span class="st">&quot;Detail Breakdown&quot;</span>)<span class="op">$</span>data[[<span class="dv">1</span>]]</a></code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1"></a><span class="kw">library</span>(dplyr)</span>
+<span id="cb3-2"><a href="#cb3-2"></a><span class="kw">library</span>(tidyr)</span>
+<span id="cb3-3"><a href="#cb3-3"></a><span class="kw">library</span>(purrr)</span>
+<span id="cb3-4"><a href="#cb3-4"></a><span class="kw">library</span>(ggplot2)</span>
+<span id="cb3-5"><a href="#cb3-5"></a></span>
+<span id="cb3-6"><a href="#cb3-6"></a><span class="co"># The original filename was &quot;barry_tycholiz__848__2002 Plan Worksheet CC107322.xlsx&quot;</span></span>
+<span id="cb3-7"><a href="#cb3-7"></a>sheet &lt;-<span class="st"> </span><span class="kw">tidy_xlsx</span>(<span class="kw">system.file</span>(<span class="st">&quot;extdata/enron-constants.xlsx&quot;</span>,</span>
+<span id="cb3-8"><a href="#cb3-8"></a>                               <span class="dt">package =</span> <span class="st">&quot;tidyxl&quot;</span>),</span>
+<span id="cb3-9"><a href="#cb3-9"></a>                   <span class="st">&quot;Detail Breakdown&quot;</span>)<span class="op">$</span>data[[<span class="dv">1</span>]]</span></code></pre></div>
 <pre><code>## Warning: &#39;tidy_xlsx()&#39; is deprecated.
 ## Use &#39;xlsx_cells()&#39; or &#39;xlsx_formats()&#39; instead.</code></pre>
-<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb5-1" title="1">sheet<span class="op">$</span>formula[<span class="dv">22</span>]</a></code></pre></div>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1"></a>sheet<span class="op">$</span>formula[<span class="dv">22</span>]</span></code></pre></div>
 <pre><code>## [1] &quot;(C8/7)*12-48000&quot;</code></pre>
-<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb7-1" title="1"><span class="kw">xlex</span>(sheet<span class="op">$</span>formula[<span class="dv">22</span>])</a></code></pre></div>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1"></a><span class="kw">xlex</span>(sheet<span class="op">$</span>formula[<span class="dv">22</span>])</span></code></pre></div>
 <pre><code>## root        
 ## °-- (       paren_open
 ##     ¦-- C8  ref
@@ -343,13 +367,13 @@ code > span.fu { color: #900; font-weight: bold; }  code > span.er { color: #a61
 <div id="many-formulas" class="section level3">
 <h3>Many formulas</h3>
 <p>The <code>xlex()</code> function isn’t vectorized (because it returns a data frame), so we map it over each of the formulas to create a ‘nest’ column of individual data frames.</p>
-<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb10-1" title="1">tokens &lt;-</a>
-<a class="sourceLine" id="cb10-2" title="2"><span class="st">  </span>sheet <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb10-3" title="3"><span class="st">  </span><span class="kw">filter</span>(<span class="op">!</span><span class="kw">is.na</span>(formula)) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb10-4" title="4"><span class="st">  </span><span class="kw">select</span>(row, col, formula) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb10-5" title="5"><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">tokens =</span> <span class="kw">map</span>(formula, xlex)) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb10-6" title="6"><span class="st">  </span><span class="kw">select</span>(<span class="op">-</span>formula)</a>
-<a class="sourceLine" id="cb10-7" title="7">tokens</a></code></pre></div>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1"></a>tokens &lt;-</span>
+<span id="cb10-2"><a href="#cb10-2"></a><span class="st">  </span>sheet <span class="op">%&gt;%</span></span>
+<span id="cb10-3"><a href="#cb10-3"></a><span class="st">  </span><span class="kw">filter</span>(<span class="op">!</span><span class="kw">is.na</span>(formula)) <span class="op">%&gt;%</span></span>
+<span id="cb10-4"><a href="#cb10-4"></a><span class="st">  </span><span class="kw">select</span>(row, col, formula) <span class="op">%&gt;%</span></span>
+<span id="cb10-5"><a href="#cb10-5"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">tokens =</span> <span class="kw">map</span>(formula, xlex)) <span class="op">%&gt;%</span></span>
+<span id="cb10-6"><a href="#cb10-6"></a><span class="st">  </span><span class="kw">select</span>(<span class="op">-</span>formula)</span>
+<span id="cb10-7"><a href="#cb10-7"></a>tokens</span></code></pre></div>
 <pre><code>## # A tibble: 154 x 3
 ##      row   col tokens          
 ##    &lt;int&gt; &lt;int&gt; &lt;list&gt;          
@@ -365,11 +389,11 @@ code > span.fu { color: #900; font-weight: bold; }  code > span.er { color: #a61
 ## 10    17     4 &lt;tibble [7 × 3]&gt;
 ## # … with 144 more rows</code></pre>
 <p>Then we can unnest the data frames and filter for tokens that are constants, to find out which cells have constants in their formulas.</p>
-<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb12-1" title="1">constants &lt;-</a>
-<a class="sourceLine" id="cb12-2" title="2"><span class="st">  </span>tokens <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb12-3" title="3"><span class="st">  </span><span class="kw">unnest</span>(tokens) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb12-4" title="4"><span class="st">  </span><span class="kw">filter</span>(type <span class="op">%in%</span><span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;error&quot;</span>, <span class="st">&quot;bool&quot;</span>, <span class="st">&quot;number&quot;</span>, <span class="st">&quot;text&quot;</span>))</a>
-<a class="sourceLine" id="cb12-5" title="5">constants</a></code></pre></div>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1"></a>constants &lt;-</span>
+<span id="cb12-2"><a href="#cb12-2"></a><span class="st">  </span>tokens <span class="op">%&gt;%</span></span>
+<span id="cb12-3"><a href="#cb12-3"></a><span class="st">  </span><span class="kw">unnest</span>(tokens) <span class="op">%&gt;%</span></span>
+<span id="cb12-4"><a href="#cb12-4"></a><span class="st">  </span><span class="kw">filter</span>(type <span class="op">%in%</span><span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;error&quot;</span>, <span class="st">&quot;bool&quot;</span>, <span class="st">&quot;number&quot;</span>, <span class="st">&quot;text&quot;</span>))</span>
+<span id="cb12-5"><a href="#cb12-5"></a>constants</span></code></pre></div>
 <pre><code>## # A tibble: 201 x 5
 ##      row   col level type   token
 ##    &lt;int&gt; &lt;int&gt; &lt;int&gt; &lt;chr&gt;  &lt;chr&gt;
@@ -385,12 +409,12 @@ code > span.fu { color: #900; font-weight: bold; }  code > span.er { color: #a61
 ## 10    13     4     1 number 7    
 ## # … with 191 more rows</code></pre>
 <p>Which constants are most common? Unsurprisingly, 12 and 7 are almost equally abundant, but there are also lots of 6s and 9s – two- and three-quarterly figures? Then there are some 150000s and the familiar 48000s, followed by some fractions that look like percentages, and then several one-offs.</p>
-<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb14-1" title="1">constants <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb14-2" title="2"><span class="st">  </span><span class="kw">count</span>(token, <span class="dt">sort =</span> <span class="ot">TRUE</span>) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb14-3" title="3"><span class="st">  </span><span class="kw">print</span>(<span class="dt">n =</span> <span class="ot">Inf</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1"></a>constants <span class="op">%&gt;%</span></span>
+<span id="cb14-2"><a href="#cb14-2"></a><span class="st">  </span><span class="kw">count</span>(token, <span class="dt">sort =</span> <span class="ot">TRUE</span>) <span class="op">%&gt;%</span></span>
+<span id="cb14-3"><a href="#cb14-3"></a><span class="st">  </span><span class="kw">print</span>(<span class="dt">n =</span> <span class="ot">Inf</span>)</span></code></pre></div>
 <pre><code>## # A tibble: 24 x 2
 ##    token      n
-##    &lt;chr&gt;  &lt;int&gt;
+##  * &lt;chr&gt;  &lt;int&gt;
 ##  1 12        59
 ##  2 7         58
 ##  3 6         30
@@ -420,43 +444,43 @@ code > span.fu { color: #900; font-weight: bold; }  code > span.er { color: #a61
 <h3>Visualising constants</h3>
 <p>A final step is to visualize the spreadsheet, highlighting cells that hide constants in their formulas. We already have a data frame of cells with constants, so we join it back to the full dataset, and pass the result into <code>ggplot</code>.</p>
 <p>This time there doesn’t seem to be any particular pattern, which is perhaps suspicious in itself.</p>
-<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb16-1" title="1">has_constants &lt;-</a>
-<a class="sourceLine" id="cb16-2" title="2"><span class="st">  </span>constants <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb16-3" title="3"><span class="st">  </span><span class="kw">distinct</span>(row, col) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb16-4" title="4"><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">has_constant =</span> <span class="ot">TRUE</span>) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb16-5" title="5"><span class="st">  </span><span class="kw">right_join</span>(sheet, <span class="dt">by =</span> <span class="kw">c</span>(<span class="st">&quot;row&quot;</span>, <span class="st">&quot;col&quot;</span>)) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb16-6" title="6"><span class="st">  </span><span class="kw">filter</span>(<span class="op">!</span>is_blank) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb16-7" title="7"><span class="st">  </span><span class="kw">select</span>(row, col, has_constant) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb16-8" title="8"><span class="st">  </span><span class="kw">replace_na</span>(<span class="kw">list</span>(<span class="dt">has_constant =</span> <span class="ot">FALSE</span>))</a>
-<a class="sourceLine" id="cb16-9" title="9">has_constants</a></code></pre></div>
+<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1"></a>has_constants &lt;-</span>
+<span id="cb16-2"><a href="#cb16-2"></a><span class="st">  </span>constants <span class="op">%&gt;%</span></span>
+<span id="cb16-3"><a href="#cb16-3"></a><span class="st">  </span><span class="kw">distinct</span>(row, col) <span class="op">%&gt;%</span></span>
+<span id="cb16-4"><a href="#cb16-4"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">has_constant =</span> <span class="ot">TRUE</span>) <span class="op">%&gt;%</span></span>
+<span id="cb16-5"><a href="#cb16-5"></a><span class="st">  </span><span class="kw">right_join</span>(sheet, <span class="dt">by =</span> <span class="kw">c</span>(<span class="st">&quot;row&quot;</span>, <span class="st">&quot;col&quot;</span>)) <span class="op">%&gt;%</span></span>
+<span id="cb16-6"><a href="#cb16-6"></a><span class="st">  </span><span class="kw">filter</span>(<span class="op">!</span>is_blank) <span class="op">%&gt;%</span></span>
+<span id="cb16-7"><a href="#cb16-7"></a><span class="st">  </span><span class="kw">select</span>(row, col, has_constant) <span class="op">%&gt;%</span></span>
+<span id="cb16-8"><a href="#cb16-8"></a><span class="st">  </span><span class="kw">replace_na</span>(<span class="kw">list</span>(<span class="dt">has_constant =</span> <span class="ot">FALSE</span>))</span>
+<span id="cb16-9"><a href="#cb16-9"></a>has_constants</span></code></pre></div>
 <pre><code>## # A tibble: 412 x 3
 ##      row   col has_constant
 ##    &lt;int&gt; &lt;int&gt; &lt;lgl&gt;       
-##  1     1     1 FALSE       
-##  2     2     1 FALSE       
-##  3     3     3 FALSE       
-##  4     3     4 FALSE       
-##  5     3     5 FALSE       
-##  6     3     6 FALSE       
-##  7     4     3 FALSE       
-##  8     4     4 FALSE       
-##  9     4     5 FALSE       
-## 10     4     6 FALSE       
+##  1     8     4 TRUE        
+##  2     9     4 TRUE        
+##  3    10     4 TRUE        
+##  4    12     4 TRUE        
+##  5    13     4 TRUE        
+##  6    17     4 TRUE        
+##  7    17     6 TRUE        
+##  8    18     4 TRUE        
+##  9    19     4 TRUE        
+## 10    20     4 TRUE        
 ## # … with 402 more rows</code></pre>
-<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb18-1" title="1">has_constants <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb18-2" title="2"><span class="st">  </span><span class="co"># filter(row &lt;= 28) %&gt;%</span></a>
-<a class="sourceLine" id="cb18-3" title="3"><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(col, row, <span class="dt">fill =</span> has_constant)) <span class="op">+</span></a>
-<a class="sourceLine" id="cb18-4" title="4"><span class="st">  </span><span class="kw">geom_tile</span>() <span class="op">+</span></a>
-<a class="sourceLine" id="cb18-5" title="5"><span class="st">  </span><span class="kw">scale_y_reverse</span>() <span class="op">+</span></a>
-<a class="sourceLine" id="cb18-6" title="6"><span class="st">  </span><span class="kw">theme</span>(<span class="dt">legend.position =</span> <span class="st">&quot;top&quot;</span>)</a></code></pre></div>
-<p><img src="data:image/png;base64,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" /><!-- --></p>
+<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1"></a>has_constants <span class="op">%&gt;%</span></span>
+<span id="cb18-2"><a href="#cb18-2"></a><span class="st">  </span><span class="co"># filter(row &lt;= 28) %&gt;%</span></span>
+<span id="cb18-3"><a href="#cb18-3"></a><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(col, row, <span class="dt">fill =</span> has_constant)) <span class="op">+</span></span>
+<span id="cb18-4"><a href="#cb18-4"></a><span class="st">  </span><span class="kw">geom_tile</span>() <span class="op">+</span></span>
+<span id="cb18-5"><a href="#cb18-5"></a><span class="st">  </span><span class="kw">scale_y_reverse</span>() <span class="op">+</span></span>
+<span id="cb18-6"><a href="#cb18-6"></a><span class="st">  </span><span class="kw">theme</span>(<span class="dt">legend.position =</span> <span class="st">&quot;top&quot;</span>)</span></code></pre></div>
+<p><img src="data:image/png;base64,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" /><!-- --></p>
 </div>
 </div>
 <div id="detecting-deeply-nested-formulas" class="section level2">
 <h2>Detecting deeply nested formulas</h2>
 <p>Using the same techniques as for detecting constants, we map <code>xlex()</code> over the formulas in a spreadsheet, unnest the result, and filter for tokens with particular properties. In this case, we are interested in the <code>level</code> of each token, which tells how deeply a token is nested in other functions and expressions.</p>
 <p>This time, we use another spreadsheet from the Enron corpus. First, an illustration. Notice that inside the first function, the level increases to 1. Inside the second function, the level increases to 2.</p>
-<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb19-1" title="1"><span class="kw">xlex</span>(<span class="st">&quot;MAX(3,MIN(2,4))&quot;</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1"></a><span class="kw">xlex</span>(<span class="st">&quot;MAX(3,MIN(2,4))&quot;</span>)</span></code></pre></div>
 <pre><code>## root           
 ## ¦-- MAX        function
 ## °-- (          fun_open
@@ -470,21 +494,21 @@ code > span.fu { color: #900; font-weight: bold; }  code > span.er { color: #a61
 ##     °-- )      fun_close
 ## °-- )          fun_close</code></pre>
 <p>Now let’s apply the same test to all the formulas in a sheet. The deepest level of nesting turns out to be 7, and is seen in all the cells in row 171.</p>
-<div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb21-1" title="1"><span class="co"># The original filename was &quot;albert_meyers__1__1-25act.xlsx&quot;</span></a>
-<a class="sourceLine" id="cb21-2" title="2">sheet &lt;-<span class="st"> </span><span class="kw">tidy_xlsx</span>(<span class="kw">system.file</span>(<span class="st">&quot;extdata/enron-nested.xlsx&quot;</span>,</a>
-<a class="sourceLine" id="cb21-3" title="3">                               <span class="dt">package =</span> <span class="st">&quot;tidyxl&quot;</span>),</a>
-<a class="sourceLine" id="cb21-4" title="4">                   <span class="st">&quot;Preschedule&quot;</span>)<span class="op">$</span>data[[<span class="dv">1</span>]]</a></code></pre></div>
+<div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1"></a><span class="co"># The original filename was &quot;albert_meyers__1__1-25act.xlsx&quot;</span></span>
+<span id="cb21-2"><a href="#cb21-2"></a>sheet &lt;-<span class="st"> </span><span class="kw">tidy_xlsx</span>(<span class="kw">system.file</span>(<span class="st">&quot;extdata/enron-nested.xlsx&quot;</span>,</span>
+<span id="cb21-3"><a href="#cb21-3"></a>                               <span class="dt">package =</span> <span class="st">&quot;tidyxl&quot;</span>),</span>
+<span id="cb21-4"><a href="#cb21-4"></a>                   <span class="st">&quot;Preschedule&quot;</span>)<span class="op">$</span>data[[<span class="dv">1</span>]]</span></code></pre></div>
 <pre><code>## Warning: &#39;tidy_xlsx()&#39; is deprecated.
 ## Use &#39;xlsx_cells()&#39; or &#39;xlsx_formats()&#39; instead.</code></pre>
-<div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb23-1" title="1">deepest &lt;-</a>
-<a class="sourceLine" id="cb23-2" title="2"><span class="st">  </span>sheet <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb23-3" title="3"><span class="st">    </span><span class="kw">filter</span>(<span class="op">!</span><span class="kw">is.na</span>(formula)) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb23-4" title="4"><span class="st">    </span><span class="kw">mutate</span>(<span class="dt">tokens =</span> <span class="kw">map</span>(formula, xlex)) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb23-5" title="5"><span class="st">    </span><span class="kw">select</span>(row, col, tokens) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb23-6" title="6"><span class="st">    </span><span class="kw">unnest</span>(tokens) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb23-7" title="7"><span class="st">    </span><span class="kw">filter</span>(level <span class="op">==</span><span class="st"> </span><span class="kw">max</span>(level)) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb23-8" title="8"><span class="st">    </span><span class="kw">distinct</span>(row, col, level)</a>
-<a class="sourceLine" id="cb23-9" title="9">deepest</a></code></pre></div>
+<div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1"></a>deepest &lt;-</span>
+<span id="cb23-2"><a href="#cb23-2"></a><span class="st">  </span>sheet <span class="op">%&gt;%</span></span>
+<span id="cb23-3"><a href="#cb23-3"></a><span class="st">    </span><span class="kw">filter</span>(<span class="op">!</span><span class="kw">is.na</span>(formula)) <span class="op">%&gt;%</span></span>
+<span id="cb23-4"><a href="#cb23-4"></a><span class="st">    </span><span class="kw">mutate</span>(<span class="dt">tokens =</span> <span class="kw">map</span>(formula, xlex)) <span class="op">%&gt;%</span></span>
+<span id="cb23-5"><a href="#cb23-5"></a><span class="st">    </span><span class="kw">select</span>(row, col, tokens) <span class="op">%&gt;%</span></span>
+<span id="cb23-6"><a href="#cb23-6"></a><span class="st">    </span><span class="kw">unnest</span>(tokens) <span class="op">%&gt;%</span></span>
+<span id="cb23-7"><a href="#cb23-7"></a><span class="st">    </span><span class="kw">filter</span>(level <span class="op">==</span><span class="st"> </span><span class="kw">max</span>(level)) <span class="op">%&gt;%</span></span>
+<span id="cb23-8"><a href="#cb23-8"></a><span class="st">    </span><span class="kw">distinct</span>(row, col, level)</span>
+<span id="cb23-9"><a href="#cb23-9"></a>deepest</span></code></pre></div>
 <pre><code>## # A tibble: 48 x 3
 ##      row   col level
 ##    &lt;int&gt; &lt;int&gt; &lt;int&gt;
@@ -500,12 +524,15 @@ code > span.fu { color: #900; font-weight: bold; }  code > span.er { color: #a61
 ## 10   171    11     7
 ## # … with 38 more rows</code></pre>
 <p>Do you wonder what those formulas look like?</p>
-<div class="sourceCode" id="cb25"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb25-1" title="1">sheet <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb25-2" title="2"><span class="st">  </span><span class="kw">filter</span>(row <span class="op">==</span><span class="st"> </span><span class="dv">171</span>, col <span class="op">==</span><span class="st"> </span><span class="dv">2</span>) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb25-3" title="3"><span class="st">  </span><span class="kw">pull</span>(formula) <span class="co"># Aaaaaaaaaaarghhhhhhhh!</span></a></code></pre></div>
+<div class="sourceCode" id="cb25"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1"></a>sheet <span class="op">%&gt;%</span></span>
+<span id="cb25-2"><a href="#cb25-2"></a><span class="st">  </span><span class="kw">filter</span>(row <span class="op">==</span><span class="st"> </span><span class="dv">171</span>, col <span class="op">==</span><span class="st"> </span><span class="dv">2</span>) <span class="op">%&gt;%</span></span>
+<span id="cb25-3"><a href="#cb25-3"></a><span class="st">  </span><span class="kw">pull</span>(formula) <span class="co"># Aaaaaaaaaaarghhhhhhhh!</span></span></code></pre></div>
 <pre><code>## [1] &quot;((IF((103-B$89)=103,0,(103-B$89)))+(IF((200-B$95)=200,0,(200-B$95)))+(IF((196-B$98)=196,0,(196-B$98)))+(IF((200-B$101)=200,0,(200-B$101)))+(IF((70-B$104)=70,0,(MIN(40,(70-B$104))))+(IF((78-B$109)=78,0,(MIN(50,(78-B$109)))))+(IF((103-B$114)=103,0,(MIN(66,(103-B$114)))))+(IF((195-B$119-B$124-B$129-B$134-B$139)=195,0,(MIN(70,(195-B$119-B$124-B$129-B$134-B$139)))))+(IF((64-B$144)=64,0,(MIN(50,(64-B$144)))))+(IF((48-B$149)=48,0,(MIN(20,(48-B$149)))))+(IF((44-B$154)=44,0,(MIN(20,(44-B$154)))))+(IF((130-B$159)=130,0,(MIN(20,(130-B$159)))))))&quot;</code></pre>
 </div>
 
+
+
+<!-- code folding -->
 
 
 <!-- dynamically load mathjax for compatibility with self-contained -->

@@ -1,30 +1,30 @@
-## ---- include = FALSE----------------------------------------------------
+## ---- include = FALSE---------------------------------------------------------
 knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>",
   fig.path = "README-"
 )
 
-## ---- echo = TRUE, eval = FALSE------------------------------------------
+## ---- echo = TRUE, eval = FALSE-----------------------------------------------
 #  devtools::install_github("nacnudus/tidyxl")
 
-## ---- echo = TRUE--------------------------------------------------------
+## ---- echo = TRUE-------------------------------------------------------------
 ftable(Titanic, row.vars = 1:2)
 
-## ---- echo = TRUE--------------------------------------------------------
+## ---- echo = TRUE-------------------------------------------------------------
 titanic <- system.file("extdata/titanic.xlsx", package = "tidyxl")
 readxl::read_excel(titanic)
 
-## ---- echo = TRUE--------------------------------------------------------
+## ---- echo = TRUE-------------------------------------------------------------
 library(tidyxl)
 x <- xlsx_cells(titanic)
 dplyr::glimpse(x)
 
-## ---- echo = TRUE--------------------------------------------------------
+## ---- echo = TRUE-------------------------------------------------------------
 x[x$data_type == "character", c("address", "character")]
 x[x$row == 4, c("address", "character", "numeric")]
 
-## ---- echo = TRUE--------------------------------------------------------
+## ---- echo = TRUE-------------------------------------------------------------
 # Bold
 formats <- xlsx_formats(titanic)
 formats$local$font$bold
@@ -46,7 +46,7 @@ head(x[x$style_format == "Normal", c("address", "character")])
 examples <- system.file("/extdata/examples.xlsx", package = "tidyxl")
 xlsx_cells(examples)$character_formatted[77]
 
-## ---- echo = TRUE--------------------------------------------------------
+## ---- echo = TRUE-------------------------------------------------------------
 x[!is.na(x$comment), c("address", "comment")]
 
 ## ---- echo = TRUE-----------------------------------------------------------------------------------------------------
