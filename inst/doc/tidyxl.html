@@ -12,10 +12,23 @@
 
 <meta name="author" content="Duncan Garmonsway" />
 
-<meta name="date" content="2020-04-01" />
+<meta name="date" content="2020-05-09" />
 
 <title>Tidyxl</title>
 
+<script>// Pandoc 2.9 adds attributes on both header and div. We remove the former (to
+// be compatible with the behavior of Pandoc < 2.8).
+document.addEventListener('DOMContentLoaded', function(e) {
+  var hs = document.querySelectorAll("div.section[class*='level'] > :first-child");
+  var i, h, a;
+  for (i = 0; i < hs.length; i++) {
+    h = hs[i];
+    if (!/^h[1-6]$/i.test(h.tagName)) continue;  // it should be a header h1-h6
+    a = h.attributes;
+    while (a.length > 0) h.removeAttribute(a[0].name);
+  }
+});
+</script>
 
 
 <style type="text/css">code{white-space: pre;}</style>
@@ -302,7 +315,7 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 
 <h1 class="title toc-ignore">Tidyxl</h1>
 <h4 class="author">Duncan Garmonsway</h4>
-<h4 class="date">2020-04-01</h4>
+<h4 class="date">2020-05-09</h4>
 
 
 
@@ -366,8 +379,8 @@ pre code, pre, code {
 <div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1"></a><span class="kw">library</span>(tidyxl)</span>
 <span id="cb4-2"><a href="#cb4-2"></a>x &lt;-<span class="st"> </span><span class="kw">xlsx_cells</span>(titanic)</span>
 <span id="cb4-3"><a href="#cb4-3"></a>dplyr<span class="op">::</span><span class="kw">glimpse</span>(x)</span>
-<span id="cb4-4"><a href="#cb4-4"></a><span class="co">#&gt; Observations: 60</span></span>
-<span id="cb4-5"><a href="#cb4-5"></a><span class="co">#&gt; Variables: 21</span></span>
+<span id="cb4-4"><a href="#cb4-4"></a><span class="co">#&gt; Rows: 60</span></span>
+<span id="cb4-5"><a href="#cb4-5"></a><span class="co">#&gt; Columns: 21</span></span>
 <span id="cb4-6"><a href="#cb4-6"></a><span class="co">#&gt; $ sheet               &lt;chr&gt; &quot;Sheet1&quot;, &quot;Sheet1&quot;, &quot;Sheet1&quot;, &quot;Sheet1&quot;, &quot;Sheet1&quot;,…</span></span>
 <span id="cb4-7"><a href="#cb4-7"></a><span class="co">#&gt; $ address             &lt;chr&gt; &quot;C1&quot;, &quot;D1&quot;, &quot;E1&quot;, &quot;F1&quot;, &quot;G1&quot;, &quot;C2&quot;, &quot;D2&quot;, &quot;E2&quot;, &quot;…</span></span>
 <span id="cb4-8"><a href="#cb4-8"></a><span class="co">#&gt; $ row                 &lt;int&gt; 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 3, 3, 4, 4, 4, 4, 4…</span></span>
