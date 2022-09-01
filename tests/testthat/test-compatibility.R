@@ -12,6 +12,11 @@ test_that("can import examples-gnumeric.xlsx", {
   expect_error(xlsx_formats("./examples-gnumeric.xlsx"), NA)
 })
 
+test_that("can import newEXCEL.xlsx with unusual XML namespaces", {
+  expect_error(xlsx_cells("./newEXCEL.xlsx"), NA)
+  expect_error(xlsx_formats("./newEXCEL.xlsx"), NA)
+})
+
 test_that("can read document from google doc", {
   expect_error(xlsx_cells("iris-google-doc.xlsx"), NA)
   expect_error(xlsx_formats("iris-google-doc.xlsx"), NA)
@@ -19,11 +24,6 @@ test_that("can read document from google doc", {
 
 test_that("gives informative error for a JMP export", {
   expect_error(xlsx_cells("jmp.xlsx"), "Invalid row or cell: lacks 'r' attribute")
-})
-
-test_that("warns about default styles when no cellStyleXfs defined", {
-  expect_warning(xlsx_cells("haskell.xlsx"),
-                 "Default styles used \\(cellStyleXfs is not defined\\)")
 })
 
 test_that("libreoffice 'true' and 'false' are interpreted as bool", {

@@ -1,3 +1,13 @@
+# tidyxl 1.0.8
+
+* tidyxl is now licensed as MIT (#63).
+* Fixed a unicode bug (#64)
+* Fixed two crashes (#71, #73)
+* Fixed a rare bug in number formats (#52, #75, @da11an)
+* New feature: Import outline levels of rows and columns (#77, #78)
+* New feature: Import raw cell value into `content` column (#80)
+* Compatibility with upcoming Rcpp release (#86, @Enchufa2)
+
 # tidyxl 1.0.7
 
 * Update namespace in C++ code for compatibility with the latest version of
@@ -185,6 +195,3 @@ formulas requires a dependency on the
 # tidyxl 0.1.0
 
 * Added a `NEWS.md` file to track changes to the package.
-
-
-

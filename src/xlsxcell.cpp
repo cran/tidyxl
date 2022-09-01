@@ -74,6 +74,7 @@ void xlsxcell::cacheValue(
   std::string vvalue;
   if (v != NULL) {
     vvalue = v->value();
+    SET_STRING_ELT(book.content_, i, Rf_mkCharCE(vvalue.c_str(), CE_UTF8));
   } else {
     book.is_blank_[i] = true;
   }
@@ -151,7 +152,7 @@ void xlsxcell::cacheValue(
   } else if (tvalue == "str") {
     // Formula, which could have evaluated to anything, so only a string is safe
     book.data_type_[i] = "character";
-    book.character_[i] = vvalue;
+    SET_STRING_ELT(book.character_, i, Rf_mkCharCE(vvalue.c_str(), CE_UTF8));
     return;
   } else if (tvalue == "b"){
     book.data_type_[i] = "logical";
@@ -184,7 +185,7 @@ void xlsxcell::cacheFormula(
   std::map<int, shared_formula>::iterator it;
   if (f != NULL) {
     formula = f->value();
-    book.formula_[i] = formula;
+    SET_STRING_ELT(book.formula_, i, Rf_mkCharCE(formula.c_str(), CE_UTF8));
     rapidxml::xml_attribute<>* f_t = f->first_attribute("t");
     if (f_t != NULL) {
       std::string ftvalue(f_t->value());
@@ -206,7 +207,7 @@ void xlsxcell::cacheFormula(
       book.formula_group_[i] = si_number;
       if (formula.length() == 0) { // inherits definition
         it = sheet->shared_formulas_.find(si_number);
-        book.formula_[i] = it->second.offset(row_, col_);
+        SET_STRING_ELT(book.formula_, i, Rf_mkCharCE(it->second.offset(row_, col_).c_str(), CE_UTF8));
       } else { // defines shared formula
         shared_formula new_shared_formula(formula, row_, col_);
         sheet->shared_formulas_.insert({si_number, new_shared_formula});

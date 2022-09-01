@@ -35,6 +35,7 @@ A data frame with the following columns.
 \item \code{row} The row number of a cell address (integer).
 \item \code{col} The column number of a cell address (integer).
 \item \code{is_blank} Whether or not the cell has a value
+\item \code{content} Raw cell value before type conversion, useful for debugging.
 \item \code{data_type} The type of a cell, referring to the following columns:
 error, logical, numeric, date, character, blank.
 \item \code{error} The error value of a cell.
@@ -51,6 +52,8 @@ formula or shared formula applies (see 'Details').
 \item \code{comment} The text of a comment attached to a cell.
 \item \code{height} The height of a cell's row, in Excel's units.
 \item \code{width} The width of a cell's column, in Excel's units.
+\item \code{row_outline_level} The outline level of a cells's row.
+\item \code{col_outline_level} The outline level of a cells's column.
 \item \code{style_format} An index into a table of style formats
 \code{x$formats$style} (see 'Details').
 \item \code{local_format_id} An index into a table of local cell formats
@@ -84,7 +87,7 @@ systems, or it may be an index into an internal table of strings.
 \code{xlsx_cells()} attempts to infer the correct data type of each cell,
 returning its value in the appropriate column (error, logical, numeric,
 date, character). In case this cleverness is unhelpful, the unparsed value
-and type information is available in the 'content' and 'type' columns.
+and type information is available in the 'content' and 'data_type' columns.
 }
 
 \subsection{Formula}{

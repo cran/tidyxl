@@ -36,6 +36,7 @@ class xlsxbook {
     Rcpp::IntegerVector   row_;       // Parsed address_ (one-based)
     Rcpp::IntegerVector   col_;       // Parsed address_ (one-based)
     Rcpp::LogicalVector   is_blank_;
+    Rcpp::CharacterVector content_;   // Raw cell value before type conversion
     Rcpp::CharacterVector data_type_; // Type of the parsed value
     Rcpp::CharacterVector error_;     // Parsed value
     Rcpp::LogicalVector   logical_;   // Parsed value
@@ -50,6 +51,8 @@ class xlsxbook {
     Rcpp::List            character_formatted_; // data frame
     Rcpp::NumericVector   height_;          // Provided to cell constructor
     Rcpp::NumericVector   width_;           // Provided to cell constructor
+    Rcpp::NumericVector   rowOutlineLevel_; // Provided to cell constructor
+    Rcpp::NumericVector   colOutlineLevel_; // Provided to cell constructor
     Rcpp::CharacterVector style_format_;    // cellXfs xfId links to cellStyleXfs entry
     Rcpp::IntegerVector   local_format_id_; // cell 'c' links to cellXfs entry
 
