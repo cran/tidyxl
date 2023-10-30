@@ -1,30 +1,36 @@
-## ---- include = FALSE---------------------------------------------------------
+## ----include = FALSE----------------------------------------------------------
 knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>",
   fig.path = "README-"
 )
 
-## ---- echo = TRUE, eval = FALSE-----------------------------------------------
+## ----echo = TRUE, eval = FALSE------------------------------------------------
 #  devtools::install_github("nacnudus/tidyxl")
 
-## ---- echo = TRUE-------------------------------------------------------------
+## ----echo = TRUE--------------------------------------------------------------
 ftable(Titanic, row.vars = 1:2)
 
-## ---- echo = TRUE-------------------------------------------------------------
+## ----echo = TRUE--------------------------------------------------------------
 titanic <- system.file("extdata/titanic.xlsx", package = "tidyxl")
 readxl::read_excel(titanic)
 
-## ---- echo = TRUE-------------------------------------------------------------
+## ----echo = TRUE--------------------------------------------------------------
 library(tidyxl)
 x <- xlsx_cells(titanic)
 dplyr::glimpse(x)
 
-## ---- echo = TRUE-------------------------------------------------------------
+## ----echo = TRUE--------------------------------------------------------------
 x[x$data_type == "character", c("address", "character")]
 x[x$row == 4, c("address", "character", "numeric")]
 
-## ---- echo = TRUE-------------------------------------------------------------
+## ----echo = FALSE, fig.alt = "Screenshot of a spreadsheet with meaningful formatting"----
+knitr::include_graphics("titanic-screenshot.png")
+
+## ----echo = FALSE, fig.alt = "Screenshot of a formatting options available in Excel"----
+knitr::include_graphics("styles-screenshot.png")
+
+## ----echo = TRUE--------------------------------------------------------------
 # Bold
 formats <- xlsx_formats(titanic)
 formats$local$font$bold
@@ -46,17 +52,17 @@ head(x[x$style_format == "Normal", c("address", "character")])
 examples <- system.file("/extdata/examples.xlsx", package = "tidyxl")
 xlsx_cells(examples)$character_formatted[77]
 
-## ---- echo = TRUE-------------------------------------------------------------
+## ----echo = TRUE--------------------------------------------------------------
 x[!is.na(x$comment), c("address", "comment")]
 
-## ---- echo = TRUE-----------------------------------------------------------------------------------------------------
+## ----echo = TRUE------------------------------------------------------------------------------------------------------
 options(width = 120)
 y <- xlsx_cells(examples, "Sheet1")
 y[!is.na(y$formula),
   c("address", "formula", "is_array", "formula_ref", "formula_group",
     "error", "logical", "numeric", "date", "character")]
 
-## ---- fig.width = 7, fig.height = 5-----------------------------------------------------------------------------------
+## ----fig.width = 7, fig.height = 5------------------------------------------------------------------------------------
 x <- xlex("MIN(3,MAX(2,A1))")
 x
 

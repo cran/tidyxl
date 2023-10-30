@@ -1,6 +1,6 @@
 Package: tidyxl
 Title: Read Untidy Excel Files
-Version: 1.0.8
+Version: 1.0.9
 Authors@R: c(
     person("Duncan", "Garmonsway", email = "nacnudus@gmail.com", role = c("aut", "cre")),
     person("Hadley", "Wickham", role = c("ctb"), comment = "Author of included readxl fragments"),
@@ -11,7 +11,7 @@ Authors@R: c(
 Description: Imports non-tabular from Excel files into R.  Exposes cell content,
     position and formatting in a tidy structure for further manipulation.
     Tokenizes Excel formulas.  Supports '.xlsx' and '.xlsm' via the embedded
-    'RapidXML' C++ library <http://rapidxml.sourceforge.net>.  Does not support
+    'RapidXML' C++ library <https://rapidxml.sourceforge.net>.  Does not support
     '.xlsb' or '.xls'.
 Depends: R (>= 3.2.0)
 License: MIT + file LICENSE
@@ -22,12 +22,13 @@ Imports: Rcpp
 URL: https://github.com/nacnudus/tidyxl,
         https://nacnudus.github.io/tidyxl/
 BugReports: https://github.com/nacnudus/tidyxl/issues
-RoxygenNote: 7.1.2
+RoxygenNote: 7.2.3
 Suggests: testthat, here, knitr, rmarkdown, readxl, dplyr, tidyr,
         purrr, tibble, ggplot2, cellranger, openxlsx, rlang
 VignetteBuilder: knitr
+Config/Needs/website: tidyverse/tidytemplate
 NeedsCompilation: yes
-Packaged: 2022-09-01 22:51:57 UTC; nacnudus
+Packaged: 2023-10-30 10:38:28 UTC; nacnudus
 Author: Duncan Garmonsway [aut, cre],
   Hadley Wickham [ctb] (Author of included readxl fragments),
   Jenny Bryan [ctb] (Author of included readxl fragments),
@@ -35,4 +36,4 @@ Author: Duncan Garmonsway [aut, cre],
   Marcin Kalicinski [ctb, cph] (Author of included RapidXML code)
 Maintainer: Duncan Garmonsway <nacnudus@gmail.com>
 Repository: CRAN
-Date/Publication: 2022-09-01 23:20:02 UTC
+Date/Publication: 2023-10-30 11:40:02 UTC

@@ -12,7 +12,7 @@
 
 <meta name="author" content="Duncan Garmonsway" />
 
-<meta name="date" content="2022-09-01" />
+<meta name="date" content="2023-10-30" />
 
 <title>Data Validation Rules</title>
 
@@ -51,7 +51,7 @@ overflow: visible;
 </style>
 <style type="text/css" data-origin="pandoc">
 pre > code.sourceCode { white-space: pre; position: relative; }
-pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span { line-height: 1.25; }
 pre > code.sourceCode > span:empty { height: 1.2em; }
 .sourceCode { overflow: visible; }
 code.sourceCode > span { color: inherit; text-decoration: inherit; }
@@ -340,7 +340,7 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 
 <h1 class="title toc-ignore">Data Validation Rules</h1>
 <h4 class="author">Duncan Garmonsway</h4>
-<h4 class="date">2022-09-01</h4>
+<h4 class="date">2023-10-30</h4>
 
 
 
@@ -355,86 +355,86 @@ xlsx file, and the ranges of cells to which each rule applies.</p>
 inclusive, or no value (blank). If any other value is attempted, then an
 error message is displayed with the imaginative title “message title”,
 the informative body text “message body”, and a “stop” symbol.</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyxl)</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Attaching package: &#39;dplyr&#39;</span></span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; The following objects are masked from &#39;package:stats&#39;:</span></span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;     filter, lag</span></span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; The following objects are masked from &#39;package:base&#39;:</span></span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;     intersect, setdiff, setequal, union</span></span>
-<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyr)</span>
-<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>examples <span class="ot">&lt;-</span> <span class="fu">system.file</span>(<span class="st">&quot;extdata/examples.xlsx&quot;</span>, <span class="at">package =</span> <span class="st">&quot;tidyxl&quot;</span>)</span>
-<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a><span class="fu">glimpse</span>(<span class="fu">xlsx_validation</span>(examples)[<span class="dv">1</span>, ])</span>
-<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Rows: 1</span></span>
-<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Columns: 14</span></span>
-<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $ sheet              &lt;chr&gt; &quot;Sheet1&quot;</span></span>
-<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $ ref                &lt;chr&gt; &quot;A106&quot;</span></span>
-<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $ type               &lt;chr&gt; &quot;whole&quot;</span></span>
-<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $ operator           &lt;chr&gt; &quot;between&quot;</span></span>
-<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $ formula1           &lt;chr&gt; &quot;0&quot;</span></span>
-<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $ formula2           &lt;chr&gt; &quot;9&quot;</span></span>
-<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $ allow_blank        &lt;lgl&gt; TRUE</span></span>
-<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $ show_input_message &lt;lgl&gt; TRUE</span></span>
-<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $ prompt_title       &lt;chr&gt; &quot;message title&quot;</span></span>
-<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $ prompt_body        &lt;chr&gt; &quot;message body&quot;</span></span>
-<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $ show_error_message &lt;lgl&gt; TRUE</span></span>
-<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $ error_title        &lt;chr&gt; &quot;error title&quot;</span></span>
-<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $ error_body         &lt;chr&gt; &quot;error body&quot;</span></span>
-<span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $ error_symbol       &lt;chr&gt; &quot;stop&quot;</span></span></code></pre></div>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a><span class="fu">library</span>(tidyxl)</span>
+<span id="cb1-2"><a href="#cb1-2" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span>
+<span id="cb1-3"><a href="#cb1-3" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb1-4"><a href="#cb1-4" tabindex="-1"></a><span class="co">#&gt; Attaching package: &#39;dplyr&#39;</span></span>
+<span id="cb1-5"><a href="#cb1-5" tabindex="-1"></a><span class="co">#&gt; The following objects are masked from &#39;package:stats&#39;:</span></span>
+<span id="cb1-6"><a href="#cb1-6" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb1-7"><a href="#cb1-7" tabindex="-1"></a><span class="co">#&gt;     filter, lag</span></span>
+<span id="cb1-8"><a href="#cb1-8" tabindex="-1"></a><span class="co">#&gt; The following objects are masked from &#39;package:base&#39;:</span></span>
+<span id="cb1-9"><a href="#cb1-9" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb1-10"><a href="#cb1-10" tabindex="-1"></a><span class="co">#&gt;     intersect, setdiff, setequal, union</span></span>
+<span id="cb1-11"><a href="#cb1-11" tabindex="-1"></a><span class="fu">library</span>(tidyr)</span>
+<span id="cb1-12"><a href="#cb1-12" tabindex="-1"></a>examples <span class="ot">&lt;-</span> <span class="fu">system.file</span>(<span class="st">&quot;extdata/examples.xlsx&quot;</span>, <span class="at">package =</span> <span class="st">&quot;tidyxl&quot;</span>)</span>
+<span id="cb1-13"><a href="#cb1-13" tabindex="-1"></a><span class="fu">glimpse</span>(<span class="fu">xlsx_validation</span>(examples)[<span class="dv">1</span>, ])</span>
+<span id="cb1-14"><a href="#cb1-14" tabindex="-1"></a><span class="co">#&gt; Rows: 1</span></span>
+<span id="cb1-15"><a href="#cb1-15" tabindex="-1"></a><span class="co">#&gt; Columns: 14</span></span>
+<span id="cb1-16"><a href="#cb1-16" tabindex="-1"></a><span class="co">#&gt; $ sheet              &lt;chr&gt; &quot;Sheet1&quot;</span></span>
+<span id="cb1-17"><a href="#cb1-17" tabindex="-1"></a><span class="co">#&gt; $ ref                &lt;chr&gt; &quot;A106&quot;</span></span>
+<span id="cb1-18"><a href="#cb1-18" tabindex="-1"></a><span class="co">#&gt; $ type               &lt;chr&gt; &quot;whole&quot;</span></span>
+<span id="cb1-19"><a href="#cb1-19" tabindex="-1"></a><span class="co">#&gt; $ operator           &lt;chr&gt; &quot;between&quot;</span></span>
+<span id="cb1-20"><a href="#cb1-20" tabindex="-1"></a><span class="co">#&gt; $ formula1           &lt;chr&gt; &quot;0&quot;</span></span>
+<span id="cb1-21"><a href="#cb1-21" tabindex="-1"></a><span class="co">#&gt; $ formula2           &lt;chr&gt; &quot;9&quot;</span></span>
+<span id="cb1-22"><a href="#cb1-22" tabindex="-1"></a><span class="co">#&gt; $ allow_blank        &lt;lgl&gt; TRUE</span></span>
+<span id="cb1-23"><a href="#cb1-23" tabindex="-1"></a><span class="co">#&gt; $ show_input_message &lt;lgl&gt; TRUE</span></span>
+<span id="cb1-24"><a href="#cb1-24" tabindex="-1"></a><span class="co">#&gt; $ prompt_title       &lt;chr&gt; &quot;message title&quot;</span></span>
+<span id="cb1-25"><a href="#cb1-25" tabindex="-1"></a><span class="co">#&gt; $ prompt_body        &lt;chr&gt; &quot;message body&quot;</span></span>
+<span id="cb1-26"><a href="#cb1-26" tabindex="-1"></a><span class="co">#&gt; $ show_error_message &lt;lgl&gt; TRUE</span></span>
+<span id="cb1-27"><a href="#cb1-27" tabindex="-1"></a><span class="co">#&gt; $ error_title        &lt;chr&gt; &quot;error title&quot;</span></span>
+<span id="cb1-28"><a href="#cb1-28" tabindex="-1"></a><span class="co">#&gt; $ error_body         &lt;chr&gt; &quot;error body&quot;</span></span>
+<span id="cb1-29"><a href="#cb1-29" tabindex="-1"></a><span class="co">#&gt; $ error_symbol       &lt;chr&gt; &quot;stop&quot;</span></span></code></pre></div>
 <p>The gamut of possible rules is given in the examples for
 <code>xlsx_validation()</code>.</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">as.data.frame</span>(<span class="fu">xlsx_validation</span>(examples))</span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;     sheet            ref       type           operator            formula1</span></span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1  Sheet1           A106      whole            between                   0</span></span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2  Sheet1           A108       list               &lt;NA&gt;              $B$108</span></span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 3  Sheet1           A110       date            between 2017-01-01 00:00:00</span></span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 4  Sheet1           A111       time            between            00:00:00</span></span>
-<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 5  Sheet1           A112 textLength            between                   0</span></span>
-<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 6  Sheet1           A114      whole         notBetween                   0</span></span>
-<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 7  Sheet1 A115,A121:A122      whole              equal                   0</span></span>
-<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 8  Sheet1           A116      whole           notEqual                   0</span></span>
-<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 9  Sheet1           A117      whole        greaterThan                   0</span></span>
-<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 10 Sheet1           A119      whole greaterThanOrEqual                   0</span></span>
-<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 11 Sheet1           A120      whole    lessThanOrEqual                   0</span></span>
-<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 12 Sheet1           A118      whole           lessThan                   0</span></span>
-<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 13 Sheet1           A107    decimal         notBetween                   0</span></span>
-<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 14 Sheet1           A113     custom               &lt;NA&gt;     A113&lt;=LEN(B113)</span></span>
-<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 15 Sheet1           A109       list               &lt;NA&gt;              $B$108</span></span>
-<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;               formula2 allow_blank show_input_message  prompt_title</span></span>
-<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1                    9        TRUE               TRUE message title</span></span>
-<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2                 &lt;NA&gt;        TRUE               TRUE          &lt;NA&gt;</span></span>
-<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 3  2017-01-09 09:00:00        TRUE               TRUE          &lt;NA&gt;</span></span>
-<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 4             09:00:00        TRUE               TRUE          &lt;NA&gt;</span></span>
-<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 5                    9        TRUE               TRUE          &lt;NA&gt;</span></span>
-<span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 6                    9        TRUE               TRUE          &lt;NA&gt;</span></span>
-<span id="cb2-25"><a href="#cb2-25" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 7                 &lt;NA&gt;        TRUE               TRUE          &lt;NA&gt;</span></span>
-<span id="cb2-26"><a href="#cb2-26" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 8                 &lt;NA&gt;        TRUE               TRUE          &lt;NA&gt;</span></span>
-<span id="cb2-27"><a href="#cb2-27" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 9                 &lt;NA&gt;        TRUE               TRUE          &lt;NA&gt;</span></span>
-<span id="cb2-28"><a href="#cb2-28" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 10                &lt;NA&gt;        TRUE               TRUE          &lt;NA&gt;</span></span>
-<span id="cb2-29"><a href="#cb2-29" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 11                &lt;NA&gt;        TRUE               TRUE          &lt;NA&gt;</span></span>
-<span id="cb2-30"><a href="#cb2-30" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 12                &lt;NA&gt;        TRUE               TRUE          &lt;NA&gt;</span></span>
-<span id="cb2-31"><a href="#cb2-31" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 13                   9       FALSE              FALSE          &lt;NA&gt;</span></span>
-<span id="cb2-32"><a href="#cb2-32" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 14                &lt;NA&gt;        TRUE               TRUE          &lt;NA&gt;</span></span>
-<span id="cb2-33"><a href="#cb2-33" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 15                &lt;NA&gt;        TRUE               TRUE          &lt;NA&gt;</span></span>
-<span id="cb2-34"><a href="#cb2-34" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;     prompt_body show_error_message error_title error_body error_symbol</span></span>
-<span id="cb2-35"><a href="#cb2-35" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1  message body               TRUE error title error body         stop</span></span>
-<span id="cb2-36"><a href="#cb2-36" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2          &lt;NA&gt;               TRUE        &lt;NA&gt;       &lt;NA&gt;      warning</span></span>
-<span id="cb2-37"><a href="#cb2-37" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 3          &lt;NA&gt;               TRUE        &lt;NA&gt;       &lt;NA&gt;         stop</span></span>
-<span id="cb2-38"><a href="#cb2-38" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 4          &lt;NA&gt;               TRUE        &lt;NA&gt;       &lt;NA&gt;         stop</span></span>
-<span id="cb2-39"><a href="#cb2-39" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 5          &lt;NA&gt;               TRUE        &lt;NA&gt;       &lt;NA&gt;         stop</span></span>
-<span id="cb2-40"><a href="#cb2-40" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 6          &lt;NA&gt;               TRUE        &lt;NA&gt;       &lt;NA&gt;         stop</span></span>
-<span id="cb2-41"><a href="#cb2-41" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 7          &lt;NA&gt;               TRUE        &lt;NA&gt;       &lt;NA&gt;         stop</span></span>
-<span id="cb2-42"><a href="#cb2-42" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 8          &lt;NA&gt;               TRUE        &lt;NA&gt;       &lt;NA&gt;         stop</span></span>
-<span id="cb2-43"><a href="#cb2-43" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 9          &lt;NA&gt;               TRUE        &lt;NA&gt;       &lt;NA&gt;         stop</span></span>
-<span id="cb2-44"><a href="#cb2-44" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 10         &lt;NA&gt;               TRUE        &lt;NA&gt;       &lt;NA&gt;         stop</span></span>
-<span id="cb2-45"><a href="#cb2-45" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 11         &lt;NA&gt;               TRUE        &lt;NA&gt;       &lt;NA&gt;         stop</span></span>
-<span id="cb2-46"><a href="#cb2-46" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 12         &lt;NA&gt;               TRUE        &lt;NA&gt;       &lt;NA&gt;         stop</span></span>
-<span id="cb2-47"><a href="#cb2-47" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 13         &lt;NA&gt;              FALSE        &lt;NA&gt;       &lt;NA&gt;         stop</span></span>
-<span id="cb2-48"><a href="#cb2-48" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 14         &lt;NA&gt;               TRUE        &lt;NA&gt;       &lt;NA&gt;         stop</span></span>
-<span id="cb2-49"><a href="#cb2-49" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 15         &lt;NA&gt;               TRUE        &lt;NA&gt;       &lt;NA&gt;  information</span></span></code></pre></div>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" tabindex="-1"></a><span class="fu">as.data.frame</span>(<span class="fu">xlsx_validation</span>(examples))</span>
+<span id="cb2-2"><a href="#cb2-2" tabindex="-1"></a><span class="co">#&gt;     sheet            ref       type           operator            formula1</span></span>
+<span id="cb2-3"><a href="#cb2-3" tabindex="-1"></a><span class="co">#&gt; 1  Sheet1           A106      whole            between                   0</span></span>
+<span id="cb2-4"><a href="#cb2-4" tabindex="-1"></a><span class="co">#&gt; 2  Sheet1           A108       list               &lt;NA&gt;              $B$108</span></span>
+<span id="cb2-5"><a href="#cb2-5" tabindex="-1"></a><span class="co">#&gt; 3  Sheet1           A110       date            between 2017-01-01 00:00:00</span></span>
+<span id="cb2-6"><a href="#cb2-6" tabindex="-1"></a><span class="co">#&gt; 4  Sheet1           A111       time            between            00:00:00</span></span>
+<span id="cb2-7"><a href="#cb2-7" tabindex="-1"></a><span class="co">#&gt; 5  Sheet1           A112 textLength            between                   0</span></span>
+<span id="cb2-8"><a href="#cb2-8" tabindex="-1"></a><span class="co">#&gt; 6  Sheet1           A114      whole         notBetween                   0</span></span>
+<span id="cb2-9"><a href="#cb2-9" tabindex="-1"></a><span class="co">#&gt; 7  Sheet1 A115,A121:A122      whole              equal                   0</span></span>
+<span id="cb2-10"><a href="#cb2-10" tabindex="-1"></a><span class="co">#&gt; 8  Sheet1           A116      whole           notEqual                   0</span></span>
+<span id="cb2-11"><a href="#cb2-11" tabindex="-1"></a><span class="co">#&gt; 9  Sheet1           A117      whole        greaterThan                   0</span></span>
+<span id="cb2-12"><a href="#cb2-12" tabindex="-1"></a><span class="co">#&gt; 10 Sheet1           A119      whole greaterThanOrEqual                   0</span></span>
+<span id="cb2-13"><a href="#cb2-13" tabindex="-1"></a><span class="co">#&gt; 11 Sheet1           A120      whole    lessThanOrEqual                   0</span></span>
+<span id="cb2-14"><a href="#cb2-14" tabindex="-1"></a><span class="co">#&gt; 12 Sheet1           A118      whole           lessThan                   0</span></span>
+<span id="cb2-15"><a href="#cb2-15" tabindex="-1"></a><span class="co">#&gt; 13 Sheet1           A107    decimal         notBetween                   0</span></span>
+<span id="cb2-16"><a href="#cb2-16" tabindex="-1"></a><span class="co">#&gt; 14 Sheet1           A113     custom               &lt;NA&gt;     A113&lt;=LEN(B113)</span></span>
+<span id="cb2-17"><a href="#cb2-17" tabindex="-1"></a><span class="co">#&gt; 15 Sheet1           A109       list               &lt;NA&gt;              $B$108</span></span>
+<span id="cb2-18"><a href="#cb2-18" tabindex="-1"></a><span class="co">#&gt;               formula2 allow_blank show_input_message  prompt_title</span></span>
+<span id="cb2-19"><a href="#cb2-19" tabindex="-1"></a><span class="co">#&gt; 1                    9        TRUE               TRUE message title</span></span>
+<span id="cb2-20"><a href="#cb2-20" tabindex="-1"></a><span class="co">#&gt; 2                 &lt;NA&gt;        TRUE               TRUE          &lt;NA&gt;</span></span>
+<span id="cb2-21"><a href="#cb2-21" tabindex="-1"></a><span class="co">#&gt; 3  2017-01-09 09:00:00        TRUE               TRUE          &lt;NA&gt;</span></span>
+<span id="cb2-22"><a href="#cb2-22" tabindex="-1"></a><span class="co">#&gt; 4             09:00:00        TRUE               TRUE          &lt;NA&gt;</span></span>
+<span id="cb2-23"><a href="#cb2-23" tabindex="-1"></a><span class="co">#&gt; 5                    9        TRUE               TRUE          &lt;NA&gt;</span></span>
+<span id="cb2-24"><a href="#cb2-24" tabindex="-1"></a><span class="co">#&gt; 6                    9        TRUE               TRUE          &lt;NA&gt;</span></span>
+<span id="cb2-25"><a href="#cb2-25" tabindex="-1"></a><span class="co">#&gt; 7                 &lt;NA&gt;        TRUE               TRUE          &lt;NA&gt;</span></span>
+<span id="cb2-26"><a href="#cb2-26" tabindex="-1"></a><span class="co">#&gt; 8                 &lt;NA&gt;        TRUE               TRUE          &lt;NA&gt;</span></span>
+<span id="cb2-27"><a href="#cb2-27" tabindex="-1"></a><span class="co">#&gt; 9                 &lt;NA&gt;        TRUE               TRUE          &lt;NA&gt;</span></span>
+<span id="cb2-28"><a href="#cb2-28" tabindex="-1"></a><span class="co">#&gt; 10                &lt;NA&gt;        TRUE               TRUE          &lt;NA&gt;</span></span>
+<span id="cb2-29"><a href="#cb2-29" tabindex="-1"></a><span class="co">#&gt; 11                &lt;NA&gt;        TRUE               TRUE          &lt;NA&gt;</span></span>
+<span id="cb2-30"><a href="#cb2-30" tabindex="-1"></a><span class="co">#&gt; 12                &lt;NA&gt;        TRUE               TRUE          &lt;NA&gt;</span></span>
+<span id="cb2-31"><a href="#cb2-31" tabindex="-1"></a><span class="co">#&gt; 13                   9       FALSE              FALSE          &lt;NA&gt;</span></span>
+<span id="cb2-32"><a href="#cb2-32" tabindex="-1"></a><span class="co">#&gt; 14                &lt;NA&gt;        TRUE               TRUE          &lt;NA&gt;</span></span>
+<span id="cb2-33"><a href="#cb2-33" tabindex="-1"></a><span class="co">#&gt; 15                &lt;NA&gt;        TRUE               TRUE          &lt;NA&gt;</span></span>
+<span id="cb2-34"><a href="#cb2-34" tabindex="-1"></a><span class="co">#&gt;     prompt_body show_error_message error_title error_body error_symbol</span></span>
+<span id="cb2-35"><a href="#cb2-35" tabindex="-1"></a><span class="co">#&gt; 1  message body               TRUE error title error body         stop</span></span>
+<span id="cb2-36"><a href="#cb2-36" tabindex="-1"></a><span class="co">#&gt; 2          &lt;NA&gt;               TRUE        &lt;NA&gt;       &lt;NA&gt;      warning</span></span>
+<span id="cb2-37"><a href="#cb2-37" tabindex="-1"></a><span class="co">#&gt; 3          &lt;NA&gt;               TRUE        &lt;NA&gt;       &lt;NA&gt;         stop</span></span>
+<span id="cb2-38"><a href="#cb2-38" tabindex="-1"></a><span class="co">#&gt; 4          &lt;NA&gt;               TRUE        &lt;NA&gt;       &lt;NA&gt;         stop</span></span>
+<span id="cb2-39"><a href="#cb2-39" tabindex="-1"></a><span class="co">#&gt; 5          &lt;NA&gt;               TRUE        &lt;NA&gt;       &lt;NA&gt;         stop</span></span>
+<span id="cb2-40"><a href="#cb2-40" tabindex="-1"></a><span class="co">#&gt; 6          &lt;NA&gt;               TRUE        &lt;NA&gt;       &lt;NA&gt;         stop</span></span>
+<span id="cb2-41"><a href="#cb2-41" tabindex="-1"></a><span class="co">#&gt; 7          &lt;NA&gt;               TRUE        &lt;NA&gt;       &lt;NA&gt;         stop</span></span>
+<span id="cb2-42"><a href="#cb2-42" tabindex="-1"></a><span class="co">#&gt; 8          &lt;NA&gt;               TRUE        &lt;NA&gt;       &lt;NA&gt;         stop</span></span>
+<span id="cb2-43"><a href="#cb2-43" tabindex="-1"></a><span class="co">#&gt; 9          &lt;NA&gt;               TRUE        &lt;NA&gt;       &lt;NA&gt;         stop</span></span>
+<span id="cb2-44"><a href="#cb2-44" tabindex="-1"></a><span class="co">#&gt; 10         &lt;NA&gt;               TRUE        &lt;NA&gt;       &lt;NA&gt;         stop</span></span>
+<span id="cb2-45"><a href="#cb2-45" tabindex="-1"></a><span class="co">#&gt; 11         &lt;NA&gt;               TRUE        &lt;NA&gt;       &lt;NA&gt;         stop</span></span>
+<span id="cb2-46"><a href="#cb2-46" tabindex="-1"></a><span class="co">#&gt; 12         &lt;NA&gt;               TRUE        &lt;NA&gt;       &lt;NA&gt;         stop</span></span>
+<span id="cb2-47"><a href="#cb2-47" tabindex="-1"></a><span class="co">#&gt; 13         &lt;NA&gt;              FALSE        &lt;NA&gt;       &lt;NA&gt;         stop</span></span>
+<span id="cb2-48"><a href="#cb2-48" tabindex="-1"></a><span class="co">#&gt; 14         &lt;NA&gt;               TRUE        &lt;NA&gt;       &lt;NA&gt;         stop</span></span>
+<span id="cb2-49"><a href="#cb2-49" tabindex="-1"></a><span class="co">#&gt; 15         &lt;NA&gt;               TRUE        &lt;NA&gt;       &lt;NA&gt;  information</span></span></code></pre></div>
 </div>
 <div id="joining-rules-to-cells" class="section level2">
 <h2>Joining rules to cells</h2>
@@ -450,73 +450,72 @@ arbitrary functions, or even the standard inequalities like
 <code>sheet</code> and <code>ref</code> columns to match the
 <code>sheet</code> and <code>address</code> columns to the output of
 <code>xlsx_cells()</code>.</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>rules <span class="ot">&lt;-</span> <span class="fu">xlsx_validation</span>(examples)</span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>cells <span class="ot">&lt;-</span> <span class="fu">filter</span>(<span class="fu">xlsx_cells</span>(examples), row <span class="sc">&gt;=</span> <span class="dv">106</span>, col <span class="sc">==</span> <span class="dv">1</span>)</span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>rules</span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # A tibble: 15 × 14</span></span>
-<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;    sheet  ref      type  opera…¹ formu…² formu…³ allow…⁴ show_…⁵ promp…⁶ promp…⁷</span></span>
-<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;    &lt;chr&gt;  &lt;chr&gt;    &lt;chr&gt; &lt;chr&gt;   &lt;chr&gt;   &lt;chr&gt;   &lt;lgl&gt;   &lt;lgl&gt;   &lt;chr&gt;   &lt;chr&gt;  </span></span>
-<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  1 Sheet1 A106     whole between 0       9       TRUE    TRUE    messag… messag…</span></span>
-<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  2 Sheet1 A108     list  &lt;NA&gt;    $B$108  &lt;NA&gt;    TRUE    TRUE    &lt;NA&gt;    &lt;NA&gt;   </span></span>
-<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  3 Sheet1 A110     date  between 2017-0… 2017-0… TRUE    TRUE    &lt;NA&gt;    &lt;NA&gt;   </span></span>
-<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  4 Sheet1 A111     time  between 00:00:… 09:00:… TRUE    TRUE    &lt;NA&gt;    &lt;NA&gt;   </span></span>
-<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  5 Sheet1 A112     text… between 0       9       TRUE    TRUE    &lt;NA&gt;    &lt;NA&gt;   </span></span>
-<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  6 Sheet1 A114     whole notBet… 0       9       TRUE    TRUE    &lt;NA&gt;    &lt;NA&gt;   </span></span>
-<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  7 Sheet1 A115,A1… whole equal   0       &lt;NA&gt;    TRUE    TRUE    &lt;NA&gt;    &lt;NA&gt;   </span></span>
-<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  8 Sheet1 A116     whole notEqu… 0       &lt;NA&gt;    TRUE    TRUE    &lt;NA&gt;    &lt;NA&gt;   </span></span>
-<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  9 Sheet1 A117     whole greate… 0       &lt;NA&gt;    TRUE    TRUE    &lt;NA&gt;    &lt;NA&gt;   </span></span>
-<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 10 Sheet1 A119     whole greate… 0       &lt;NA&gt;    TRUE    TRUE    &lt;NA&gt;    &lt;NA&gt;   </span></span>
-<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 11 Sheet1 A120     whole lessTh… 0       &lt;NA&gt;    TRUE    TRUE    &lt;NA&gt;    &lt;NA&gt;   </span></span>
-<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 12 Sheet1 A118     whole lessTh… 0       &lt;NA&gt;    TRUE    TRUE    &lt;NA&gt;    &lt;NA&gt;   </span></span>
-<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 13 Sheet1 A107     deci… notBet… 0       9       FALSE   FALSE   &lt;NA&gt;    &lt;NA&gt;   </span></span>
-<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 14 Sheet1 A113     cust… &lt;NA&gt;    A113&lt;=… &lt;NA&gt;    TRUE    TRUE    &lt;NA&gt;    &lt;NA&gt;   </span></span>
-<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 15 Sheet1 A109     list  &lt;NA&gt;    $B$108  &lt;NA&gt;    TRUE    TRUE    &lt;NA&gt;    &lt;NA&gt;   </span></span>
-<span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # … with 4 more variables: show_error_message &lt;lgl&gt;, error_title &lt;chr&gt;,</span></span>
-<span id="cb3-24"><a href="#cb3-24" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; #   error_body &lt;chr&gt;, error_symbol &lt;chr&gt;, and abbreviated variable names</span></span>
-<span id="cb3-25"><a href="#cb3-25" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; #   ¹​operator, ²​formula1, ³​formula2, ⁴​allow_blank, ⁵​show_input_message,</span></span>
-<span id="cb3-26"><a href="#cb3-26" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; #   ⁶​prompt_title, ⁷​prompt_body</span></span>
-<span id="cb3-27"><a href="#cb3-27" aria-hidden="true" tabindex="-1"></a>cells</span>
-<span id="cb3-28"><a href="#cb3-28" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # A tibble: 93 × 24</span></span>
-<span id="cb3-29"><a href="#cb3-29" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;    sheet  address   row   col is_blank content     data_…¹ error logical numeric</span></span>
-<span id="cb3-30"><a href="#cb3-30" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;    &lt;chr&gt;  &lt;chr&gt;   &lt;int&gt; &lt;int&gt; &lt;lgl&gt;    &lt;chr&gt;       &lt;chr&gt;   &lt;chr&gt; &lt;lgl&gt;     &lt;dbl&gt;</span></span>
-<span id="cb3-31"><a href="#cb3-31" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  1 Sheet1 A106      106     1 FALSE    0           numeric &lt;NA&gt;  NA          0  </span></span>
-<span id="cb3-32"><a href="#cb3-32" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  2 Sheet1 A107      107     1 FALSE    0.1         numeric &lt;NA&gt;  NA          0.1</span></span>
-<span id="cb3-33"><a href="#cb3-33" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  3 Sheet1 A108      108     1 FALSE    137         charac… &lt;NA&gt;  NA         NA  </span></span>
-<span id="cb3-34"><a href="#cb3-34" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  4 Sheet1 A109      109     1 FALSE    137         charac… &lt;NA&gt;  NA         NA  </span></span>
-<span id="cb3-35"><a href="#cb3-35" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  5 Sheet1 A110      110     1 FALSE    42736       date    &lt;NA&gt;  NA         NA  </span></span>
-<span id="cb3-36"><a href="#cb3-36" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  6 Sheet1 A111      111     1 FALSE    0.35416666… date    &lt;NA&gt;  NA         NA  </span></span>
-<span id="cb3-37"><a href="#cb3-37" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  7 Sheet1 A112      112     1 FALSE    149         charac… &lt;NA&gt;  NA         NA  </span></span>
-<span id="cb3-38"><a href="#cb3-38" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  8 Sheet1 A113      113     1 FALSE    10          numeric &lt;NA&gt;  NA         10  </span></span>
-<span id="cb3-39"><a href="#cb3-39" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  9 Sheet1 A114      114     1 FALSE    -1          numeric &lt;NA&gt;  NA         -1  </span></span>
-<span id="cb3-40"><a href="#cb3-40" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 10 Sheet1 A115      115     1 FALSE    0           numeric &lt;NA&gt;  NA          0  </span></span>
-<span id="cb3-41"><a href="#cb3-41" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # … with 83 more rows, 14 more variables: date &lt;dttm&gt;, character &lt;chr&gt;,</span></span>
-<span id="cb3-42"><a href="#cb3-42" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; #   character_formatted &lt;list&gt;, formula &lt;chr&gt;, is_array &lt;lgl&gt;,</span></span>
-<span id="cb3-43"><a href="#cb3-43" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; #   formula_ref &lt;chr&gt;, formula_group &lt;int&gt;, comment &lt;chr&gt;, height &lt;dbl&gt;,</span></span>
-<span id="cb3-44"><a href="#cb3-44" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; #   width &lt;dbl&gt;, row_outline_level &lt;dbl&gt;, col_outline_level &lt;dbl&gt;,</span></span>
-<span id="cb3-45"><a href="#cb3-45" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; #   style_format &lt;chr&gt;, local_format_id &lt;int&gt;, and abbreviated variable name</span></span>
-<span id="cb3-46"><a href="#cb3-46" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; #   ¹​data_type</span></span>
-<span id="cb3-47"><a href="#cb3-47" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-48"><a href="#cb3-48" aria-hidden="true" tabindex="-1"></a><span class="fu">inner_join</span>(rules, cells, <span class="at">by =</span> <span class="fu">c</span>(<span class="st">&quot;sheet&quot;</span> <span class="ot">=</span> <span class="st">&quot;sheet&quot;</span>, <span class="st">&quot;ref&quot;</span> <span class="ot">=</span> <span class="st">&quot;address&quot;</span>))</span>
-<span id="cb3-49"><a href="#cb3-49" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # A tibble: 9 × 36</span></span>
-<span id="cb3-50"><a href="#cb3-50" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   sheet  ref   type      opera…¹ formu…² formu…³ allow…⁴ show_…⁵ promp…⁶ promp…⁷</span></span>
-<span id="cb3-51"><a href="#cb3-51" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   &lt;chr&gt;  &lt;chr&gt; &lt;chr&gt;     &lt;chr&gt;   &lt;chr&gt;   &lt;chr&gt;   &lt;lgl&gt;   &lt;lgl&gt;   &lt;chr&gt;   &lt;chr&gt;  </span></span>
-<span id="cb3-52"><a href="#cb3-52" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1 Sheet1 A106  whole     between 0       9       TRUE    TRUE    messag… messag…</span></span>
-<span id="cb3-53"><a href="#cb3-53" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2 Sheet1 A108  list      &lt;NA&gt;    $B$108  &lt;NA&gt;    TRUE    TRUE    &lt;NA&gt;    &lt;NA&gt;   </span></span>
-<span id="cb3-54"><a href="#cb3-54" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 3 Sheet1 A110  date      between 2017-0… 2017-0… TRUE    TRUE    &lt;NA&gt;    &lt;NA&gt;   </span></span>
-<span id="cb3-55"><a href="#cb3-55" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 4 Sheet1 A111  time      between 00:00:… 09:00:… TRUE    TRUE    &lt;NA&gt;    &lt;NA&gt;   </span></span>
-<span id="cb3-56"><a href="#cb3-56" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 5 Sheet1 A112  textLeng… between 0       9       TRUE    TRUE    &lt;NA&gt;    &lt;NA&gt;   </span></span>
-<span id="cb3-57"><a href="#cb3-57" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 6 Sheet1 A114  whole     notBet… 0       9       TRUE    TRUE    &lt;NA&gt;    &lt;NA&gt;   </span></span>
-<span id="cb3-58"><a href="#cb3-58" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 7 Sheet1 A107  decimal   notBet… 0       9       FALSE   FALSE   &lt;NA&gt;    &lt;NA&gt;   </span></span>
-<span id="cb3-59"><a href="#cb3-59" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 8 Sheet1 A113  custom    &lt;NA&gt;    A113&lt;=… &lt;NA&gt;    TRUE    TRUE    &lt;NA&gt;    &lt;NA&gt;   </span></span>
-<span id="cb3-60"><a href="#cb3-60" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 9 Sheet1 A109  list      &lt;NA&gt;    $B$108  &lt;NA&gt;    TRUE    TRUE    &lt;NA&gt;    &lt;NA&gt;   </span></span>
-<span id="cb3-61"><a href="#cb3-61" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # … with 26 more variables: show_error_message &lt;lgl&gt;, error_title &lt;chr&gt;,</span></span>
-<span id="cb3-62"><a href="#cb3-62" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; #   error_body &lt;chr&gt;, error_symbol &lt;chr&gt;, row &lt;int&gt;, col &lt;int&gt;, is_blank &lt;lgl&gt;,</span></span>
-<span id="cb3-63"><a href="#cb3-63" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; #   content &lt;chr&gt;, data_type &lt;chr&gt;, error &lt;chr&gt;, logical &lt;lgl&gt;, numeric &lt;dbl&gt;,</span></span>
-<span id="cb3-64"><a href="#cb3-64" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; #   date &lt;dttm&gt;, character &lt;chr&gt;, character_formatted &lt;list&gt;, formula &lt;chr&gt;,</span></span>
-<span id="cb3-65"><a href="#cb3-65" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; #   is_array &lt;lgl&gt;, formula_ref &lt;chr&gt;, formula_group &lt;int&gt;, comment &lt;chr&gt;,</span></span>
-<span id="cb3-66"><a href="#cb3-66" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; #   height &lt;dbl&gt;, width &lt;dbl&gt;, row_outline_level &lt;dbl&gt;,</span></span>
-<span id="cb3-67"><a href="#cb3-67" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; #   col_outline_level &lt;dbl&gt;, style_format &lt;chr&gt;, local_format_id &lt;int&gt;, and …</span></span></code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" tabindex="-1"></a>rules <span class="ot">&lt;-</span> <span class="fu">xlsx_validation</span>(examples)</span>
+<span id="cb3-2"><a href="#cb3-2" tabindex="-1"></a>cells <span class="ot">&lt;-</span> <span class="fu">filter</span>(<span class="fu">xlsx_cells</span>(examples), row <span class="sc">&gt;=</span> <span class="dv">106</span>, col <span class="sc">==</span> <span class="dv">1</span>)</span>
+<span id="cb3-3"><a href="#cb3-3" tabindex="-1"></a></span>
+<span id="cb3-4"><a href="#cb3-4" tabindex="-1"></a>rules</span>
+<span id="cb3-5"><a href="#cb3-5" tabindex="-1"></a><span class="co">#&gt; # A tibble: 15 × 14</span></span>
+<span id="cb3-6"><a href="#cb3-6" tabindex="-1"></a><span class="co">#&gt;    sheet  ref    type  operator formula1 formula2 allow_blank show_input_message</span></span>
+<span id="cb3-7"><a href="#cb3-7" tabindex="-1"></a><span class="co">#&gt;    &lt;chr&gt;  &lt;chr&gt;  &lt;chr&gt; &lt;chr&gt;    &lt;chr&gt;    &lt;chr&gt;    &lt;lgl&gt;       &lt;lgl&gt;             </span></span>
+<span id="cb3-8"><a href="#cb3-8" tabindex="-1"></a><span class="co">#&gt;  1 Sheet1 A106   whole between  0        9        TRUE        TRUE              </span></span>
+<span id="cb3-9"><a href="#cb3-9" tabindex="-1"></a><span class="co">#&gt;  2 Sheet1 A108   list  &lt;NA&gt;     $B$108   &lt;NA&gt;     TRUE        TRUE              </span></span>
+<span id="cb3-10"><a href="#cb3-10" tabindex="-1"></a><span class="co">#&gt;  3 Sheet1 A110   date  between  2017-01… 2017-01… TRUE        TRUE              </span></span>
+<span id="cb3-11"><a href="#cb3-11" tabindex="-1"></a><span class="co">#&gt;  4 Sheet1 A111   time  between  00:00:00 09:00:00 TRUE        TRUE              </span></span>
+<span id="cb3-12"><a href="#cb3-12" tabindex="-1"></a><span class="co">#&gt;  5 Sheet1 A112   text… between  0        9        TRUE        TRUE              </span></span>
+<span id="cb3-13"><a href="#cb3-13" tabindex="-1"></a><span class="co">#&gt;  6 Sheet1 A114   whole notBetw… 0        9        TRUE        TRUE              </span></span>
+<span id="cb3-14"><a href="#cb3-14" tabindex="-1"></a><span class="co">#&gt;  7 Sheet1 A115,… whole equal    0        &lt;NA&gt;     TRUE        TRUE              </span></span>
+<span id="cb3-15"><a href="#cb3-15" tabindex="-1"></a><span class="co">#&gt;  8 Sheet1 A116   whole notEqual 0        &lt;NA&gt;     TRUE        TRUE              </span></span>
+<span id="cb3-16"><a href="#cb3-16" tabindex="-1"></a><span class="co">#&gt;  9 Sheet1 A117   whole greater… 0        &lt;NA&gt;     TRUE        TRUE              </span></span>
+<span id="cb3-17"><a href="#cb3-17" tabindex="-1"></a><span class="co">#&gt; 10 Sheet1 A119   whole greater… 0        &lt;NA&gt;     TRUE        TRUE              </span></span>
+<span id="cb3-18"><a href="#cb3-18" tabindex="-1"></a><span class="co">#&gt; 11 Sheet1 A120   whole lessTha… 0        &lt;NA&gt;     TRUE        TRUE              </span></span>
+<span id="cb3-19"><a href="#cb3-19" tabindex="-1"></a><span class="co">#&gt; 12 Sheet1 A118   whole lessThan 0        &lt;NA&gt;     TRUE        TRUE              </span></span>
+<span id="cb3-20"><a href="#cb3-20" tabindex="-1"></a><span class="co">#&gt; 13 Sheet1 A107   deci… notBetw… 0        9        FALSE       FALSE             </span></span>
+<span id="cb3-21"><a href="#cb3-21" tabindex="-1"></a><span class="co">#&gt; 14 Sheet1 A113   cust… &lt;NA&gt;     A113&lt;=L… &lt;NA&gt;     TRUE        TRUE              </span></span>
+<span id="cb3-22"><a href="#cb3-22" tabindex="-1"></a><span class="co">#&gt; 15 Sheet1 A109   list  &lt;NA&gt;     $B$108   &lt;NA&gt;     TRUE        TRUE              </span></span>
+<span id="cb3-23"><a href="#cb3-23" tabindex="-1"></a><span class="co">#&gt; # ℹ 6 more variables: prompt_title &lt;chr&gt;, prompt_body &lt;chr&gt;,</span></span>
+<span id="cb3-24"><a href="#cb3-24" tabindex="-1"></a><span class="co">#&gt; #   show_error_message &lt;lgl&gt;, error_title &lt;chr&gt;, error_body &lt;chr&gt;,</span></span>
+<span id="cb3-25"><a href="#cb3-25" tabindex="-1"></a><span class="co">#&gt; #   error_symbol &lt;chr&gt;</span></span>
+<span id="cb3-26"><a href="#cb3-26" tabindex="-1"></a>cells</span>
+<span id="cb3-27"><a href="#cb3-27" tabindex="-1"></a><span class="co">#&gt; # A tibble: 93 × 24</span></span>
+<span id="cb3-28"><a href="#cb3-28" tabindex="-1"></a><span class="co">#&gt;    sheet  address   row   col is_blank content   data_type error logical numeric</span></span>
+<span id="cb3-29"><a href="#cb3-29" tabindex="-1"></a><span class="co">#&gt;    &lt;chr&gt;  &lt;chr&gt;   &lt;int&gt; &lt;int&gt; &lt;lgl&gt;    &lt;chr&gt;     &lt;chr&gt;     &lt;chr&gt; &lt;lgl&gt;     &lt;dbl&gt;</span></span>
+<span id="cb3-30"><a href="#cb3-30" tabindex="-1"></a><span class="co">#&gt;  1 Sheet1 A106      106     1 FALSE    0         numeric   &lt;NA&gt;  NA          0  </span></span>
+<span id="cb3-31"><a href="#cb3-31" tabindex="-1"></a><span class="co">#&gt;  2 Sheet1 A107      107     1 FALSE    0.1       numeric   &lt;NA&gt;  NA          0.1</span></span>
+<span id="cb3-32"><a href="#cb3-32" tabindex="-1"></a><span class="co">#&gt;  3 Sheet1 A108      108     1 FALSE    137       character &lt;NA&gt;  NA         NA  </span></span>
+<span id="cb3-33"><a href="#cb3-33" tabindex="-1"></a><span class="co">#&gt;  4 Sheet1 A109      109     1 FALSE    137       character &lt;NA&gt;  NA         NA  </span></span>
+<span id="cb3-34"><a href="#cb3-34" tabindex="-1"></a><span class="co">#&gt;  5 Sheet1 A110      110     1 FALSE    42736     date      &lt;NA&gt;  NA         NA  </span></span>
+<span id="cb3-35"><a href="#cb3-35" tabindex="-1"></a><span class="co">#&gt;  6 Sheet1 A111      111     1 FALSE    0.354166… date      &lt;NA&gt;  NA         NA  </span></span>
+<span id="cb3-36"><a href="#cb3-36" tabindex="-1"></a><span class="co">#&gt;  7 Sheet1 A112      112     1 FALSE    149       character &lt;NA&gt;  NA         NA  </span></span>
+<span id="cb3-37"><a href="#cb3-37" tabindex="-1"></a><span class="co">#&gt;  8 Sheet1 A113      113     1 FALSE    10        numeric   &lt;NA&gt;  NA         10  </span></span>
+<span id="cb3-38"><a href="#cb3-38" tabindex="-1"></a><span class="co">#&gt;  9 Sheet1 A114      114     1 FALSE    -1        numeric   &lt;NA&gt;  NA         -1  </span></span>
+<span id="cb3-39"><a href="#cb3-39" tabindex="-1"></a><span class="co">#&gt; 10 Sheet1 A115      115     1 FALSE    0         numeric   &lt;NA&gt;  NA          0  </span></span>
+<span id="cb3-40"><a href="#cb3-40" tabindex="-1"></a><span class="co">#&gt; # ℹ 83 more rows</span></span>
+<span id="cb3-41"><a href="#cb3-41" tabindex="-1"></a><span class="co">#&gt; # ℹ 14 more variables: date &lt;dttm&gt;, character &lt;chr&gt;,</span></span>
+<span id="cb3-42"><a href="#cb3-42" tabindex="-1"></a><span class="co">#&gt; #   character_formatted &lt;list&gt;, formula &lt;chr&gt;, is_array &lt;lgl&gt;,</span></span>
+<span id="cb3-43"><a href="#cb3-43" tabindex="-1"></a><span class="co">#&gt; #   formula_ref &lt;chr&gt;, formula_group &lt;int&gt;, comment &lt;chr&gt;, height &lt;dbl&gt;,</span></span>
+<span id="cb3-44"><a href="#cb3-44" tabindex="-1"></a><span class="co">#&gt; #   width &lt;dbl&gt;, row_outline_level &lt;dbl&gt;, col_outline_level &lt;dbl&gt;,</span></span>
+<span id="cb3-45"><a href="#cb3-45" tabindex="-1"></a><span class="co">#&gt; #   style_format &lt;chr&gt;, local_format_id &lt;int&gt;</span></span>
+<span id="cb3-46"><a href="#cb3-46" tabindex="-1"></a></span>
+<span id="cb3-47"><a href="#cb3-47" tabindex="-1"></a><span class="fu">inner_join</span>(rules, cells, <span class="at">by =</span> <span class="fu">c</span>(<span class="st">&quot;sheet&quot;</span> <span class="ot">=</span> <span class="st">&quot;sheet&quot;</span>, <span class="st">&quot;ref&quot;</span> <span class="ot">=</span> <span class="st">&quot;address&quot;</span>))</span>
+<span id="cb3-48"><a href="#cb3-48" tabindex="-1"></a><span class="co">#&gt; # A tibble: 9 × 36</span></span>
+<span id="cb3-49"><a href="#cb3-49" tabindex="-1"></a><span class="co">#&gt;   sheet  ref   type    operator formula1 formula2 allow_blank show_input_message</span></span>
+<span id="cb3-50"><a href="#cb3-50" tabindex="-1"></a><span class="co">#&gt;   &lt;chr&gt;  &lt;chr&gt; &lt;chr&gt;   &lt;chr&gt;    &lt;chr&gt;    &lt;chr&gt;    &lt;lgl&gt;       &lt;lgl&gt;             </span></span>
+<span id="cb3-51"><a href="#cb3-51" tabindex="-1"></a><span class="co">#&gt; 1 Sheet1 A106  whole   between  0        9        TRUE        TRUE              </span></span>
+<span id="cb3-52"><a href="#cb3-52" tabindex="-1"></a><span class="co">#&gt; 2 Sheet1 A108  list    &lt;NA&gt;     $B$108   &lt;NA&gt;     TRUE        TRUE              </span></span>
+<span id="cb3-53"><a href="#cb3-53" tabindex="-1"></a><span class="co">#&gt; 3 Sheet1 A110  date    between  2017-01… 2017-01… TRUE        TRUE              </span></span>
+<span id="cb3-54"><a href="#cb3-54" tabindex="-1"></a><span class="co">#&gt; 4 Sheet1 A111  time    between  00:00:00 09:00:00 TRUE        TRUE              </span></span>
+<span id="cb3-55"><a href="#cb3-55" tabindex="-1"></a><span class="co">#&gt; 5 Sheet1 A112  textLe… between  0        9        TRUE        TRUE              </span></span>
+<span id="cb3-56"><a href="#cb3-56" tabindex="-1"></a><span class="co">#&gt; 6 Sheet1 A114  whole   notBetw… 0        9        TRUE        TRUE              </span></span>
+<span id="cb3-57"><a href="#cb3-57" tabindex="-1"></a><span class="co">#&gt; 7 Sheet1 A107  decimal notBetw… 0        9        FALSE       FALSE             </span></span>
+<span id="cb3-58"><a href="#cb3-58" tabindex="-1"></a><span class="co">#&gt; 8 Sheet1 A113  custom  &lt;NA&gt;     A113&lt;=L… &lt;NA&gt;     TRUE        TRUE              </span></span>
+<span id="cb3-59"><a href="#cb3-59" tabindex="-1"></a><span class="co">#&gt; 9 Sheet1 A109  list    &lt;NA&gt;     $B$108   &lt;NA&gt;     TRUE        TRUE              </span></span>
+<span id="cb3-60"><a href="#cb3-60" tabindex="-1"></a><span class="co">#&gt; # ℹ 28 more variables: prompt_title &lt;chr&gt;, prompt_body &lt;chr&gt;,</span></span>
+<span id="cb3-61"><a href="#cb3-61" tabindex="-1"></a><span class="co">#&gt; #   show_error_message &lt;lgl&gt;, error_title &lt;chr&gt;, error_body &lt;chr&gt;,</span></span>
+<span id="cb3-62"><a href="#cb3-62" tabindex="-1"></a><span class="co">#&gt; #   error_symbol &lt;chr&gt;, row &lt;int&gt;, col &lt;int&gt;, is_blank &lt;lgl&gt;, content &lt;chr&gt;,</span></span>
+<span id="cb3-63"><a href="#cb3-63" tabindex="-1"></a><span class="co">#&gt; #   data_type &lt;chr&gt;, error &lt;chr&gt;, logical &lt;lgl&gt;, numeric &lt;dbl&gt;, date &lt;dttm&gt;,</span></span>
+<span id="cb3-64"><a href="#cb3-64" tabindex="-1"></a><span class="co">#&gt; #   character &lt;chr&gt;, character_formatted &lt;list&gt;, formula &lt;chr&gt;, is_array &lt;lgl&gt;,</span></span>
+<span id="cb3-65"><a href="#cb3-65" tabindex="-1"></a><span class="co">#&gt; #   formula_ref &lt;chr&gt;, formula_group &lt;int&gt;, comment &lt;chr&gt;, height &lt;dbl&gt;,</span></span>
+<span id="cb3-66"><a href="#cb3-66" tabindex="-1"></a><span class="co">#&gt; #   width &lt;dbl&gt;, row_outline_level &lt;dbl&gt;, col_outline_level &lt;dbl&gt;, …</span></span></code></pre></div>
 <p>Notice that only 9 cells were joined, even though 15 rules were
 defined. Surely at least 15 cells ought to be joined? The reason why
 they are not is that the cells for the other 6 rules don’t exist – rules
@@ -534,69 +533,64 @@ haven’t written one, so what follows is a workaround. First, the two
 ranges of cells must be <code>unnested</code> into <code>A115</code> and
 <code>A121:122</code>. Then the range <code>A121:122</code> must be
 ‘unranged’ into <code>A121</code> and <code>A122</code>.</p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>unrange <span class="ot">&lt;-</span> <span class="cf">function</span>(x) {</span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  limits <span class="ot">&lt;-</span> cellranger<span class="sc">::</span><span class="fu">as.cell_limits</span>(x)</span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  rows <span class="ot">&lt;-</span> <span class="fu">seq</span>(limits<span class="sc">$</span>ul[<span class="dv">1</span>], limits<span class="sc">$</span>lr[<span class="dv">1</span>])</span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>  cols <span class="ot">&lt;-</span> <span class="fu">seq</span>(limits<span class="sc">$</span>ul[<span class="dv">2</span>], limits<span class="sc">$</span>lr[<span class="dv">2</span>])</span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>  rowcol <span class="ot">&lt;-</span> <span class="fu">expand.grid</span>(rows, cols)</span>
-<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>  cell_addrs <span class="ot">&lt;-</span> cellranger<span class="sc">::</span><span class="fu">cell_addr</span>(rowcol[[<span class="dv">1</span>]], rowcol[[<span class="dv">2</span>]])</span>
-<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>  cellranger<span class="sc">::</span><span class="fu">to_string</span>(cell_addrs, <span class="at">fo =</span> <span class="st">&quot;A1&quot;</span>, <span class="at">strict =</span> <span class="cn">FALSE</span>)</span>
-<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>unnest_ref <span class="ot">&lt;-</span> <span class="cf">function</span>(x, ref) {</span>
-<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">UseMethod</span>(<span class="st">&quot;unnest_ref&quot;</span>)</span>
-<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a>unnest_ref.default <span class="ot">&lt;-</span> <span class="cf">function</span>(x, <span class="at">ref_col =</span> ref) {</span>
-<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">stopifnot</span>(<span class="fu">is.character</span>(x), <span class="fu">length</span>(x) <span class="sc">==</span> 1L)</span>
-<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a>  refs <span class="ot">&lt;-</span> <span class="fu">unlist</span>(<span class="fu">strsplit</span>(x, <span class="st">&quot;,&quot;</span>, <span class="at">fixed =</span> <span class="cn">TRUE</span>))</span>
-<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">unlist</span>(<span class="fu">lapply</span>(refs, unrange))</span>
-<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-20"><a href="#cb4-20" aria-hidden="true" tabindex="-1"></a><span class="fu">unrange</span>(<span class="st">&quot;A121:A122&quot;</span>)</span>
-<span id="cb4-21"><a href="#cb4-21" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] &quot;A121&quot; &quot;A122&quot;</span></span>
-<span id="cb4-22"><a href="#cb4-22" aria-hidden="true" tabindex="-1"></a><span class="fu">unnest_ref</span>(<span class="st">&quot;A115,A121:A122&quot;</span>)</span>
-<span id="cb4-23"><a href="#cb4-23" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] &quot;A115&quot; &quot;A121&quot; &quot;A122&quot;</span></span></code></pre></div>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" tabindex="-1"></a>unrange <span class="ot">&lt;-</span> <span class="cf">function</span>(x) {</span>
+<span id="cb4-2"><a href="#cb4-2" tabindex="-1"></a>  limits <span class="ot">&lt;-</span> cellranger<span class="sc">::</span><span class="fu">as.cell_limits</span>(x)</span>
+<span id="cb4-3"><a href="#cb4-3" tabindex="-1"></a>  rows <span class="ot">&lt;-</span> <span class="fu">seq</span>(limits<span class="sc">$</span>ul[<span class="dv">1</span>], limits<span class="sc">$</span>lr[<span class="dv">1</span>])</span>
+<span id="cb4-4"><a href="#cb4-4" tabindex="-1"></a>  cols <span class="ot">&lt;-</span> <span class="fu">seq</span>(limits<span class="sc">$</span>ul[<span class="dv">2</span>], limits<span class="sc">$</span>lr[<span class="dv">2</span>])</span>
+<span id="cb4-5"><a href="#cb4-5" tabindex="-1"></a>  rowcol <span class="ot">&lt;-</span> <span class="fu">expand.grid</span>(rows, cols)</span>
+<span id="cb4-6"><a href="#cb4-6" tabindex="-1"></a>  cell_addrs <span class="ot">&lt;-</span> cellranger<span class="sc">::</span><span class="fu">cell_addr</span>(rowcol[[<span class="dv">1</span>]], rowcol[[<span class="dv">2</span>]])</span>
+<span id="cb4-7"><a href="#cb4-7" tabindex="-1"></a>  cellranger<span class="sc">::</span><span class="fu">to_string</span>(cell_addrs, <span class="at">fo =</span> <span class="st">&quot;A1&quot;</span>, <span class="at">strict =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb4-8"><a href="#cb4-8" tabindex="-1"></a>}</span>
+<span id="cb4-9"><a href="#cb4-9" tabindex="-1"></a></span>
+<span id="cb4-10"><a href="#cb4-10" tabindex="-1"></a>unnest_ref <span class="ot">&lt;-</span> <span class="cf">function</span>(x, ref) {</span>
+<span id="cb4-11"><a href="#cb4-11" tabindex="-1"></a>  <span class="fu">UseMethod</span>(<span class="st">&quot;unnest_ref&quot;</span>)</span>
+<span id="cb4-12"><a href="#cb4-12" tabindex="-1"></a>}</span>
+<span id="cb4-13"><a href="#cb4-13" tabindex="-1"></a></span>
+<span id="cb4-14"><a href="#cb4-14" tabindex="-1"></a>unnest_ref.default <span class="ot">&lt;-</span> <span class="cf">function</span>(x, <span class="at">ref_col =</span> ref) {</span>
+<span id="cb4-15"><a href="#cb4-15" tabindex="-1"></a>  <span class="fu">stopifnot</span>(<span class="fu">is.character</span>(x), <span class="fu">length</span>(x) <span class="sc">==</span> <span class="dv">1</span><span class="dt">L</span>)</span>
+<span id="cb4-16"><a href="#cb4-16" tabindex="-1"></a>  refs <span class="ot">&lt;-</span> <span class="fu">unlist</span>(<span class="fu">strsplit</span>(x, <span class="st">&quot;,&quot;</span>, <span class="at">fixed =</span> <span class="cn">TRUE</span>))</span>
+<span id="cb4-17"><a href="#cb4-17" tabindex="-1"></a>  <span class="fu">unlist</span>(<span class="fu">lapply</span>(refs, unrange))</span>
+<span id="cb4-18"><a href="#cb4-18" tabindex="-1"></a>}</span>
+<span id="cb4-19"><a href="#cb4-19" tabindex="-1"></a></span>
+<span id="cb4-20"><a href="#cb4-20" tabindex="-1"></a><span class="fu">unrange</span>(<span class="st">&quot;A121:A122&quot;</span>)</span>
+<span id="cb4-21"><a href="#cb4-21" tabindex="-1"></a><span class="co">#&gt; [1] &quot;A121&quot; &quot;A122&quot;</span></span>
+<span id="cb4-22"><a href="#cb4-22" tabindex="-1"></a><span class="fu">unnest_ref</span>(<span class="st">&quot;A115,A121:A122&quot;</span>)</span>
+<span id="cb4-23"><a href="#cb4-23" tabindex="-1"></a><span class="co">#&gt; [1] &quot;A115&quot; &quot;A121&quot; &quot;A122&quot;</span></span></code></pre></div>
 <p>The <code>unnest_ref()</code> function can also be defined for whole
 data frames, unnesting them by a column of references.</p>
-<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>unnest_ref.data.frame <span class="ot">&lt;-</span> <span class="cf">function</span>(x, ref_col) {</span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  ref <span class="ot">&lt;-</span> rlang<span class="sc">::</span><span class="fu">enquo</span>(ref_col)</span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>  x[[rlang<span class="sc">::</span><span class="fu">quo_name</span>(ref)]] <span class="ot">&lt;-</span> <span class="fu">lapply</span>(x[[rlang<span class="sc">::</span><span class="fu">quo_name</span>(ref)]], unnest_ref)</span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>  tidyr<span class="sc">::</span><span class="fu">unnest</span>(x, rlang<span class="sc">::</span><span class="fu">UQ</span>(ref))</span>
-<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>(nested_rule <span class="ot">&lt;-</span> <span class="fu">slice</span>(rules, <span class="dv">7</span>))</span>
-<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # A tibble: 1 × 14</span></span>
-<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   sheet  ref       type  opera…¹ formu…² formu…³ allow…⁴ show_…⁵ promp…⁶ promp…⁷</span></span>
-<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   &lt;chr&gt;  &lt;chr&gt;     &lt;chr&gt; &lt;chr&gt;   &lt;chr&gt;   &lt;chr&gt;   &lt;lgl&gt;   &lt;lgl&gt;   &lt;chr&gt;   &lt;chr&gt;  </span></span>
-<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1 Sheet1 A115,A12… whole equal   0       &lt;NA&gt;    TRUE    TRUE    &lt;NA&gt;    &lt;NA&gt;   </span></span>
-<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # … with 4 more variables: show_error_message &lt;lgl&gt;, error_title &lt;chr&gt;,</span></span>
-<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; #   error_body &lt;chr&gt;, error_symbol &lt;chr&gt;, and abbreviated variable names</span></span>
-<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; #   ¹​operator, ²​formula1, ³​formula2, ⁴​allow_blank, ⁵​show_input_message,</span></span>
-<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; #   ⁶​prompt_title, ⁷​prompt_body</span></span>
-<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a><span class="fu">unnest_ref</span>(nested_rule, ref)</span>
-<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Warning: Prefixing `UQ()` with the rlang namespace is deprecated as of rlang 0.3.0.</span></span>
-<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Please use the non-prefixed form or `!!` instead.</span></span>
-<span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb5-20"><a href="#cb5-20" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   # Bad:</span></span>
-<span id="cb5-21"><a href="#cb5-21" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   rlang::expr(mean(rlang::UQ(var) * 100))</span></span>
-<span id="cb5-22"><a href="#cb5-22" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb5-23"><a href="#cb5-23" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   # Ok:</span></span>
-<span id="cb5-24"><a href="#cb5-24" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   rlang::expr(mean(UQ(var) * 100))</span></span>
-<span id="cb5-25"><a href="#cb5-25" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb5-26"><a href="#cb5-26" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   # Good:</span></span>
-<span id="cb5-27"><a href="#cb5-27" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   rlang::expr(mean(!!var * 100))</span></span>
-<span id="cb5-28"><a href="#cb5-28" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb5-29"><a href="#cb5-29" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; This warning is displayed once per session.</span></span>
-<span id="cb5-30"><a href="#cb5-30" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # A tibble: 3 × 14</span></span>
-<span id="cb5-31"><a href="#cb5-31" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   sheet  ref   type  operator formula1 formula2 allow_…¹ show_…² promp…³ promp…⁴</span></span>
-<span id="cb5-32"><a href="#cb5-32" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   &lt;chr&gt;  &lt;chr&gt; &lt;chr&gt; &lt;chr&gt;    &lt;chr&gt;    &lt;chr&gt;    &lt;lgl&gt;    &lt;lgl&gt;   &lt;chr&gt;   &lt;chr&gt;  </span></span>
-<span id="cb5-33"><a href="#cb5-33" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1 Sheet1 A115  whole equal    0        &lt;NA&gt;     TRUE     TRUE    &lt;NA&gt;    &lt;NA&gt;   </span></span>
-<span id="cb5-34"><a href="#cb5-34" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2 Sheet1 A121  whole equal    0        &lt;NA&gt;     TRUE     TRUE    &lt;NA&gt;    &lt;NA&gt;   </span></span>
-<span id="cb5-35"><a href="#cb5-35" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 3 Sheet1 A122  whole equal    0        &lt;NA&gt;     TRUE     TRUE    &lt;NA&gt;    &lt;NA&gt;   </span></span>
-<span id="cb5-36"><a href="#cb5-36" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # … with 4 more variables: show_error_message &lt;lgl&gt;, error_title &lt;chr&gt;,</span></span>
-<span id="cb5-37"><a href="#cb5-37" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; #   error_body &lt;chr&gt;, error_symbol &lt;chr&gt;, and abbreviated variable names</span></span>
-<span id="cb5-38"><a href="#cb5-38" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; #   ¹​allow_blank, ²​show_input_message, ³​prompt_title, ⁴​prompt_body</span></span></code></pre></div>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" tabindex="-1"></a>unnest_ref.data.frame <span class="ot">&lt;-</span> <span class="cf">function</span>(x, ref_col) {</span>
+<span id="cb5-2"><a href="#cb5-2" tabindex="-1"></a>  ref <span class="ot">&lt;-</span> rlang<span class="sc">::</span><span class="fu">enquo</span>(ref_col)</span>
+<span id="cb5-3"><a href="#cb5-3" tabindex="-1"></a>  x[[rlang<span class="sc">::</span><span class="fu">quo_name</span>(ref)]] <span class="ot">&lt;-</span> <span class="fu">lapply</span>(x[[rlang<span class="sc">::</span><span class="fu">quo_name</span>(ref)]], unnest_ref)</span>
+<span id="cb5-4"><a href="#cb5-4" tabindex="-1"></a>  tidyr<span class="sc">::</span><span class="fu">unnest</span>(x, rlang<span class="sc">::</span><span class="fu">UQ</span>(ref))</span>
+<span id="cb5-5"><a href="#cb5-5" tabindex="-1"></a>}</span>
+<span id="cb5-6"><a href="#cb5-6" tabindex="-1"></a></span>
+<span id="cb5-7"><a href="#cb5-7" tabindex="-1"></a>(nested_rule <span class="ot">&lt;-</span> <span class="fu">slice</span>(rules, <span class="dv">7</span>))</span>
+<span id="cb5-8"><a href="#cb5-8" tabindex="-1"></a><span class="co">#&gt; # A tibble: 1 × 14</span></span>
+<span id="cb5-9"><a href="#cb5-9" tabindex="-1"></a><span class="co">#&gt;   sheet  ref     type  operator formula1 formula2 allow_blank show_input_message</span></span>
+<span id="cb5-10"><a href="#cb5-10" tabindex="-1"></a><span class="co">#&gt;   &lt;chr&gt;  &lt;chr&gt;   &lt;chr&gt; &lt;chr&gt;    &lt;chr&gt;    &lt;chr&gt;    &lt;lgl&gt;       &lt;lgl&gt;             </span></span>
+<span id="cb5-11"><a href="#cb5-11" tabindex="-1"></a><span class="co">#&gt; 1 Sheet1 A115,A… whole equal    0        &lt;NA&gt;     TRUE        TRUE              </span></span>
+<span id="cb5-12"><a href="#cb5-12" tabindex="-1"></a><span class="co">#&gt; # ℹ 6 more variables: prompt_title &lt;chr&gt;, prompt_body &lt;chr&gt;,</span></span>
+<span id="cb5-13"><a href="#cb5-13" tabindex="-1"></a><span class="co">#&gt; #   show_error_message &lt;lgl&gt;, error_title &lt;chr&gt;, error_body &lt;chr&gt;,</span></span>
+<span id="cb5-14"><a href="#cb5-14" tabindex="-1"></a><span class="co">#&gt; #   error_symbol &lt;chr&gt;</span></span>
+<span id="cb5-15"><a href="#cb5-15" tabindex="-1"></a><span class="fu">unnest_ref</span>(nested_rule, ref)</span>
+<span id="cb5-16"><a href="#cb5-16" tabindex="-1"></a><span class="co">#&gt; Warning: Prefixing `UQ()` with the rlang namespace is deprecated as of rlang 0.3.0.</span></span>
+<span id="cb5-17"><a href="#cb5-17" tabindex="-1"></a><span class="co">#&gt; Please use the non-prefixed form or `!!` instead.</span></span>
+<span id="cb5-18"><a href="#cb5-18" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb5-19"><a href="#cb5-19" tabindex="-1"></a><span class="co">#&gt; # Bad: rlang::expr(mean(rlang::UQ(var) * 100))</span></span>
+<span id="cb5-20"><a href="#cb5-20" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb5-21"><a href="#cb5-21" tabindex="-1"></a><span class="co">#&gt; # Ok: rlang::expr(mean(UQ(var) * 100))</span></span>
+<span id="cb5-22"><a href="#cb5-22" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb5-23"><a href="#cb5-23" tabindex="-1"></a><span class="co">#&gt; # Good: rlang::expr(mean(!!var * 100))</span></span>
+<span id="cb5-24"><a href="#cb5-24" tabindex="-1"></a><span class="co">#&gt; This warning is displayed once every 8 hours.</span></span>
+<span id="cb5-25"><a href="#cb5-25" tabindex="-1"></a><span class="co">#&gt; # A tibble: 3 × 14</span></span>
+<span id="cb5-26"><a href="#cb5-26" tabindex="-1"></a><span class="co">#&gt;   sheet  ref   type  operator formula1 formula2 allow_blank show_input_message</span></span>
+<span id="cb5-27"><a href="#cb5-27" tabindex="-1"></a><span class="co">#&gt;   &lt;chr&gt;  &lt;chr&gt; &lt;chr&gt; &lt;chr&gt;    &lt;chr&gt;    &lt;chr&gt;    &lt;lgl&gt;       &lt;lgl&gt;             </span></span>
+<span id="cb5-28"><a href="#cb5-28" tabindex="-1"></a><span class="co">#&gt; 1 Sheet1 A115  whole equal    0        &lt;NA&gt;     TRUE        TRUE              </span></span>
+<span id="cb5-29"><a href="#cb5-29" tabindex="-1"></a><span class="co">#&gt; 2 Sheet1 A121  whole equal    0        &lt;NA&gt;     TRUE        TRUE              </span></span>
+<span id="cb5-30"><a href="#cb5-30" tabindex="-1"></a><span class="co">#&gt; 3 Sheet1 A122  whole equal    0        &lt;NA&gt;     TRUE        TRUE              </span></span>
+<span id="cb5-31"><a href="#cb5-31" tabindex="-1"></a><span class="co">#&gt; # ℹ 6 more variables: prompt_title &lt;chr&gt;, prompt_body &lt;chr&gt;,</span></span>
+<span id="cb5-32"><a href="#cb5-32" tabindex="-1"></a><span class="co">#&gt; #   show_error_message &lt;lgl&gt;, error_title &lt;chr&gt;, error_body &lt;chr&gt;,</span></span>
+<span id="cb5-33"><a href="#cb5-33" tabindex="-1"></a><span class="co">#&gt; #   error_symbol &lt;chr&gt;</span></span></code></pre></div>
 <p>Finally the new data frame of rules can be joined to a data frame of
 cells in any of the usual ways, via the <code>sheet</code> and
 <code>ref</code> columns.</p>

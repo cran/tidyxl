@@ -3,7 +3,7 @@ library(tidyxl)
 x <- xlex("MIN(3,MAX(2,A1))")
 x
 
-## ---- out.width = "850px", include = FALSE------------------------------------
+## ----out.width = "850px", include = FALSE-------------------------------------
 knitr::include_graphics("enron-constants.png")
 
 ## -----------------------------------------------------------------------------
